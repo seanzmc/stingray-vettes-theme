@@ -1,0 +1,8 @@
+/* Stingray Corvette Design System — global stylesheet entry point.
+   THEME DELTA (see README.md): in the DS this file is a list of @imports
+   (Inter + the four token files). In the theme, functions.php enqueues each
+   file as its own <link> in the manifest's order — colors → typography →
+   spacing → base → styles — and Inter has its own handle ('stingray-inter'),
+   so the @imports here would double-load everything. They are intentionally
+   removed; this handle stays last in the DS chain and will carry any future
+   DS-level rules that aren't token files. */

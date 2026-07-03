@@ -1,0 +1,37 @@
+/* ==========================================================================
+   Stingray Corvette — Spacing, radius, layout tokens
+   ========================================================================== */
+:root {
+  /* ---- radii ---- */
+  --radius-sm: 6px;      /* nav link, small chips */
+  --radius-md: 7px;      /* buttons, step-link */
+  --radius-lg: 8px;      /* icon buttons, card icon wells */
+  --radius-xl: 10px;     /* cards — sc-card, choice-card, summary-card */
+  --radius-2xl: 12px;    /* app shell */
+  --radius-pill: 999px;  /* pills, badges, CTA */
+
+  /* ---- hit targets ---- */
+  --hit-min: 44px;
+  --hit-icon: 44px;
+  --hit-step: 42px;
+
+  /* ---- spacing scale (as used in source; not a strict 4/8 grid) ---- */
+  --space-3xs: 3px;
+  --space-2xs: 5px;
+  --space-xs: 8px;
+  --space-sm: 9px;
+  --space-md: 12px;
+  --space-lg: 14px;
+  --space-xl: 18px;
+  --space-2xl: 22px;
+  --space-3xl: 28px;
+  --space-4xl: 42px;
+
+  /* ---- content width ---- */
+  --content-max: 1280px;
+  --shell-max: 1680px;
+
+  /* ---- motion ---- */
+  --transition-fast: 140ms ease; /* @kind other */
+  --carbon-checker-size: 6px; /* checker texture tile size, both products */
+}

@@ -1,0 +1,80 @@
+/* ==========================================================================
+   Stingray Corvette — Color tokens
+   Source of truth: stingray-homepage/index.html (:root) and
+   form-style-1a/SPEC.md §1–2 (token remap + dynamic accent-follows-paint map).
+   The product is dark ("full carbon") everywhere — there is no light theme.
+   ========================================================================== */
+:root {
+  color-scheme: dark;
+
+  /* ---- carbon surfaces (base) ---- */
+  --carbon-desk: #33373a;          /* desk color behind a shell/app frame */
+  --carbon-base: #0c0e0f;          /* page / choice-panel base */
+  --carbon-panel: #101315;         /* rail + summary panel */
+  --carbon-panel-strong: #14181b;  /* cards, inputs, choice cards */
+  --carbon-panel-sunk: #0f1112;    /* recessed media wells (choice-media bg) */
+  --carbon-panel-disabled: #101214;
+  --carbon-texture: #16191c;       /* checker-texture dark square */
+  --carbon-topbar: rgba(11, 13, 14, 0.92);
+  --carbon-scrim: rgba(8, 10, 11, 0.97);   /* mobile drawer scrim */
+  --carbon-modal-backdrop: rgba(0, 0, 0, 0.6);
+
+  /* ---- text ---- */
+  --ink: #f4f1eb;          /* primary text — warm white, never pure #fff */
+  --muted: #a9aeb1;        /* secondary text */
+  --dim: #8b9094;          /* tertiary text, upcoming/disabled labels, footnotes */
+  --disabled-text: #5c6166;
+
+  /* ---- borders / hairlines ---- */
+  --line: #262c31;                       /* card & input borders */
+  --line-hover: #3a4248;                  /* hover border on cards */
+  --hairline: rgba(255, 255, 255, 0.07);  /* panel dividers */
+  --hairline-strong: rgba(255, 255, 255, 0.12);
+  --hairline-footer: rgba(255, 255, 255, 0.08);
+  --control-bg: rgba(255, 255, 255, 0.06);
+  --control-bg-hover: rgba(255, 255, 255, 0.10);
+  --control-border: rgba(255, 255, 255, 0.14);
+  --control-border-hover: rgba(255, 255, 255, 0.3);
+  --ghost-border: rgba(255, 255, 255, 0.24);
+  --ghost-hover-bg: rgba(255, 255, 255, 0.05);
+  --wash-faint: rgba(255, 255, 255, 0.04);
+  --wash-soft: rgba(255, 255, 255, 0.03);
+
+  /* ---- brand accent: Torch Red is the default / marketing accent ---- */
+  --accent: #d0425a;
+  --accent-deep: #b22234;
+  --on-accent: #ffffff;
+  --accent-glow: rgba(208, 66, 90, 0.4);
+
+  /* ---- semantic ---- */
+  --ok: #35b85d;
+  --ok-bg: rgba(53, 184, 93, 0.16);
+  --warn: #e8a13c;
+  --warn-bg: rgba(232, 161, 60, 0.12);
+  --warn-border: rgba(232, 161, 60, 0.4);
+
+  /* ---- interaction shadows ---- */
+  --hover-lift-shadow: 6px 6px 0 rgba(38, 44, 49, 0.95);
+  --hover-lift-shadow-accent: 8px 8px 0 var(--accent-deep);
+  --shadow-modal: 0 18px 48px rgba(0, 0, 0, 0.55);
+  --shadow-drop-vehicle: drop-shadow(0 22px 30px rgba(0, 0, 0, 0.5));
+}
+
+/* ---------------------------------------------------------------------------
+   Dynamic accent-follows-paint palette. Each paint RPO carries its own
+   --accent / --accent-deep / --on-accent / --accent-glow so the JS hook can
+   re-theme the whole page to whatever exterior color is selected. Neutrals
+   (white, black, gray, silver) fall back to the default Torch Red accent.
+   These are exposed as classes so specimen cards can render every swatch
+   without JS; production re-themes via inline style on :root instead.
+   ------------------------------------------------------------------------- */
+.paint-gkz { --paint-accent: #d0425a; --paint-accent-deep: #b22234; --paint-on: #ffffff; --paint-hex: #c8102e; --paint-name: "Torch Red"; /* @kind other */ }
+.paint-g4z { --paint-accent: #35b85d; --paint-accent-deep: #2e7d4f; --paint-on: #06210f; --paint-hex: #4e5a50; --paint-name: "Roswell Green Metallic"; /* @kind other */ }
+.paint-gtr { --paint-accent: #4073fc; --paint-accent-deep: #1d4ed8; --paint-on: #ffffff; --paint-hex: #1e3f7d; --paint-name: "Admiral Blue Metallic"; /* @kind other */ }
+.paint-gbk { --paint-accent: #ffc829; --paint-accent-deep: #e0a400; --paint-on: #1c1606; --paint-hex: #f4c62c; --paint-name: "Competition Yellow Tintcoat Metallic"; /* @kind other */ }
+.paint-g26 { --paint-accent: #ff6a1b; --paint-accent-deep: #d8480a; --paint-on: #1c0d04; --paint-hex: #e35b1c; --paint-name: "Sebring Orange Tintcoat"; /* @kind other */ }
+.paint-gph { --paint-accent: #cf3e5e; --paint-accent-deep: #8a1a2c; --paint-on: #ffffff; --paint-hex: #8a1a2c; --paint-name: "Red Mist Metallic Tintcoat"; /* @kind other */ }
+.paint-g8g { --paint-accent: #d0425a; --paint-accent-deep: #b22234; --paint-on: #ffffff; --paint-hex: #e9e9e7; --paint-name: "Arctic White"; /* @kind other */ }
+.paint-gba { --paint-accent: #d0425a; --paint-accent-deep: #b22234; --paint-on: #ffffff; --paint-hex: #131313; --paint-name: "Black"; /* @kind other */ }
+.paint-gec { --paint-accent: #d0425a; --paint-accent-deep: #b22234; --paint-on: #ffffff; --paint-hex: #53585c; --paint-name: "Pitch Gray Metallic"; /* @kind other */ }
+.paint-gka { --paint-accent: #d0425a; --paint-accent-deep: #b22234; --paint-on: #ffffff; --paint-hex: #a9adb0; --paint-name: "Blade Silver Metallic"; /* @kind other */ }

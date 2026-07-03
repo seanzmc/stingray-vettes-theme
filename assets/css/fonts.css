@@ -1,0 +1,34 @@
+/* ==========================================================================
+   ChevySans @font-face — extracted verbatim from the design system's
+   tokens/typography.css (only the url()s changed: the DS resolves fonts at
+   ../assets/fonts/, this theme serves them from assets/fonts/).
+   Enqueued FIRST so the font requests start before the token layer parses.
+
+   Weight ranges map the source's 500–900 usage onto the two real cuts —
+   Regular (400) and Demi (600) — with no synthetic bold:
+     ChevySans        100–549 → ChevySans-Regular.woff2
+     ChevySans        550–900 → ChevySans-Demi.woff2
+     ChevySans Narrow 100–900 → ChevySans-NarrowRegular.woff2
+   Inter stays the fallback stack (--font-fallback in tokens/typography.css).
+   ========================================================================== */
+@font-face {
+  font-family: "ChevySans";
+  src: url("../fonts/ChevySans-Regular.woff2") format("woff2");
+  font-weight: 100 549;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "ChevySans";
+  src: url("../fonts/ChevySans-Demi.woff2") format("woff2");
+  font-weight: 550 900;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "ChevySans Narrow";
+  src: url("../fonts/ChevySans-NarrowRegular.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
