@@ -1,0 +1,434 @@
+/* ==========================================================================
+   Stingray Corvette — dark skins for third-party embeds.
+   Loaded only on pages that render them (functions.php):
+   1) Formidable Forms — deposit form [formidable id=8], B&P share
+      [formidable id=30]. Selectors follow Formidable's stock markup
+      (.frm_forms, .frm_form_field, item_meta inputs); a few !importants
+      counter the plugin stylesheet (formidableforms.css) it enqueues.
+   2) wpDataTables — the @Factory orders table [wpdatatable id=7].
+   Both translate to the DS: carbon surfaces, warm-white ink, accent only
+   on affordances, 140ms ease, no new fonts.
+   ========================================================================== */
+
+/* =========================== Formidable Forms ========================== */
+
+.sc-embed .frm_forms {
+  max-width: 860px;
+}
+
+.sc-embed .frm_forms form {
+  display: grid;
+  gap: 4px;
+}
+
+.sc-embed .frm_forms fieldset {
+  border: 0;
+  margin: 0;
+  padding: 0;
+  min-width: 0;
+}
+
+.sc-embed .frm_forms legend {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+}
+
+.sc-embed .frm_forms h3 {
+  margin: 26px 0 12px;
+  font-family: var(--font-primary);
+  font-weight: 600;
+  font-size: 1.15rem;
+  letter-spacing: var(--tracking-display);
+  text-transform: uppercase;
+  color: var(--ink);
+  border-bottom: 1px solid var(--hairline-footer);
+  padding-bottom: 8px;
+}
+
+.sc-embed .frm_forms p,
+.sc-embed .frm_forms .frm_description {
+  color: var(--muted);
+  font-size: var(--text-body-sm);
+  line-height: var(--leading-relaxed);
+}
+
+.sc-embed .frm_forms a {
+  color: var(--accent);
+}
+
+.sc-embed .frm_forms hr {
+  border: 0;
+  border-top: 1px solid var(--hairline);
+  margin: 18px 0;
+}
+
+/* labels */
+.sc-embed .frm_forms label,
+.sc-embed .frm_forms .frm_primary_label {
+  display: block;
+  margin: 0 0 6px;
+  color: var(--muted);
+  font-size: 0.75rem;
+  font-weight: var(--weight-bold);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.sc-embed .frm_forms .frm_required {
+  color: var(--accent);
+}
+
+/* fields */
+.sc-embed .frm_forms .frm_form_field {
+  margin-bottom: 16px;
+}
+
+.sc-embed .frm_forms input[type="text"],
+.sc-embed .frm_forms input[type="email"],
+.sc-embed .frm_forms input[type="tel"],
+.sc-embed .frm_forms input[type="number"],
+.sc-embed .frm_forms input[type="url"],
+.sc-embed .frm_forms input[type="date"],
+.sc-embed .frm_forms select,
+.sc-embed .frm_forms textarea {
+  width: 100%;
+  min-height: 46px;
+  border: 1px solid var(--line) !important;
+  border-radius: var(--radius-sm);
+  padding: 0 14px;
+  background: var(--carbon-panel-strong) !important;
+  color: var(--ink) !important;
+  font: inherit;
+  font-weight: var(--weight-semibold);
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.sc-embed .frm_forms textarea {
+  min-height: 110px;
+  padding: 12px 14px;
+  resize: vertical;
+}
+
+.sc-embed .frm_forms input:focus-visible,
+.sc-embed .frm_forms select:focus-visible,
+.sc-embed .frm_forms textarea:focus-visible {
+  outline: none;
+  border-color: var(--accent) !important;
+  box-shadow: 0 0 0 3px var(--accent-glow);
+}
+
+.sc-embed .frm_forms ::placeholder {
+  color: var(--dim);
+}
+
+/* radios + checkboxes: sentence-case, ink, accent controls */
+.sc-embed .frm_forms .frm_radio label,
+.sc-embed .frm_forms .frm_checkbox label,
+.sc-embed .frm_forms .frm_opt_container label {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: var(--carbon-panel-strong);
+  color: var(--ink);
+  font-size: var(--text-body);
+  font-weight: var(--weight-semibold);
+  letter-spacing: 0;
+  text-transform: none;
+  cursor: pointer;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.sc-embed .frm_forms .frm_radio label:hover,
+.sc-embed .frm_forms .frm_checkbox label:hover {
+  border-color: var(--line-hover);
+  box-shadow: var(--hover-lift-shadow);
+}
+
+.sc-embed .frm_forms .frm_radio,
+.sc-embed .frm_forms .frm_checkbox {
+  margin-bottom: 8px;
+}
+
+.sc-embed .frm_forms input[type="radio"],
+.sc-embed .frm_forms input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  min-height: 0;
+  margin: 0;
+  flex: 0 0 auto;
+  accent-color: var(--accent);
+}
+
+/* model-choice radio images (B&P form) */
+.sc-embed .frm_forms .frm_opt_container label img {
+  height: 40px;
+  width: auto;
+  max-width: 140px;
+  object-fit: contain;
+}
+
+/* file upload dropzone */
+.sc-embed .frm_forms .frm_dropzone,
+.sc-embed .frm_forms input[type="file"] {
+  border: 1px dashed var(--control-border);
+  border-radius: var(--radius-lg);
+  background: var(--wash-soft);
+  color: var(--muted);
+  padding: 18px;
+}
+
+.sc-embed .frm_forms .frm_dropzone .dz-message {
+  color: var(--muted);
+}
+
+.sc-embed .frm_forms .frm_dropzone button,
+.sc-embed .frm_forms .frm_upload_inline_button {
+  min-height: 40px;
+  border: 1px solid var(--ghost-border);
+  border-radius: var(--radius-sm);
+  padding: 0 16px;
+  background: transparent;
+  color: var(--ink);
+  font-size: 0.8rem;
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: border-color var(--transition-fast), background var(--transition-fast);
+}
+
+.sc-embed .frm_forms .frm_dropzone button:hover,
+.sc-embed .frm_forms .frm_upload_inline_button:hover {
+  border-color: var(--accent);
+  background: var(--ghost-hover-bg);
+}
+
+/* submit */
+.sc-embed .frm_forms .frm_submit {
+  margin-top: 10px;
+}
+
+.sc-embed .frm_forms .frm_submit button,
+.sc-embed .frm_forms button[type="submit"] {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: var(--hit-min);
+  border: 0;
+  border-radius: var(--radius-md);
+  padding: 14px 26px;
+  background: var(--accent) !important;
+  color: var(--on-accent) !important;
+  font-size: var(--text-body);
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: 0 10px 30px var(--accent-glow);
+  transition: background var(--transition-fast);
+}
+
+.sc-embed .frm_forms .frm_submit button:hover,
+.sc-embed .frm_forms button[type="submit"]:hover {
+  background: var(--accent-deep) !important;
+}
+
+/* validation + messages */
+.sc-embed .frm_forms .frm_error,
+.sc-embed .frm_forms .frm_error_style {
+  border: 1px solid var(--warn-border);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  background: var(--warn-bg);
+  color: #f0c07a;
+  font-size: var(--text-body-sm);
+  font-weight: var(--weight-semibold);
+}
+
+.sc-embed .frm_forms .frm_blank_field input,
+.sc-embed .frm_forms .frm_blank_field select,
+.sc-embed .frm_forms .frm_blank_field textarea {
+  border-color: var(--warn) !important;
+}
+
+.sc-embed .frm_forms .frm_message {
+  border: 1px solid rgba(53, 184, 93, 0.4);
+  border-radius: var(--radius-lg);
+  padding: 14px 16px;
+  background: var(--ok-bg);
+  color: var(--ok);
+  font-weight: var(--weight-semibold);
+}
+
+/* the page copy Formidable renders above/around fields */
+.sc-embed .frm_forms strong {
+  color: var(--ink);
+}
+
+.sc-embed .frm_forms figure {
+  margin: 12px 0;
+}
+
+.sc-embed .frm_forms figure img {
+  max-width: 100%;
+  height: auto;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+}
+
+.sc-embed .frm_forms figcaption {
+  margin-top: 8px;
+  color: var(--dim);
+  font-size: 0.8rem;
+}
+
+/* ============================= wpDataTables ============================ */
+
+.sc-embed .wpDataTablesWrapper {
+  color: var(--ink);
+  font-size: var(--text-body-sm);
+}
+
+.sc-embed table.wpDataTable {
+  width: 100% !important;
+  border-collapse: separate;
+  border-spacing: 0;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: var(--carbon-panel-strong) !important;
+}
+
+.sc-embed table.wpDataTable thead th {
+  background: var(--carbon-panel) !important;
+  border-bottom: 1px solid var(--hairline-strong) !important;
+  color: var(--ink) !important;
+  font-size: 0.72rem;
+  font-weight: var(--weight-heavy);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 12px 14px;
+  text-align: left;
+}
+
+.sc-embed table.wpDataTable tbody td {
+  background: transparent !important;
+  border-bottom: 1px solid var(--hairline) !important;
+  color: var(--muted) !important;
+  padding: 11px 14px;
+}
+
+.sc-embed table.wpDataTable tbody tr:nth-child(even) td {
+  background: var(--wash-soft) !important;
+}
+
+.sc-embed table.wpDataTable tbody tr:hover td {
+  background: var(--control-bg) !important;
+  color: var(--ink) !important;
+  cursor: pointer;
+}
+
+.sc-embed table.wpDataTable tbody tr:last-child td {
+  border-bottom: 0 !important;
+}
+
+/* toolbar: search / length / export row */
+.sc-embed .wpDataTablesWrapper .dataTables_filter label,
+.sc-embed .wpDataTablesWrapper .dataTables_length label {
+  color: var(--muted);
+  font-size: 0.75rem;
+  font-weight: var(--weight-bold);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.sc-embed .wpDataTablesWrapper .dataTables_filter input,
+.sc-embed .wpDataTablesWrapper .dataTables_length select,
+.sc-embed .wpDataTablesWrapper input[type="search"],
+.sc-embed .wpDataTablesWrapper .wdt-filter-control {
+  min-height: 42px;
+  border: 1px solid var(--line) !important;
+  border-radius: var(--radius-sm);
+  padding: 0 12px;
+  background: var(--carbon-panel-strong) !important;
+  color: var(--ink) !important;
+  font: inherit;
+  margin-left: 8px;
+}
+
+.sc-embed .wpDataTablesWrapper .dataTables_filter input:focus-visible,
+.sc-embed .wpDataTablesWrapper .dataTables_length select:focus-visible {
+  outline: none;
+  border-color: var(--accent) !important;
+  box-shadow: 0 0 0 3px var(--accent-glow);
+}
+
+/* pagination */
+.sc-embed .wpDataTablesWrapper .dataTables_paginate .paginate_button {
+  display: inline-flex;
+  align-items: center;
+  min-height: 36px;
+  margin: 0 2px;
+  border: 1px solid var(--control-border) !important;
+  border-radius: var(--radius-sm);
+  padding: 4px 12px;
+  background: var(--control-bg) !important;
+  color: #cfd3d6 !important;
+  font-weight: var(--weight-semibold);
+  transition: border-color var(--transition-fast), background var(--transition-fast);
+}
+
+.sc-embed .wpDataTablesWrapper .dataTables_paginate .paginate_button:hover {
+  border-color: var(--control-border-hover) !important;
+  color: #ffffff !important;
+}
+
+.sc-embed .wpDataTablesWrapper .dataTables_paginate .paginate_button.current {
+  border-color: var(--accent) !important;
+  background: var(--accent) !important;
+  color: var(--on-accent) !important;
+}
+
+.sc-embed .wpDataTablesWrapper .dataTables_paginate .paginate_button.disabled {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+.sc-embed .wpDataTablesWrapper .dataTables_info {
+  color: var(--dim);
+  font-size: 0.78rem;
+}
+
+/* row-detail popup (wpDataTables uses a bootstrap-style modal) */
+.wdt-frontend-modal .modal-content,
+.wpDataTablesPopover,
+.wdt-popup {
+  background: var(--carbon-panel) !important;
+  border: 1px solid var(--line) !important;
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-modal);
+  color: var(--ink) !important;
+}
+
+.wdt-frontend-modal .modal-header {
+  border-bottom: 1px solid var(--hairline) !important;
+  color: var(--ink);
+}
+
+.wdt-frontend-modal .modal-body table td,
+.wdt-frontend-modal .modal-body table th {
+  border-color: var(--hairline) !important;
+  color: var(--muted) !important;
+  background: transparent !important;
+}
+
+.wdt-frontend-modal .modal-body table th {
+  color: var(--ink) !important;
+}

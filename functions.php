@@ -60,6 +60,9 @@ function stingray_corvette_enqueue_styles() {
 	// Theme chrome shared by every surface (topbar, drawer, buttons, page shell, footer).
 	wp_enqueue_style( 'stingray-theme', $uri . '/assets/css/theme.css', array( 'stingray-ds-styles' ), $ver );
 
+	// Interior-surface components (link cards, accordions, pills, step lists).
+	wp_enqueue_style( 'stingray-surfaces', $uri . '/assets/css/surfaces.css', array( 'stingray-theme' ), $ver );
+
 	// Homepage-only layer: hero + quick actions + the 360° spin viewer.
 	if ( is_front_page() ) {
 		wp_enqueue_style( 'stingray-homepage', $uri . '/assets/homepage/homepage.css', array( 'stingray-theme' ), $ver );
@@ -69,6 +72,40 @@ function stingray_corvette_enqueue_styles() {
 			'window.SC_SPIN_BASE = ' . wp_json_encode( $uri . '/assets/homepage/spin/' ) . ';',
 			'before'
 		);
+	}
+
+	// Order form (/order/): vendored form-app in its 1a "Full Carbon" skin.
+	if ( is_page( 'order' ) ) {
+		wp_enqueue_style( 'stingray-order', $uri . '/assets/order/order.css', array( 'stingray-surfaces' ), $ver );
+		wp_enqueue_script(
+			'stingray-turnstile',
+			'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit',
+			array(),
+			null,
+			array(
+				'in_footer' => true,
+				'strategy'  => 'async',
+			)
+		);
+		wp_enqueue_script( 'stingray-order-data', $uri . '/assets/order/data.js', array(), $ver, true );
+		wp_enqueue_script( 'stingray-order-app', $uri . '/assets/order/app.js', array( 'stingray-order-data' ), $ver, true );
+		wp_add_inline_script(
+			'stingray-order-app',
+			'window.SC_FORM_ASSET_BASE = ' . wp_json_encode( $uri . '/assets/order/assets/' ) . ';',
+			'before'
+		);
+	}
+
+	// Payment calculator (/calculator/): vendored Stingcalc logic, DS-authored skin.
+	if ( is_page( 'calculator' ) ) {
+		wp_enqueue_style( 'stingray-calculator', $uri . '/assets/calculator/calculator.css', array( 'stingray-surfaces' ), $ver );
+		wp_enqueue_script( 'stingray-calculator', $uri . '/assets/calculator/script.js', array(), $ver, true );
+		wp_enqueue_script( 'stingray-calculator-qp', $uri . '/assets/calculator/qp-new.js', array( 'stingray-calculator' ), $ver, true );
+	}
+
+	// Dark skins for third-party embeds: Formidable (deposit, B&P) + wpDataTables (@Factory).
+	if ( is_page( array( 'deposit', 'build-and-price', 'factory' ) ) ) {
+		wp_enqueue_style( 'stingray-embeds', $uri . '/assets/css/embeds.css', array( 'stingray-surfaces' ), $ver );
 	}
 }
 add_action( 'wp_enqueue_scripts', 'stingray_corvette_enqueue_styles' );

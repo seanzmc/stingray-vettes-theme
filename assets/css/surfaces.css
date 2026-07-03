@@ -1,0 +1,414 @@
+/* ==========================================================================
+   Stingray Corvette — interior-surface components.
+   Shared vocabulary for the content templates (deposit, build-and-price,
+   factory, process, calculator): page headers, panel cards, link cards,
+   numbered step lists, status pills, accordions, notes, embeds, figures.
+   Values ride on the DS tokens; interaction motifs follow the system
+   invariants (outline selection, hard offset hover, 140ms ease).
+   ========================================================================== */
+
+/* ---- Page header ---- */
+.sc-page-eyebrow {
+  margin: 0 0 10px;
+  color: var(--accent);
+  font-size: 0.75rem;
+  font-weight: var(--weight-bold);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.sc-page-lede {
+  margin: calc(-1 * var(--space-3xl) + 16px) 0 var(--space-3xl);
+  max-width: 62ch;
+  color: var(--muted);
+  font-size: var(--text-body-lg);
+  line-height: var(--leading-relaxed);
+}
+
+/* ---- Sections ---- */
+.sc-section {
+  margin: 0 0 clamp(36px, 5vw, 56px);
+}
+
+.sc-section-title {
+  margin: 0 0 6px;
+  font-family: var(--font-primary);
+  font-weight: 600;
+  font-size: clamp(1.35rem, 2.4vw, 1.8rem);
+  line-height: var(--leading-display);
+  letter-spacing: var(--tracking-display);
+  text-transform: uppercase;
+  color: var(--ink);
+}
+
+.sc-section-lede {
+  margin: 0 0 18px;
+  max-width: 68ch;
+  color: var(--muted);
+  font-size: var(--text-body);
+  line-height: var(--leading-relaxed);
+}
+
+.sc-divider {
+  border: 0;
+  border-top: 1px solid var(--hairline-footer);
+  margin: clamp(28px, 4vw, 44px) 0;
+}
+
+/* ---- Panel cards + grids ---- */
+.sc-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+  gap: 14px;
+}
+
+.sc-card-panel {
+  padding: 20px 22px;
+  background: var(--carbon-panel-strong);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-xl);
+  transition: border-color var(--transition-fast);
+}
+
+.sc-card-panel:hover {
+  border-color: var(--line-hover);
+}
+
+.sc-card-panel-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin: 0 0 10px;
+  color: var(--ink);
+  font-size: 1.05rem;
+  font-weight: var(--weight-heavy);
+}
+
+.sc-card-panel ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 8px;
+}
+
+.sc-card-panel ul li {
+  position: relative;
+  padding-left: 16px;
+  color: var(--muted);
+  font-size: var(--text-body-sm);
+  line-height: var(--leading-relaxed);
+}
+
+.sc-card-panel ul li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.62em;
+  width: 6px;
+  height: 6px;
+  border-radius: 1px;
+  background: var(--accent);
+}
+
+.sc-card-panel ul li strong,
+.sc-card-panel ul li a {
+  color: var(--ink);
+}
+
+.sc-card-panel ul li a {
+  color: var(--accent);
+}
+
+/* ---- External / action link cards (configurators, cross-links) ---- */
+.sc-link-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 20px 22px;
+  background: var(--carbon-panel-strong);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-xl);
+  color: var(--ink);
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.sc-link-card:hover {
+  border-color: var(--line-hover);
+  box-shadow: var(--hover-lift-shadow);
+}
+
+.sc-link-eyebrow {
+  font-size: 0.68rem;
+  font-weight: var(--weight-bold);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--dim);
+}
+
+.sc-link-title {
+  margin-top: 5px;
+  font-size: 1.1rem;
+  font-weight: var(--weight-heavy);
+}
+
+.sc-link-arrow {
+  flex: 0 0 auto;
+  color: var(--accent);
+  font-size: 1.2rem;
+}
+
+/* ---- Numbered step list (instructions) ---- */
+.sc-step-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: sc-step;
+  display: grid;
+  gap: 12px;
+}
+
+.sc-step-list > li {
+  counter-increment: sc-step;
+  display: grid;
+  grid-template-columns: 30px minmax(0, 1fr);
+  gap: 12px;
+  align-items: baseline;
+  padding: 14px 16px;
+  background: var(--carbon-panel-strong);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  color: var(--muted);
+  font-size: var(--text-body);
+  line-height: var(--leading-relaxed);
+}
+
+.sc-step-list > li::before {
+  content: counter(sc-step);
+  display: inline-grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--on-accent);
+  font-size: 0.75rem;
+  font-weight: var(--weight-heavy);
+}
+
+.sc-step-list > li strong {
+  color: var(--ink);
+}
+
+.sc-step-list > li a {
+  color: var(--accent);
+}
+
+/* ---- Status pills ---- */
+.sc-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid var(--control-border);
+  border-radius: 999px;
+  padding: 3px 10px;
+  background: transparent;
+  color: var(--muted);
+  font-size: 0.7rem;
+  font-weight: var(--weight-heavy);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.sc-pill--open {
+  border-color: rgba(53, 184, 93, 0.4);
+  background: var(--ok-bg);
+  color: var(--ok);
+}
+
+.sc-pill--closed {
+  border-color: var(--warn-border);
+  background: var(--warn-bg);
+  color: var(--warn);
+}
+
+.sc-pill--ended {
+  border-color: var(--control-border);
+  background: var(--control-bg);
+  color: var(--dim);
+}
+
+.sc-pill--accent {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* ---- Accordion (native details/summary) ---- */
+.sc-accordion {
+  display: grid;
+  gap: 8px;
+}
+
+.sc-accordion details {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: var(--carbon-panel-strong);
+  transition: border-color var(--transition-fast);
+}
+
+.sc-accordion details:hover,
+.sc-accordion details[open] {
+  border-color: var(--line-hover);
+}
+
+.sc-accordion summary {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 52px;
+  padding: 12px 16px;
+  cursor: pointer;
+  color: var(--ink);
+  font-size: var(--text-body);
+  font-weight: var(--weight-bold);
+  list-style: none;
+}
+
+.sc-accordion summary::-webkit-details-marker {
+  display: none;
+}
+
+.sc-accordion summary::before {
+  content: "▸";
+  flex: 0 0 auto;
+  color: var(--accent);
+  font-size: 0.8rem;
+}
+
+.sc-accordion details[open] summary::before {
+  content: "▾";
+}
+
+.sc-accordion summary .sc-code {
+  flex: 0 0 auto;
+}
+
+.sc-accordion-body {
+  padding: 0 16px 16px 40px;
+  color: var(--muted);
+  font-size: var(--text-body-sm);
+  line-height: var(--leading-relaxed);
+}
+
+.sc-accordion-body p {
+  margin: 0 0 10px;
+}
+
+.sc-accordion-body p:last-child {
+  margin-bottom: 0;
+}
+
+.sc-accordion-body a {
+  color: var(--accent);
+}
+
+/* ---- Code chip (status codes, RPOs) ---- */
+.sc-code {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--accent);
+  border-radius: 999px;
+  padding: 2px 9px;
+  background: transparent;
+  color: var(--accent);
+  font-size: 0.7rem;
+  font-weight: var(--weight-heavy);
+  letter-spacing: 0.04em;
+}
+
+/* ---- Notes / callouts ---- */
+.sc-note {
+  display: grid;
+  gap: 6px;
+  border: 1px solid var(--warn-border);
+  border-radius: var(--radius-lg);
+  padding: 14px 16px;
+  background: var(--warn-bg);
+  color: #f0c07a;
+  font-size: var(--text-body-sm);
+  line-height: var(--leading-relaxed);
+  font-weight: var(--weight-semibold);
+}
+
+.sc-note strong {
+  color: #f6d9a6;
+}
+
+.sc-note--info {
+  border-color: var(--hairline-strong);
+  background: var(--wash-faint);
+  color: var(--muted);
+}
+
+.sc-note--info strong {
+  color: var(--ink);
+}
+
+/* ---- Embed wrapper (Formidable, wpDataTables) ---- */
+.sc-embed {
+  margin-top: 8px;
+}
+
+/* ---- Figures (annotated screenshots) ---- */
+.sc-figure {
+  margin: 0;
+  display: grid;
+  gap: 10px;
+}
+
+.sc-figure img {
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: var(--carbon-panel-sunk);
+}
+
+.sc-figure figcaption {
+  color: var(--dim);
+  font-size: 0.8rem;
+  line-height: var(--leading-relaxed);
+}
+
+/* ---- Definition rows (fees, codes) ---- */
+.sc-fact-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 12px 2px;
+  border-bottom: 1px solid var(--hairline);
+  color: var(--muted);
+  font-size: var(--text-body-sm);
+}
+
+.sc-fact-row:last-child {
+  border-bottom: 0;
+}
+
+.sc-fact-row strong {
+  color: var(--ink);
+  font-weight: var(--weight-heavy);
+}
+
+/* ---- Fine print ---- */
+.sc-fineprint {
+  margin: 0;
+  color: var(--dim);
+  font-size: 0.78rem;
+  line-height: var(--leading-relaxed);
+  font-style: italic;
+}

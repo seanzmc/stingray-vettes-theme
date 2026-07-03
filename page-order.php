@@ -1,0 +1,170 @@
+<?php
+/**
+ * /order/ — the 2027 Corvette Order Form (SiteWireframe item 2).
+ *
+ * Binds by slug: page-order.php ↔ the "order" page. The configurator is the
+ * vendored form-app (27vette repo) in its form-style-1a "Full Carbon" skin:
+ * markup below mirrors form-app/index.html's <body> with one mount delta —
+ * the in-form brand block is omitted because the shared sc-topbar directly
+ * above already carries the crossflags + wordmark. Assets enqueue from
+ * assets/order/ in functions.php; window.SC_FORM_ASSET_BASE points the app
+ * at the vendored vehicle renders.
+ *
+ * @package Stingray_Corvette
+ */
+
+get_header();
+?>
+
+<div class="sc-order-desk">
+	<main class="app-shell">
+		<div class="accent-stripe" aria-hidden="true"></div>
+		<header class="topbar">
+			<button id="openStepDrawerButton" class="mobile-drawer-button mobile-drawer-button-left" type="button" aria-controls="stepRailDrawer" aria-expanded="false" aria-label="Open steps">
+				<span aria-hidden="true">&#9776;</span>
+			</button>
+			<div>
+				<p class="eyebrow">2027 Corvette</p>
+				<h1 id="appTitle">Stingray Order Form</h1>
+			</div>
+			<div class="toolbar" aria-label="Build actions">
+				<div class="toolbar-action-group toolbar-utility-group">
+					<button id="resetButton" type="button" class="ghost-button reset-icon-button" aria-label="Reset build" title="Reset build">
+						<svg class="reset-icon" aria-hidden="true" viewBox="0 0 24 24" focusable="false">
+							<path d="M6.5 8.5A6.8 6.8 0 0 1 18.8 12a6.8 6.8 0 0 1-11.6 4.8" />
+							<path d="M6.5 8.5H11M6.5 8.5V4" />
+						</svg>
+						<span class="reset-label">Reset</span>
+					</button>
+					<button id="downloadBuildButton" class="download-icon-button" type="button" aria-label="Download Build" title="Download Build">
+						<svg class="download-icon" aria-hidden="true" viewBox="0 0 24 24" focusable="false">
+							<path d="M12 3v11m0 0 4.5-4.5M12 14 7.5 9.5M5 15v3.5c0 .8.7 1.5 1.5 1.5h11c.8 0 1.5-.7 1.5-1.5V15" />
+						</svg>
+						<span class="download-label">Download Build</span>
+					</button>
+				</div>
+				<div class="toolbar-action-group toolbar-build-group">
+					<button id="openSummaryDrawerButton" class="mobile-drawer-button mobile-drawer-button-right summary-action-button" type="button" aria-controls="summaryDrawer" aria-expanded="false" aria-label="View build summary">
+						<span class="summary-drawer-label">Build Summary</span>
+					</button>
+					<button id="submitDealerButton" type="button">Submit to Dealer</button>
+				</div>
+			</div>
+		</header>
+
+		<section id="alertRegion" class="alert-region" aria-live="polite"></section>
+
+		<section id="toastRegion" class="toast-region" aria-live="polite"></section>
+
+		<button id="mobileSummaryButton" class="mobile-summary-bar" type="button" aria-controls="summaryDrawer" aria-expanded="false" aria-label="View build summary">
+			<span class="mobile-summary-total-block">
+				<small class="mobile-summary-label">Build Summary</small>
+				<strong id="mobileSummaryTotal">$0</strong>
+				<small id="mobileSummarySelected">No selections yet</small>
+			</span>
+			<span id="mobileSummaryMissing" aria-hidden="true">&rsaquo;</span>
+		</button>
+
+		<div class="workspace">
+			<section id="mobileProgress" class="mobile-progress" aria-label="Mobile step progress">
+				<button id="mobilePrevStep" class="ghost-button" type="button">Previous</button>
+				<div>
+					<span id="mobileStepCount">Step 1 of 1</span>
+					<strong id="mobileStepName">Body Style</strong>
+				</div>
+				<button id="mobileNextStep" type="button">Next</button>
+			</section>
+			<nav id="stepRailDrawer" class="step-rail" aria-label="Form steps">
+				<div class="mobile-drawer-header">
+					<h2>Steps</h2>
+					<button id="closeStepDrawerButton" class="modal-close-button" type="button" aria-label="Close steps">&times;</button>
+				</div>
+				<div id="stepRail"></div>
+			</nav>
+			<section class="choice-panel" aria-label="Current choices">
+				<div id="stepContent"></div>
+			</section>
+			<aside id="summaryDrawer" class="summary-panel" aria-label="Order summary">
+				<div class="mobile-drawer-header">
+					<h2>Build</h2>
+					<button id="closeSummaryDrawerButton" class="modal-close-button" type="button" aria-label="Close build summary">&times;</button>
+				</div>
+				<div id="summaryOverviewCard" class="summary-card">
+					<p class="eyebrow">Summary</p>
+					<h3 id="variantName">Stingray</h3>
+					<dl class="total-list">
+						<div><dt>Base</dt><dd id="summaryBase">$0</dd></div>
+						<div><dt>Options</dt><dd id="summaryOptions">$0</dd></div>
+						<div class="grand"><dt>Total MSRP</dt><dd id="summaryTotal">$0</dd></div>
+					</dl>
+				</div>
+				<div id="selectedRposCard" class="summary-card">
+					<h3>Selected RPOs</h3>
+					<ul id="selectedList" class="summary-list"></ul>
+					<div id="selectedStandardEquipmentList" class="standard-equipment-list compact-standard-equipment"></div>
+				</div>
+				<div id="autoAddedCard" class="summary-card">
+					<h3>Auto-added RPOs</h3>
+					<ul id="autoList" class="summary-list"></ul>
+				</div>
+				<div id="requirementsCard" class="summary-card">
+					<h3>Required Selections</h3>
+					<ul id="missingList" class="summary-list"></ul>
+				</div>
+			</aside>
+		</div>
+		<div id="mobileDrawerBackdrop" class="mobile-drawer-backdrop" hidden></div>
+	</main>
+
+	<div id="dealerSubmitModal" class="modal-backdrop" hidden>
+		<div class="dealer-submit-modal" role="dialog" aria-modal="true" aria-labelledby="dealerSubmitTitle">
+			<div class="modal-header">
+				<div>
+					<p class="eyebrow">Dealer Request</p>
+					<h2 id="dealerSubmitTitle">Submit to Dealer</h2>
+				</div>
+				<button id="dealerSubmitCloseButton" class="modal-close-button" type="button" aria-label="Close dealer submission">&times;</button>
+			</div>
+			<form id="dealerSubmitForm" class="dealer-submit-form">
+				<div class="customer-field-grid">
+					<label>
+						<span>Name <span class="required-mark" aria-hidden="true">*</span></span>
+						<input id="dealerSubmitName" name="name" type="text" autocomplete="name" required>
+					</label>
+					<label>
+						<span>Email <span class="required-mark" aria-hidden="true">*</span></span>
+						<input id="dealerSubmitEmail" name="email" type="email" autocomplete="email" required>
+					</label>
+					<label>
+						Phone Number
+						<input id="dealerSubmitPhone" name="phone" type="tel" autocomplete="tel">
+					</label>
+					<label class="full-field">
+						Message
+						<textarea id="dealerSubmitComments" name="comments" rows="5"></textarea>
+					</label>
+				</div>
+				<p id="dealerSubmitStatus" class="dealer-submit-status" role="status" aria-live="polite"></p>
+				<div id="dealerTurnstile" class="dealer-turnstile"></div>
+				<div class="modal-actions">
+					<button id="dealerSubmitCancelButton" class="ghost-button" type="button">Cancel</button>
+					<button id="dealerSubmitConfirmButton" type="submit">Submit</button>
+				</div>
+			</form>
+		</div>
+	</div>
+
+	<div id="confirmActionModal" class="modal-backdrop" hidden>
+		<div class="confirm-action-modal" role="dialog" aria-modal="true" aria-labelledby="confirmActionTitle">
+			<h2 id="confirmActionTitle">Confirm Reset</h2>
+			<p id="confirmActionMessage"></p>
+			<div class="modal-actions">
+				<button id="confirmActionCancelButton" class="ghost-button" type="button">No, Cancel</button>
+				<button id="confirmActionConfirmButton" type="button">Yes, Reset</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<?php
+get_footer();
