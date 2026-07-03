@@ -1,0 +1,117 @@
+/* ==========================================================================
+   Homepage-only layer: hero, 360° spin viewer, quick actions.
+   Ported from stingray-homepage/index.html inline CSS onto DS tokens.
+
+   ChevySans adaptation (the source predates the DS and rendered in Inter):
+   the hero H1 and section H2 now use ChevySans Demi at the DS display
+   treatment — uppercase, 0.28em tracking (--tracking-display), 1.1
+   line-height (--leading-display). At that tracking the source's Inter
+   metrics (clamp(2.5rem,7.2vw,5rem) at line-height .94, -.015em) blow past
+   the column, so the sizes follow the DS's own homepage kit reconciliation:
+   H1 clamp(2rem,5.4vw,3.6rem), H2 clamp(1.4rem,3vw,2rem), weight 600 (the
+   real Demi cut — nothing heavier exists, no synthetic bold).
+   ========================================================================== */
+
+/* ---- Hero ---- */
+.sc-hero {
+  position: relative; max-width: var(--content-max); margin: 0 auto;
+  padding: clamp(40px, 7vw, 84px) clamp(16px, 4vw, 40px) clamp(20px, 4vw, 48px);
+  overflow: hidden;
+}
+.sc-hero-glow {
+  position: absolute; top: 8%; right: -6%; width: 62%; height: 78%;
+  background: radial-gradient(closest-side, var(--accent-glow), transparent 72%);
+  filter: blur(44px); pointer-events: none;
+}
+.sc-hero-row { position: relative; display: flex; flex-wrap: wrap; align-items: center; gap: 32px; }
+.sc-hero-copy { flex: 1 1 420px; min-width: min(100%, 420px); position: relative; z-index: 2; }
+.sc-hero-badge {
+  display: inline-flex; align-items: center; gap: 10px; padding: 7px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.16); border-radius: var(--radius-pill);
+  font-size: 0.72rem; font-weight: var(--weight-bold); letter-spacing: 0.14em;
+  text-transform: uppercase; color: #cfd3d6;
+}
+.sc-hero-badge-dot { width: 7px; height: 7px; border-radius: var(--radius-pill); background: var(--accent); box-shadow: 0 0 10px var(--accent); }
+.sc-hero-title {
+  margin: 22px 0 0;
+  font-family: var(--font-primary);
+  font-size: clamp(2rem, 5.4vw, 3.6rem);
+  line-height: var(--leading-display);
+  font-weight: 600;
+  letter-spacing: var(--tracking-display);
+  text-transform: uppercase;
+  color: var(--ink);
+}
+.sc-hero-title .sc-accent { color: var(--accent); }
+.sc-hero-lede {
+  margin: 22px 0 0; max-width: 30em;
+  font-size: var(--text-body-lg); line-height: var(--leading-relaxed);
+  font-weight: var(--weight-regular); color: #b9bec1;
+}
+.sc-hero-ctas { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 30px; }
+.sc-hero-trims {
+  display: flex; align-items: center; gap: 18px; margin-top: 30px;
+  font-size: 0.78rem; font-weight: var(--weight-bold); letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--dim);
+}
+.sc-hero-trims .sc-accent { color: var(--accent); }
+
+/* ---- 360° spin viewer ---- */
+.sc-hero-stage { flex: 1 1 440px; min-width: min(100%, 360px); position: relative; z-index: 1; }
+.sc-spin-frame { position: relative; width: 100%; aspect-ratio: 2 / 1; }
+#spinCanvas {
+  position: absolute; inset: 0; width: 100%; height: 100%; display: block;
+  filter: var(--shadow-drop-vehicle); cursor: grab; touch-action: pan-y;
+  user-select: none; -webkit-user-select: none;
+}
+#spinLoader { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; pointer-events: none; }
+#spinLoader span { font-size: 0.7rem; font-weight: var(--weight-bold); letter-spacing: var(--tracking-widest); text-transform: uppercase; color: #6b7075; }
+.sc-spin-pill {
+  position: absolute; left: 50%; bottom: 1%; transform: translateX(-50%);
+  display: flex; align-items: center; gap: 8px; padding: 7px 13px;
+  background: rgba(11, 13, 14, 0.7); border: 1px solid var(--control-border);
+  border-radius: var(--radius-pill); font-size: var(--text-pill);
+  font-weight: var(--weight-bold); letter-spacing: var(--tracking-wider);
+  text-transform: uppercase; color: #cfd3d6; pointer-events: none; white-space: nowrap;
+}
+
+/* ---- Quick actions ---- */
+.sc-actions { max-width: var(--content-max); margin: 0 auto; padding: clamp(28px, 5vw, 64px) clamp(16px, 4vw, 40px) clamp(20px, 4vw, 40px); }
+.sc-actions-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 26px; }
+.sc-actions-eyebrow { font-size: 0.74rem; font-weight: var(--weight-bold); letter-spacing: var(--tracking-widest); text-transform: uppercase; color: var(--accent); }
+.sc-actions-title {
+  margin: 8px 0 0;
+  font-family: var(--font-primary);
+  font-size: clamp(1.4rem, 3vw, 2rem);
+  font-weight: 600;
+  letter-spacing: var(--tracking-display);
+  text-transform: uppercase;
+  line-height: var(--leading-display);
+  color: var(--ink);
+}
+.sc-actions-lede { margin: 0; max-width: 24em; font-size: var(--text-body); line-height: var(--leading-relaxed); color: #9aa0a3; font-weight: var(--weight-regular); }
+.sc-actions-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 14px; }
+
+.sc-card {
+  display: flex; flex-direction: column; gap: 14px; padding: 26px; min-height: 184px;
+  background: var(--carbon-panel-strong); border: 1px solid var(--line); border-radius: var(--radius-xl);
+  color: var(--ink); transition: box-shadow var(--transition-fast), border-color var(--transition-fast);
+}
+.sc-card:hover { box-shadow: var(--hover-lift-shadow); border-color: var(--line-hover); }
+.sc-card--priority { border-color: var(--accent-deep); }
+.sc-card--priority:hover { box-shadow: var(--hover-lift-shadow-accent); border-color: var(--accent); }
+.sc-card--lead { background: linear-gradient(165deg, rgba(208, 66, 90, 0.10), rgba(24, 28, 31, 0) 60%), var(--carbon-panel-strong); }
+.sc-card-head { display: flex; align-items: center; justify-content: space-between; }
+.sc-card-title { font-size: var(--text-card-title); font-weight: var(--weight-heavy); letter-spacing: -0.01em; }
+.sc-card-desc { margin: 6px 0 0; font-size: var(--text-desc); line-height: 1.45; color: var(--muted); font-weight: var(--weight-regular); }
+.sc-card-icon {
+  width: 46px; height: 46px; display: flex; align-items: center; justify-content: center;
+  border-radius: var(--radius-lg); background: var(--control-bg); color: #cfd3d6;
+}
+.sc-card-icon--accent { background: rgba(208, 66, 90, 0.14); color: var(--accent); }
+.sc-card-icon--solid { background: var(--accent); color: var(--on-accent); box-shadow: 0 6px 18px var(--accent-glow); }
+.sc-card-pill {
+  font-size: 0.62rem; font-weight: var(--weight-bold); letter-spacing: var(--tracking-wider);
+  text-transform: uppercase; color: var(--on-accent); background: var(--accent);
+  padding: 5px 9px; border-radius: var(--radius-pill); white-space: nowrap;
+}
