@@ -7,9 +7,15 @@
    treatment — uppercase, 0.28em tracking (--tracking-display), 1.1
    line-height (--leading-display). At that tracking the source's Inter
    metrics (clamp(2.5rem,7.2vw,5rem) at line-height .94, -.015em) blow past
-   the column, so the sizes follow the DS's own homepage kit reconciliation:
-   H1 clamp(2rem,5.4vw,3.6rem), H2 clamp(1.4rem,3vw,2rem), weight 600 (the
-   real Demi cut — nothing heavier exists, no synthetic bold).
+   the column, so the sizes start from the DS homepage kit's reconciliation
+   (H1 clamp(2rem,5.4vw,3.6rem), H2 clamp(1.4rem,3vw,2rem), weight 600 — the
+   real Demi cut, no synthetic bold). The H1 curve is tightened further to
+   clamp(2rem,3.9vw,3.25rem): at 0.28em tracking the widest line ("BUILD THE
+   ONE") measures 10.75x the font size, and the kit's 5.4vw/3.6rem lets it
+   overrun the ~446–574px copy column at 1024–1440 viewports, splintering
+   the intended three-line lockup into ragged extra lines. The min(…, 8.3vw)
+   term shrinks the 2rem floor on sub-390px screens where even 2rem overruns
+   the single column. Verified to hold three lines from 320 to 1440.
    ========================================================================== */
 
 /* ---- Hero ---- */
@@ -35,7 +41,7 @@
 .sc-hero-title {
   margin: 22px 0 0;
   font-family: var(--font-primary);
-  font-size: clamp(2rem, 5.4vw, 3.6rem);
+  font-size: min(clamp(2rem, 3.9vw, 3.25rem), 8.3vw);
   line-height: var(--leading-display);
   font-weight: 600;
   letter-spacing: var(--tracking-display);
