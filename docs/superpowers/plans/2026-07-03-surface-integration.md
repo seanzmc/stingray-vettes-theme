@@ -83,7 +83,7 @@
 
 **Files:** Create `page-build-and-price.php`.
 - Four configurator link cards (Stingray/E-Ray/Z06/ZR1 → chevrolet.com configurator URLs, external-arrow style like footer `.sc-ext-card`), "how to find your build code" explainer with the two screenshots (existing media URLs), then `[formidable id=30]`.
-- [ ] Step 1: template; Step 2: `php -l`; Step 3: commit.
+- [x] Step 1: template; Step 2: `php -l`; Step 3: commit pending.
 
 ### Task 7: @Factory page (`/factory/`)
 

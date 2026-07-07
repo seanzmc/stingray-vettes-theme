@@ -87,7 +87,8 @@ Vendored from `/Users/seandm/Projects/Stingcalc/` into `assets/calculator/`:
   the vendored Stingcalc logic in `assets/calculator/`.
 - `page-deposit.php` — DS-styled deposit instructions and Formidable form embed
   at `/deposit/` (`[formidable id=8]`) inside `.sc-embed`.
+- `page-build-and-price.php` — configurator links, build-code guidance, and
+  Formidable link-share embed at `/build-and-price/` (`[formidable id=30]`).
 - `page.php` — generic DS-styled interior wrapper for pages without a dedicated
   template yet.
-- Planned dedicated templates still remaining: `/build-and-price/`, `/factory/`,
-  and `/process/`.
+- Planned dedicated templates still remaining: `/factory/` and `/process/`.
