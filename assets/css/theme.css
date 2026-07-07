@@ -25,6 +25,7 @@ body.admin-bar .sc-topbar { top: 32px; }
 .sc-nav-flags { height: 30px; width: auto; display: block; opacity: 0.95; }
 .sc-nav-wordmark { height: 34px; width: auto; display: block; }
 .sc-nav-links { display: flex; align-items: center; gap: 4px; }
+.sc-nav-links li { list-style: none; margin: 0; padding: 0; }
 .sc-nav-link {
   padding: 9px 12px; font-size: var(--text-body-sm); font-weight: var(--weight-semibold);
   letter-spacing: var(--tracking-wide); text-transform: uppercase; color: #cfd3d6;
