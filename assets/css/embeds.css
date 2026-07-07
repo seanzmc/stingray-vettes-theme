@@ -1,11 +1,11 @@
 /* ==========================================================================
    Stingray Corvette — dark skins for third-party embeds.
    Loaded only on pages that render them (functions.php):
-   1) Formidable Forms — deposit form [formidable id=8], B&P share
-      [formidable id=30]. Selectors follow Formidable's stock markup
+   1) Formidable Forms — deposit and B&P share embeds. Selectors follow
+      Formidable's stock markup
       (.frm_forms, .frm_form_field, item_meta inputs); a few !importants
       counter the plugin stylesheet (formidableforms.css) it enqueues.
-   2) wpDataTables — the @Factory orders table [wpdatatable id=7].
+   2) wpDataTables — the @Factory orders table.
    Both translate to the DS: carbon surfaces, warm-white ink, accent only
    on affordances, 140ms ease, no new fonts.
    ========================================================================== */

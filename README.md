@@ -86,14 +86,26 @@ Vendored from `/Users/seandm/Projects/Stingcalc/` into `assets/calculator/`:
 - `page-calculator.php` — mounted payment calculator at `/calculator/`, using
   the vendored Stingcalc logic in `assets/calculator/`.
 - `page-deposit.php` — DS-styled deposit instructions and Formidable form embed
-  at `/deposit/` (`[formidable id=8]`) inside `.sc-embed`.
+  at `/deposit/` inside `.sc-embed`.
 - `page-build-and-price.php` — configurator links, build-code guidance, and
-  Formidable link-share embed at `/build-and-price/` (`[formidable id=30]`).
+  Formidable link-share embed at `/build-and-price/`.
 - `page-factory.php` — DS-styled Orders @ Factory explainer and wpDataTables
-  embed at `/factory/` (`[wpdatatable id=7 table_view=regular]`).
+  embed at `/factory/`.
 - `page-process.php` — DS-styled Corvette order process guide at `/process/`,
   rebuilt from the live policy/process page content.
 - `page.php` — generic DS-styled interior wrapper for pages without a dedicated
   template yet.
 - All planned dedicated public surface templates are now present; final
   WordPress preview, cache-busting/versioning, and deployment are still pending.
+
+### Embed shortcode configuration
+
+The plugin-backed surfaces read their embed from the page custom field
+`stingray_embed_shortcode`. Store the complete shortcode there so staging and
+production can use different plugin IDs without editing the theme.
+
+Suggested current values:
+
+- `/deposit/`: `[formidable id=8]`
+- `/build-and-price/`: `[formidable id=30]`
+- `/factory/`: `[wpdatatable id=NEW_ID table_view=regular]`

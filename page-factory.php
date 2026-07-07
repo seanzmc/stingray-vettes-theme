@@ -103,14 +103,6 @@ get_header();
 						<li><?php esc_html_e( 'Contact us to get your VIN number for insurance, accessories, and related next steps.', 'stingray-corvette' ); ?></li>
 					</ul>
 				</div>
-
-				<a class="sc-link-card" href="<?php echo esc_url( home_url( '/learning-center/' ) ); ?>">
-					<span>
-						<span class="sc-link-eyebrow"><?php esc_html_e( 'While you wait', 'stingray-corvette' ); ?></span>
-						<span class="sc-link-title"><?php esc_html_e( 'Visit the Learning Center', 'stingray-corvette' ); ?></span>
-					</span>
-					<span class="sc-link-arrow" aria-hidden="true">&#8594;</span>
-				</a>
 			</div>
 		</section>
 
@@ -159,7 +151,7 @@ get_header();
 			<h2 id="factory-table-heading" class="sc-section-title"><?php esc_html_e( 'Factory order table', 'stingray-corvette' ); ?></h2>
 			<p class="sc-section-lede"><?php esc_html_e( 'Search the current factory-order snapshot by order number, then select a row for the available details.', 'stingray-corvette' ); ?></p>
 			<div class="sc-embed">
-				<?php echo do_shortcode( '[wpdatatable id=7 table_view=regular]' ); ?>
+				<?php echo stingray_corvette_render_page_embed_shortcode(); ?>
 			</div>
 		</section>
 	</div>

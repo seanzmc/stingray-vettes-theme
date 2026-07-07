@@ -83,7 +83,7 @@ get_header();
 			<h2 id="deposit-form-heading" class="sc-section-title"><?php esc_html_e( 'Submit your deposit request', 'stingray-corvette' ); ?></h2>
 			<p class="sc-section-lede"><?php esc_html_e( 'Complete the form below first. After submitting, follow the payment portal link to complete the deposit.', 'stingray-corvette' ); ?></p>
 			<div class="sc-embed">
-				<?php echo do_shortcode( '[formidable id=8]' ); ?>
+				<?php echo stingray_corvette_render_page_embed_shortcode(); ?>
 			</div>
 		</section>
 	</div>

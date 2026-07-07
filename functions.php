@@ -111,6 +111,56 @@ function stingray_corvette_enqueue_styles() {
 add_action( 'wp_enqueue_scripts', 'stingray_corvette_enqueue_styles' );
 
 /**
+ * Render a page-owned embed shortcode.
+ *
+ * Templates own the surrounding layout and .sc-embed styling. The current
+ * WordPress page owns the actual plugin shortcode so staging/live can use
+ * different Formidable or wpDataTables IDs without editing theme files.
+ *
+ * @param string $meta_key Custom field key that stores the complete shortcode.
+ * @return string Rendered embed markup, or an admin-only setup note.
+ */
+function stingray_corvette_render_page_embed_shortcode( $meta_key = 'stingray_embed_shortcode' ) {
+	$post_id = get_queried_object_id();
+
+	if ( ! $post_id ) {
+		return '';
+	}
+
+	$shortcode = get_post_meta( $post_id, $meta_key, true );
+	$shortcode = is_string( $shortcode ) ? trim( $shortcode ) : '';
+
+	if ( '' === $shortcode ) {
+		if ( current_user_can( 'edit_post', $post_id ) ) {
+			return sprintf(
+				'<div class="sc-note sc-note--info"><strong>%1$s</strong><span>%2$s <code>%3$s</code>.</span></div>',
+				esc_html__( 'Embed shortcode missing.', 'stingray-corvette' ),
+				esc_html__( 'Add the complete shortcode to this page custom field:', 'stingray-corvette' ),
+				esc_html( $meta_key )
+			);
+		}
+
+		return '';
+	}
+
+	$rendered = do_shortcode( $shortcode );
+
+	if ( $rendered === $shortcode ) {
+		if ( current_user_can( 'edit_post', $post_id ) ) {
+			return sprintf(
+				'<div class="sc-note sc-note--info"><strong>%1$s</strong><span>%2$s</span></div>',
+				esc_html__( 'Embed shortcode did not render.', 'stingray-corvette' ),
+				esc_html__( 'Confirm the required plugin is active and the page custom field shortcode is valid.', 'stingray-corvette' )
+			);
+		}
+
+		return '';
+	}
+
+	return $rendered;
+}
+
+/**
  * Primary-menu items render as bare <a> tags inside .sc-nav-links (the topbar
  * partial passes items_wrap '%3$s'); this puts the DS nav-link class on them.
  */

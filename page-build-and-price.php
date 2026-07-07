@@ -95,7 +95,7 @@ get_header();
 			<h2 id="build-share-form-heading" class="sc-section-title"><?php esc_html_e( 'Send us your build code', 'stingray-corvette' ); ?></h2>
 			<p class="sc-section-lede"><?php esc_html_e( 'Paste your build code and contact information below. We’ll use it to view your exact configuration and help with the next steps.', 'stingray-corvette' ); ?></p>
 			<div class="sc-embed">
-				<?php echo do_shortcode( '[formidable id=30]' ); ?>
+				<?php echo stingray_corvette_render_page_embed_shortcode(); ?>
 			</div>
 		</section>
 	</div>
