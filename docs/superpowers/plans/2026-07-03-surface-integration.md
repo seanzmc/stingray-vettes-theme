@@ -89,7 +89,7 @@
 
 **Files:** Create `page-factory.php`.
 - Intro (tracking copy, four bullet notes incl. Learning Center link, contact block), "How to read the table" panel, status-code accordion (native `<details>` per code 1100→6000 + "other codes", styled by `.sc-accordion`), then `[wpdatatable id=7 table_view=regular]`.
-- [ ] Step 1: template; Step 2: `php -l`; Step 3: commit.
+- [x] Step 1: template; Step 2: `php -l`; Step 3: commit pending.
 
 ### Task 8: process guide rebuild (`/process/`)
 

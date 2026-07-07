@@ -89,6 +89,8 @@ Vendored from `/Users/seandm/Projects/Stingcalc/` into `assets/calculator/`:
   at `/deposit/` (`[formidable id=8]`) inside `.sc-embed`.
 - `page-build-and-price.php` — configurator links, build-code guidance, and
   Formidable link-share embed at `/build-and-price/` (`[formidable id=30]`).
+- `page-factory.php` — DS-styled Orders @ Factory explainer and wpDataTables
+  embed at `/factory/` (`[wpdatatable id=7 table_view=regular]`).
 - `page.php` — generic DS-styled interior wrapper for pages without a dedicated
   template yet.
-- Planned dedicated templates still remaining: `/factory/` and `/process/`.
+- Planned dedicated templates still remaining: `/process/`.
