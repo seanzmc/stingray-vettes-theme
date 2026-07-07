@@ -1,0 +1,494 @@
+<?php
+/**
+ * /calculator/ — payment tools surface (SiteWireframe item 5).
+ *
+ * Binds by slug: page-calculator.php ↔ the "calculator" page. The calculator
+ * logic is vendored from Stingcalc and enqueued in functions.php; this template
+ * ports the source calculator body markup into the shared DS page shell while
+ * preserving every JS selector contract.
+ *
+ * @package Stingray_Corvette
+ */
+
+get_header();
+?>
+
+<main class="sc-page">
+	<div class="sc-page-inner">
+		<header class="sc-section">
+			<p class="sc-page-eyebrow"><?php esc_html_e( 'Payment Tools', 'stingray-corvette' ); ?></p>
+			<h1 class="sc-page-title"><?php esc_html_e( 'Payment Calculator', 'stingray-corvette' ); ?></h1>
+			<p class="sc-page-lede"><?php esc_html_e( 'Estimate payments, loan amounts, income, and quick-pencil figures before you start or submit your Corvette order.', 'stingray-corvette' ); ?></p>
+		</header>
+
+		<noscript>
+			<div class="sc-note sc-note--info">
+				<strong><?php esc_html_e( 'JavaScript Required', 'stingray-corvette' ); ?></strong>
+				<span><?php esc_html_e( 'This calculator requires JavaScript to switch tools and run estimates. Please enable JavaScript in your browser settings and reload the page.', 'stingray-corvette' ); ?></span>
+			</div>
+		</noscript>
+
+		<div class="sc-calc-wrap">
+			<div class="calculator-container">
+			    <div class="tabs">
+			        <button type="button"
+			                class="tab-btn active"
+			                data-tab="payment-calculators">Payment Calculators</button>
+			        <button type="button"
+			                class="tab-btn"
+			                data-tab="income-calc">Income Calculator</button>
+			        <button type="button"
+			                class="tab-btn"
+			                data-tab="quick-pencil">Quick Pencil</button>
+			    </div>
+			
+			    <div class="tab-content">
+			        <!-- Payment Calculators Tab -->
+			        <div class="tab-pane active"
+			             id="payment-calculators">
+			            <div class="tabs payment-subtabs">
+			                <button type="button"
+			                        class="tab-btn active"
+			                        data-calculator="payment-calc">Monthly Payment</button>
+			                <button type="button"
+			                        class="tab-btn"
+			                        data-calculator="amount-calc">Loan Amount</button>
+			                <button type="button"
+			                        class="tab-btn"
+			                        data-calculator="rate-solver">Rate Solver</button>
+			            </div>
+			            <h2 id="payment-calculator-heading">Calculate Monthly Payment</h2>
+			            <div class="info-heading"
+			            id="payment-calculator-info">Calculate monthly payment based on the loan amount, term, and interest rate.</div>
+			            <div class="calculator-pane active"
+			            data-calculator="payment-calc">
+			                <form id="payment-form">
+			                    <div class="form-group">
+			                        <label for="loan-amount">Loan Amount ($):</label>
+			                        <input type="number"
+			                               id="loan-amount"
+			                               min="0.01"
+			                               step="0.01"
+			                               placeholder="e.g., 25000.00"
+			                               required>
+			                        <small class="form-text">Enter the total amount financed</small>
+			                    </div>
+			                    <div class="form-group">
+			                        <label for="loan-term">Loan Term (months):</label>
+			                        <input type="number"
+			                               id="loan-term"
+			                               min="0"
+			                               max="120"
+			                               step="1"
+			                               placeholder="e.g., 60"
+			                               required>
+			                        <small class="form-text">Enter the length of the loan in months (1-120)</small>
+			                    </div>
+			                    <div class="form-group">
+			                        <label for="interest-rate">Interest Rate (% APR):</label>
+			                        <input type="number"
+			                               id="interest-rate"
+			                               min="0"
+			                               step="0.01"
+			                               placeholder="e.g., 4.5"
+			                               required>
+			                        <small class="form-text">Enter the annual interest rate as a percentage</small>
+			                    </div>
+			                    <div class="form-group checkbox-group">
+			                        <input type="checkbox"
+			                               id="disableDocStampPayment">
+			                        <label for="disableDocStampPayment">Disable doc stamps for loans outside Florida</label>
+			                    </div>
+			                    <div class="info-box">Florida documentary stamp tax applies at $0.35 per $100 financed, capped at $2,450 and is added to your loan amount.</div>
+			                    <div class="button-group">
+			                        <button type="submit"
+			                                class="calculate-btn">Calculate</button>
+			                        <button type="button"
+			                                class="clear-btn"
+			                                data-form="payment-form">Clear</button>
+			                    </div>
+			                </form>
+			                <div class="result hidden"
+			                     id="payment-result">
+			                    <h3>Monthly Payment:</h3>
+			                    <p class="amount">$0.00</p>
+			                    <div class="result-details">
+			                        <p id="payment-doc-stamp"></p>
+			                        <p id="payment-total-loan"></p>
+			                        <p id="payment-total-cost"></p>
+			                    </div>
+			                </div>
+			            </div>
+			            <div class="calculator-pane"
+			                 data-calculator="amount-calc">
+			                <form id="amount-form">
+			                    <div class="form-group">
+			                        <label for="desired-payment">Monthly Payment Target ($):</label>
+			                        <input type="number"
+			                               id="desired-payment"
+			                               min="1"
+			                               step="1"
+			                               placeholder="e.g., 400"
+			                               required>
+			                        <small class="form-text">Enter the target monthly payment amount</small>
+			                    </div>
+			                    <div class="form-group">
+			                        <label for="amount-term">Loan Term (months):</label>
+			                        <input type="number"
+			                               id="amount-term"
+			                               min="0"
+			                               max="120"
+			                               step="1"
+			                               placeholder="e.g., 60"
+			                               required>
+			                        <small class="form-text">Enter the length of the loan in months (1-120)</small>
+			                    </div>
+			                    <div class="form-group">
+			                        <label for="amount-rate">Interest Rate (% APR):</label>
+			                        <input type="number"
+			                               id="amount-rate"
+			                               min="0"
+			                               step="0.01"
+			                               placeholder="e.g., 4.5"
+			                               required>
+			                        <small class="form-text">Enter the annual interest rate as a percentage</small>
+			                    </div>
+			                    <div class="form-group checkbox-group">
+			                        <input type="checkbox"
+			                               id="disableDocStampAmount">
+			                        <label for="disableDocStampAmount">Disable doc stamps for loans outside Florida</label>
+			                    </div>
+			                    <div class="info-box">Florida documentary stamp tax applies at $0.35 per $100 financed, capped at $2,450 and is added to your loan amount.</div>
+			                    <div class="button-group">
+			                        <button type="submit"
+			                                class="calculate-btn">Calculate</button>
+			                        <button type="button"
+			                                class="clear-btn"
+			                                data-form="amount-form">Clear</button>
+			                    </div>
+			                </form>
+			                <div class="result hidden"
+			                     id="amount-result">
+			                    <h3>Loan Amount:</h3>
+			                    <p class="amount">$0.00</p>
+			                    <div class="result-details">
+			                        <p id="amount-doc-stamp"></p>
+			                        <p id="amount-total-loan"></p>
+			                    </div>
+			                </div>
+			            </div>
+			            <div class="calculator-pane"
+			                 data-calculator="rate-solver">
+			                <form id="interest-rate-form">
+			                    <div class="form-group">
+			                        <label for="principal-amount">Principal Amount ($):</label>
+			                        <input type="number"
+			                               id="principal-amount"
+			                               min="0.01"
+			                               step="0.01"
+			                               placeholder="e.g., 25000.00"
+			                               required>
+			                        <small class="form-text">Enter the amount financed</small>
+			                    </div>
+			                    <div class="form-group">
+			                        <label for="interest-term">Loan Term (months):</label>
+			                        <input type="number"
+			                               id="interest-term"
+			                               min="0"
+			                               max="120"
+			                               step="1"
+			                               placeholder="e.g., 60"
+			                               required>
+			                        <small class="form-text">Enter the length of the loan in months (1-120)</small>
+			                    </div>
+			                    <div class="form-group">
+			                        <label for="target-payment">Target Monthly Payment ($):</label>
+			                        <input type="number"
+			                               id="target-payment"
+			                               min="0.01"
+			                               step="0.01"
+			                               placeholder="e.g., 450.00"
+			                               required>
+			                        <small class="form-text">Enter the target monthly payment amount</small>
+			                    </div>
+			                    <div class="button-group">
+			                        <button type="submit"
+			                                class="calculate-btn">Calculate</button>
+			                        <button type="button"
+			                                class="clear-btn"
+			                                data-form="interest-rate-form">Clear</button>
+			                    </div>
+			                </form>
+			                <div class="result hidden"
+			                     id="interest-rate-result">
+			                    <h3>Required Interest Rate:</h3>
+			                    <p class="amount">0.00%</p>
+			                    <div class="result-details">
+			                        <p id="interest-validation-message"></p>
+			                    </div>
+			                </div>
+			            </div>
+			        </div>
+			
+			        <!-- Calculate Monthly Income Tab -->
+			        <div class="tab-pane"
+			             id="income-calc">
+			            <h2>Calculate Monthly Income</h2>
+			            <div class="info-heading">Calculate the monthly income based on the year-to-date amount and the pay period end date.</div>
+			            <form id="income-form">
+			                <div class="form-group">
+			                    <label for="ytd-amount">Year-to-Date (YTD) Amount ($):</label>
+			                    <input type="number"
+			                           id="ytd-amount"
+			                           min="0.01"
+			                           step="0.01"
+			                           placeholder="e.g., 24000"
+			                           required>
+			                    <small class="form-text">Enter the total YTD amount found in the GROSS field of the paystub</small>
+			                </div>
+			                <div class="form-group">
+			                    <label for="check-date">Pay Period End:</label>
+			                    <input type="date"
+			                           id="check-date"
+			                           required>
+			                    <small class="form-text">Enter the Pay Period End Date</small>
+			                </div>
+			                <div class="form-group">
+			                    <label for="hire-date">Hire Date (if hired after Jan 1st this year):</label>
+			                    <input type="date"
+			                           id="hire-date">
+			                    <small class="form-text">Leave blank if hired before this year</small>
+			                </div>
+			                <div class="button-group">
+			                    <button type="submit"
+			                            class="calculate-btn">Calculate</button>
+			                    <button type="button"
+			                            class="clear-btn"
+			                            data-form="income-form">Clear</button>
+			                </div>
+			            </form>
+			            <div class="result hidden"
+			                 id="income-result">
+			                <h3>Estimated Monthly Gross Income:</h3>
+			                <p class="amount">$0.00</p>
+			                <div class="result-details">
+			                    <p id="income-annual">Estimated Annual Gross Income: $0.00</p>
+			                </div>
+			            </div>
+			        </div>
+			        <div class="tab-pane"
+			             id="quick-pencil">
+			            <h2>Quick Pencil</h2>
+			            <div class="info-heading">Perform quick estimates for New and Used vehicle sales. Enter values below and view an itemized summary.</div>
+			            <div class="tabs sale-type-tabs">
+			                <button type="button"
+			                        class="tab-btn active"
+			                        data-sale-type="new">New</button>
+			                <button type="button"
+			                        class="tab-btn"
+			                        data-sale-type="used">Used</button>
+			            </div>
+			            <form id="qp-form">
+			                <div class="qp-fields">
+			                    <div class="qp-row">
+			                        <label for="client-name">Client Name (optional)</label>
+			                        <input type="text"
+			                               id="client-name"
+			                               name="client_name"
+			                               placeholder="e.g., Jane Doe"
+			                               autocomplete="name">
+			                    </div>
+			                    <div class="qp-row"
+			                         data-field="msrp">
+			                        <label for="msrp">M.S.R.P.</label>
+			                        <input type="number"
+			                               id="msrp"
+			                               name="msrp"
+			                               step="0.01"
+			                               required>
+			                    </div>
+			                    <div class="qp-row"
+			                         data-field="selling-price"
+			                         style="display: none;">
+			                        <label for="selling-price">Selling Price</label>
+			                        <input type="number"
+			                               id="selling-price"
+			                               name="selling_price"
+			                               step="0.01">
+			                    </div>
+			                    <div class="qp-row">
+			                        <label for="additional-equipment">Additional Equipment</label>
+			                        <input type="number"
+			                               id="additional-equipment"
+			                               name="additional_equipment"
+			                               step="0.01">
+			                    </div>
+			                    <div class="qp-row"
+			                         data-field="discount">
+			                        <label for="discount">Discount</label>
+			                        <input type="number"
+			                               id="discount"
+			                               name="discount"
+			                               step="0.01">
+			                    </div>
+			                    <div class="qp-row"
+			                         data-field="rebates">
+			                        <label for="rebates">Rebates</label>
+			                        <input type="number"
+			                               id="rebates"
+			                               name="rebates"
+			                               step="0.01">
+			                    </div>
+			                    <div class="qp-row">
+			                        <label for="trade-allowance">Trade Allowance</label>
+			                        <input type="number"
+			                               id="trade-allowance"
+			                               name="trade_allowance"
+			                               step="0.01">
+			                    </div>
+			                    <div class="qp-row">
+			                        <label for="trade-payoff">Trade Payoff</label>
+			                        <input type="number"
+			                               id="trade-payoff"
+			                               name="trade_payoff"
+			                               step="0.01">
+			                    </div>
+			                    <div class="qp-row">
+			                        <label for="tag-type">Tag Type</label>
+			                        <select id="tag-type"
+			                                name="tag_type">
+			                            <option value="new">New Tag ($450)</option>
+			                            <option value="transfer">Transfer Tag ($350)</option>
+			                            <option value="custom">Custom Tag Fee</option>
+			                        </select>
+			                    </div>
+			                    <div class="qp-row"
+			                         data-field="custom-tag-fee"
+			                         style="display: none;">
+			                        <label for="custom-tag-fee">Custom Tag Fee ($)</label>
+			                        <input type="number"
+			                               id="custom-tag-fee"
+			                               name="custom_tag_fee"
+			                               min="0"
+			                               step="0.01"
+			                               placeholder="Enter custom tag fee">
+			                    </div>
+			                    <div class="qp-row">
+			                        <label for="down-payment">Down Payment</label>
+			                        <input type="number"
+			                               id="down-payment"
+			                               name="down_payment"
+			                               step="0.01">
+			                    </div>
+			                    <div class="qp-row checkbox-group">
+			                        <label for="tax-outside-fl">Tax outside FL</label>
+			                        <input type="checkbox"
+			                               id="tax-outside-fl"
+			                               name="tax_outside_fl">
+			                    </div>
+			                    <div class="qp-row"
+			                         data-field="custom-tax-rate"
+			                         style="display: none;">
+			                        <label for="custom-tax-rate">Sales Tax Rate (%)</label>
+			                        <input type="number"
+			                               id="custom-tax-rate"
+			                               name="custom_tax_rate"
+			                               min="0"
+			                               max="100"
+			                               step="0.01">
+			                    </div>
+			                    <div class="qp-row"
+			                         data-field="state-dropdown"
+			                         style="display: none;">
+			                        <label for="state-select">State</label>
+			                        <input type="text"
+			                               id="state-select"
+			                               name="state_select"
+			                               list="states-list"
+			                               placeholder="Select state..."
+			                               autocomplete="off">
+			                        <datalist id="states-list">
+			                            <option value="AL">Alabama</option>
+			                            <option value="AK">Alaska</option>
+			                            <option value="AZ">Arizona</option>
+			                            <option value="AR">Arkansas</option>
+			                            <option value="CA">California</option>
+			                            <option value="CO">Colorado</option>
+			                            <option value="CT">Connecticut</option>
+			                            <option value="DE">Delaware</option>
+			                            <option value="GA">Georgia</option>
+			                            <option value="HI">Hawaii</option>
+			                            <option value="ID">Idaho</option>
+			                            <option value="IL">Illinois</option>
+			                            <option value="IN">Indiana</option>
+			                            <option value="IA">Iowa</option>
+			                            <option value="KS">Kansas</option>
+			                            <option value="KY">Kentucky</option>
+			                            <option value="LA">Louisiana</option>
+			                            <option value="ME">Maine</option>
+			                            <option value="MD">Maryland</option>
+			                            <option value="MA">Massachusetts</option>
+			                            <option value="MI">Michigan</option>
+			                            <option value="MN">Minnesota</option>
+			                            <option value="MS">Mississippi</option>
+			                            <option value="MO">Missouri</option>
+			                            <option value="MT">Montana</option>
+			                            <option value="NE">Nebraska</option>
+			                            <option value="NV">Nevada</option>
+			                            <option value="NH">New Hampshire</option>
+			                            <option value="NJ">New Jersey</option>
+			                            <option value="NM">New Mexico</option>
+			                            <option value="NY">New York</option>
+			                            <option value="NC">North Carolina</option>
+			                            <option value="ND">North Dakota</option>
+			                            <option value="OH">Ohio</option>
+			                            <option value="OK">Oklahoma</option>
+			                            <option value="OR">Oregon</option>
+			                            <option value="PA">Pennsylvania</option>
+			                            <option value="RI">Rhode Island</option>
+			                            <option value="SC">South Carolina</option>
+			                            <option value="SD">South Dakota</option>
+			                            <option value="TN">Tennessee</option>
+			                            <option value="TX">Texas</option>
+			                            <option value="UT">Utah</option>
+			                            <option value="VT">Vermont</option>
+			                            <option value="VA">Virginia</option>
+			                            <option value="WA">Washington</option>
+			                            <option value="WV">West Virginia</option>
+			                            <option value="WI">Wisconsin</option>
+			                            <option value="WY">Wyoming</option>
+			                        </datalist>
+			                    </div>
+			                    <div class="qp-row checkbox-group"
+			                         data-field="rebates-reduce-taxable"
+			                         style="display: none;">
+			                        <label for="rebates-reduce-taxable">Rebates reduce taxable amount</label>
+			                        <input type="checkbox"
+			                               id="rebates-reduce-taxable"
+			                               name="rebates_reduce_taxable">
+			                    </div>
+			                </div>
+			                <div class="button-group">
+			                    <button type="submit"
+			                            class="calculate-btn">Calculate</button>
+			                    <button type="button"
+			                            id="qp-clear-btn"
+			                            class="clear-btn"
+			                            data-form="qp-form">Clear</button>
+			                </div>
+			            </form>
+			            <div class="results"
+			                 id="qp-results"></div>
+			        </div>
+			        <!-- Persistent Disclosure Banner -->
+			        <div class="disclosure-banner">
+			            <p>All calculations, estimates, and projections provided by this application (including payment calculations, loan amounts, interest rates, income estimates, and vehicle pricing) are for informational and illustrative purposes only. These figures are approximations based on the information entered and should not be relied upon as accurate, complete, or binding. Actual loan terms, payments, interest rates, vehicle prices, fees, taxes, and other costs may vary and will be determined by the dealer and/or lender. This calculator does not constitute financial, legal, or tax advice, nor does it represent a commitment to lend or an offer of credit. No warranty, express or implied, is made regarding the accuracy, reliability, or completeness of any calculations. Users assume all risk and liability for decisions made based on information provided by this application. Final terms and conditions are subject to dealer approval and applicable lending institution requirements.</p>
+			        </div>
+			    </div>
+			</div>
+		</div>
+	</div>
+</main>
+
+<?php
+get_footer();

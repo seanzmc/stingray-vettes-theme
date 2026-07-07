@@ -47,6 +47,16 @@ into `assets/homepage/`:
   selected paint's set loads on page view; the next paint's set loads
   on demand as rotation approaches a color change (see `assets/homepage/spin.js`).
 
+### Calculator assets
+
+Vendored from `/Users/seandm/Projects/Stingcalc/` into `assets/calculator/`:
+
+- `script.js`, `qp-new.js` — calculator logic copied verbatim from the Stingcalc
+  source (`script.js` and `qp/qp-new.js`).
+- `calculator.css` — theme-authored DS skin replacing the source `styles.css` and
+  `qp/qp.css` while preserving the JS selector contracts used by the vendored
+  scripts.
+
 ## How to re-sync when the DS changes
 
 1. Re-copy the five CSS files from the DS paths in the table above.
@@ -64,12 +74,18 @@ into `assets/homepage/`:
   interior-page shell), ported from the homepage's inline CSS onto DS tokens.
 - `assets/homepage/homepage.css` — homepage-only layer (hero, spin viewer,
   quick-action cards), same provenance.
+- `assets/calculator/calculator.css` — calculator-only DS skin for the vendored
+  Stingcalc markup.
 
 ## Surfaces
 
 - `front-page.php` — the ported marketing homepage (full-bleed, own document,
   shares the topbar/footer partials in `inc/`).
-- `page.php` — generic DS-styled interior wrapper; the six content pages
-  (Order, Deposit, B&P, Calculator, @Factory, Process) are later passes and
-  currently route to their intended slugs (`/order/`, `/deposit/`,
-  `/build-and-price/`, `/calculator/`, `/factory/`, `/process/`).
+- `page-order.php` — mounted 2027 Corvette order form at `/order/`, using the
+  vendored form-app assets in `assets/order/`.
+- `page-calculator.php` — mounted payment calculator at `/calculator/`, using
+  the vendored Stingcalc logic in `assets/calculator/`.
+- `page.php` — generic DS-styled interior wrapper for pages without a dedicated
+  template yet.
+- Planned dedicated templates still remaining: `/deposit/`,
+  `/build-and-price/`, `/factory/`, and `/process/`.

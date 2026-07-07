@@ -62,7 +62,7 @@
 - Create: `assets/calculator/{calculator.css,script.js,qp-new.js}` (JS verbatim from `~/Projects/Stingcalc/`; calculator.css theme-authored replacing styles.css+qp/qp.css on DS tokens: tabs → segmented control w/ accent active state, forms → panel-strong cards, results → ok-tinted card, disclosure → dim footnote)
 - Modify: `functions.php`, `README.md`
 
-- [ ] Step 1: vendor JS; Step 2: write calculator.css (keep every selector contract script.js/qp-new.js relies on: `.tab-btn.active`, `.tab-pane.active`, `.calculator-pane.active`, `.result.hidden`, `.qp-row`, `#qp-results`, `.hidden`); Step 3: template + enqueue + `php -l`; Step 4: static harness QA in browser (tab switching, a payment calc, quick pencil render); Step 5: commit.
+- [x] Step 1: vendor JS; Step 2: write calculator.css (keep every selector contract script.js/qp-new.js relies on: `.tab-btn.active`, `.tab-pane.active`, `.calculator-pane.active`, `.result.hidden`, `.qp-row`, `#qp-results`, `.hidden`); Step 3: template + enqueue + `php -l`; Step 4: static/static-contract QA (PHP lint, JS syntax, selector audit) plus static browser harness QA. WordPress preview QA and commit remain pending until run/approved.
 
 ### Task 4: shared surface + embed stylesheets
 
