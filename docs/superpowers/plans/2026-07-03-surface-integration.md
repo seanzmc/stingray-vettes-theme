@@ -95,7 +95,7 @@
 
 **Files:** Create `page-process.php`.
 - Full content rebuilt from live page: deposit lists status grid (cards with `.sc-pill` Open/Closed/Discontinued), deposit details by model, policies, order process, pricing, fees, payment options, delivery, restrictions, staying informed. All DS-typeset; `<hr>` → hairline dividers.
-- [ ] Step 1: template; Step 2: `php -l`; Step 3: commit.
+- [x] Step 1: template; Step 2: `php -l`; Step 3: commit pending.
 
 ### Task 9: QA + report
 

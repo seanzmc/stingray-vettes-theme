@@ -91,6 +91,9 @@ Vendored from `/Users/seandm/Projects/Stingcalc/` into `assets/calculator/`:
   Formidable link-share embed at `/build-and-price/` (`[formidable id=30]`).
 - `page-factory.php` — DS-styled Orders @ Factory explainer and wpDataTables
   embed at `/factory/` (`[wpdatatable id=7 table_view=regular]`).
+- `page-process.php` — DS-styled Corvette order process guide at `/process/`,
+  rebuilt from the live policy/process page content.
 - `page.php` — generic DS-styled interior wrapper for pages without a dedicated
   template yet.
-- Planned dedicated templates still remaining: `/process/`.
+- All planned dedicated public surface templates are now present; final
+  WordPress preview, cache-busting/versioning, and deployment are still pending.
