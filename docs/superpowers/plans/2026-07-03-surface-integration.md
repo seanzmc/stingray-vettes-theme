@@ -77,7 +77,7 @@
 
 **Files:** Create `page-deposit.php`.
 - Hero header (eyebrow "Reserve Your Allocation" / title "Deposit Form"), DS step-list of the 6 payment-portal instructions (incl. the RO/Stock# = "C8 Deposit", Department = "SALES" callout as a warn note), link card to the process guide, then `<?php echo do_shortcode( '[formidable id=8]' ); ?>` inside `.sc-embed`.
-- [ ] Step 1: template; Step 2: `php -l`; Step 3: commit.
+- [x] Step 1: template; Step 2: `php -l`; Step 3: commit pending.
 
 ### Task 6: B&P link-share page (`/build-and-price/`)
 
