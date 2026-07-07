@@ -33,9 +33,6 @@ $configurator_links = array(
 	),
 );
 
-$summary_screenshot = 'https://stingraychevroletcorvette.com/wp-content/uploads/pictures/google-chrome-2026-corvette-stingray-summary-chevrolet-002093-09-06-1133am-598x1024.png';
-$share_screenshot   = 'https://stingraychevroletcorvette.com/wp-content/uploads/pictures/google-chrome-2026-corvette-stingray-summary-chevrolet-002095-09-06-0127pm-1024x580.png';
-
 get_header();
 ?>
 
@@ -74,15 +71,23 @@ get_header();
 			</div>
 
 			<div class="sc-grid">
-				<figure class="sc-figure">
-					<img src="<?php echo esc_url( $summary_screenshot ); ?>" alt="<?php esc_attr_e( 'Example Chevrolet Build & Price summary page showing where the build code appears.', 'stingray-corvette' ); ?>">
-					<figcaption><?php esc_html_e( 'The build code appears near the top of the Chevrolet Build & Price summary page. Your screen layout may differ.', 'stingray-corvette' ); ?></figcaption>
-				</figure>
+				<div class="sc-card-panel">
+					<h3 class="sc-card-panel-title"><?php esc_html_e( 'Summary page location', 'stingray-corvette' ); ?></h3>
+					<ul>
+						<li><?php esc_html_e( 'Look near the top of the Chevrolet Build & Price summary page.', 'stingray-corvette' ); ?></li>
+						<li><?php esc_html_e( 'Find the six-digit code under the “Your 2027 Corvette” heading.', 'stingray-corvette' ); ?></li>
+						<li><?php esc_html_e( 'Your screen layout may differ depending on device size and Chevrolet’s current configurator layout.', 'stingray-corvette' ); ?></li>
+					</ul>
+				</div>
 
-				<figure class="sc-figure">
-					<img src="<?php echo esc_url( $share_screenshot ); ?>" alt="<?php esc_attr_e( 'Example Chevrolet Build & Price share screen showing the copy control for the build code.', 'stingray-corvette' ); ?>">
-					<figcaption><?php esc_html_e( 'The Share button can display a panel with a copy control for your build code.', 'stingray-corvette' ); ?></figcaption>
-				</figure>
+				<div class="sc-card-panel">
+					<h3 class="sc-card-panel-title"><?php esc_html_e( 'Share panel copy action', 'stingray-corvette' ); ?></h3>
+					<ul>
+						<li><?php esc_html_e( 'The Share button may open a panel with a copy control for the same build code.', 'stingray-corvette' ); ?></li>
+						<li><?php esc_html_e( 'Copy the code, return to this page, and paste it into the form below.', 'stingray-corvette' ); ?></li>
+						<li><?php esc_html_e( 'If you cannot find the code, submit the closest available Chevrolet link and add a note for our Corvette team.', 'stingray-corvette' ); ?></li>
+					</ul>
+				</div>
 			</div>
 		</section>
 

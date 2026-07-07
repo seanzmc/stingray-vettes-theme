@@ -141,6 +141,7 @@
 }
 
 .sc-link-eyebrow {
+  display: block;
   font-size: 0.68rem;
   font-weight: var(--weight-bold);
   letter-spacing: 0.14em;
@@ -149,6 +150,7 @@
 }
 
 .sc-link-title {
+  display: block;
   margin-top: 5px;
   font-size: 1.1rem;
   font-weight: var(--weight-heavy);
