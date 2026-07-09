@@ -151,6 +151,12 @@
   box-shadow: var(--hover-lift-shadow);
 }
 
+.sc-embed .frm_forms .frm_radio label:focus-within,
+.sc-embed .frm_forms .frm_checkbox label:focus-within {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-glow);
+}
+
 .sc-embed .frm_forms .frm_radio,
 .sc-embed .frm_forms .frm_checkbox {
   margin-bottom: 8px;
@@ -210,6 +216,14 @@
   background: var(--ghost-hover-bg);
 }
 
+.sc-embed .frm_forms .frm_dropzone button:focus-visible,
+.sc-embed .frm_forms .frm_upload_inline_button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-glow);
+}
+
 /* submit */
 .sc-embed .frm_forms .frm_submit {
   margin-top: 10px;
@@ -238,6 +252,13 @@
 .sc-embed .frm_forms .frm_submit button:hover,
 .sc-embed .frm_forms button[type="submit"]:hover {
   background: var(--accent-deep) !important;
+}
+
+.sc-embed .frm_forms .frm_submit button:focus-visible,
+.sc-embed .frm_forms button[type="submit"]:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  box-shadow: 0 0 0 3px var(--accent-glow), 0 10px 30px var(--accent-glow);
 }
 
 /* validation + messages */
@@ -272,6 +293,11 @@
   color: var(--ink);
 }
 
+.sc-embed .frm_forms .frm_html_container img {
+  max-width: 100%;
+  height: auto;
+}
+
 .sc-embed .frm_forms figure {
   margin: 12px 0;
 }
@@ -292,86 +318,196 @@
 /* ============================= wpDataTables ============================ */
 
 .sc-embed .wpDataTablesWrapper {
+  max-width: 100%;
   color: var(--ink);
+  font-family: inherit;
   font-size: var(--text-body-sm);
 }
 
-.sc-embed table.wpDataTable {
-  width: 100% !important;
-  border-collapse: separate;
-  border-spacing: 0;
+.sc-embed .wpDataTablesWrapper.wdt-skin-mojito,
+.sc-embed .wpdt-c.wdt-skin-mojito > .wpDataTablesWrapper {
+  box-sizing: border-box;
   border: 1px solid var(--line);
-  border-radius: var(--radius-lg);
-  overflow: hidden;
-  background: var(--carbon-panel-strong) !important;
+  border-radius: var(--radius-xl);
+  padding: clamp(var(--space-md), 3vw, var(--space-2xl));
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  background: var(--carbon-panel);
+  color: var(--ink);
+  font-family: inherit;
 }
 
-.sc-embed table.wpDataTable thead th {
-  background: var(--carbon-panel) !important;
-  border-bottom: 1px solid var(--hairline-strong) !important;
-  color: var(--ink) !important;
-  font-size: 0.72rem;
-  font-weight: var(--weight-heavy);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  padding: 12px 14px;
-  text-align: left;
+.sc-embed .wpdt-c.wdt-skin-mojito .wpDataTablesWrapper .wpDataTableFilterBox {
+  display: flex;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: var(--space-md);
+  max-width: 100%;
+  margin-bottom: 16px;
+  padding: 0;
+  background: transparent;
 }
 
-.sc-embed table.wpDataTable tbody td {
-  background: transparent !important;
-  border-bottom: 1px solid var(--hairline) !important;
-  color: var(--muted) !important;
-  padding: 11px 14px;
+.sc-embed .wpdt-c.wdt-skin-mojito .wpDataTablesWrapper .wpDataTableFilterSection {
+  flex: 1 1 180px;
+  width: auto !important;
+  min-width: 0;
+  max-width: 100%;
+  min-height: 0 !important;
+  margin: 0 !important;
+  order: 0 !important;
+  padding: 0 !important;
 }
 
-.sc-embed table.wpDataTable tbody tr:nth-child(even) td {
-  background: var(--wash-soft) !important;
+.sc-embed .wpdt-c.wdt-skin-mojito .wpDataTablesWrapper #wdt-clear-filters-button-block {
+  flex: 0 0 auto;
+  width: auto;
+  min-height: 0;
+  margin: 0;
+  padding: 0 !important;
 }
 
-.sc-embed table.wpDataTable tbody tr:hover td {
-  background: var(--control-bg) !important;
-  color: var(--ink) !important;
-  cursor: pointer;
-}
-
-.sc-embed table.wpDataTable tbody tr:last-child td {
-  border-bottom: 0 !important;
-}
-
-/* toolbar: search / length / export row */
+/* toolbar: column filters, search, length, and export controls */
+.sc-embed .wpdt-c.wdt-skin-mojito .wpDataTablesWrapper .wpDataTableFilterSection > label,
 .sc-embed .wpDataTablesWrapper .dataTables_filter label,
 .sc-embed .wpDataTablesWrapper .dataTables_length label {
+  display: block;
+  max-width: 100%;
+  margin: 0 0 6px;
   color: var(--muted);
   font-size: 0.75rem;
   font-weight: var(--weight-bold);
   letter-spacing: 0.04em;
+  line-height: var(--leading-normal);
   text-transform: uppercase;
+  white-space: normal;
 }
 
 .sc-embed .wpDataTablesWrapper .dataTables_filter input,
 .sc-embed .wpDataTablesWrapper .dataTables_length select,
 .sc-embed .wpDataTablesWrapper input[type="search"],
-.sc-embed .wpDataTablesWrapper .wdt-filter-control {
-  min-height: 42px;
+.sc-embed .wdt-filter-control {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
+  min-height: var(--hit-step);
   border: 1px solid var(--line) !important;
   border-radius: var(--radius-sm);
+  margin: 0;
   padding: 0 12px;
   background: var(--carbon-panel-strong) !important;
   color: var(--ink) !important;
   font: inherit;
-  margin-left: 8px;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
 }
 
 .sc-embed .wpDataTablesWrapper .dataTables_filter input:focus-visible,
-.sc-embed .wpDataTablesWrapper .dataTables_length select:focus-visible {
+.sc-embed .wpDataTablesWrapper .dataTables_length select:focus-visible,
+.sc-embed .wpDataTablesWrapper input[type="search"]:focus-visible,
+.sc-embed .wdt-filter-control:focus-visible {
   outline: none;
   border-color: var(--accent) !important;
   box-shadow: 0 0 0 3px var(--accent-glow);
 }
 
+.sc-embed .wpdt-c.wdt-skin-mojito .wpDataTablesWrapper .wpDataTableFilterSection .wdt-clear-filters-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: var(--hit-step);
+  height: var(--hit-step);
+  min-width: var(--hit-step);
+  min-height: var(--hit-step);
+  border: 1px solid var(--ghost-border);
+  border-radius: var(--radius-sm);
+  padding: 0;
+  background: var(--control-bg);
+  color: var(--ink);
+  font: inherit;
+  cursor: pointer;
+  transition: border-color var(--transition-fast), background var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.sc-embed .wpdt-c.wdt-skin-mojito .wpDataTablesWrapper .wpDataTableFilterSection .wdt-clear-filters-button:hover {
+  border-color: var(--accent);
+  background: var(--ghost-hover-bg);
+  box-shadow: var(--hover-lift-shadow);
+}
+
+.sc-embed .wpdt-c.wdt-skin-mojito .wpDataTablesWrapper .wpDataTableFilterSection .wdt-clear-filters-button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-glow);
+}
+
+.sc-embed .wpdt-c.wdt-skin-mojito .wpDataTablesWrapper table.wpDataTable {
+  width: 100% !important;
+  min-width: 680px;
+  border-collapse: separate;
+  border-spacing: 0;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: var(--carbon-panel-strong) !important;
+  color: var(--muted);
+  font-family: inherit !important;
+}
+
+.sc-embed .wpdt-c.wdt-skin-mojito .wpDataTablesWrapper table.wpDataTable thead th.wdtheader {
+  border-bottom: 1px solid var(--hairline-strong) !important;
+  padding: 12px 14px !important;
+  background: var(--carbon-panel) !important;
+  color: var(--ink) !important;
+  font-family: inherit !important;
+  font-size: 0.72rem !important;
+  font-weight: var(--weight-heavy) !important;
+  letter-spacing: 0.08em !important;
+  line-height: var(--leading-normal) !important;
+  text-align: left;
+  text-transform: uppercase !important;
+  transition: background var(--transition-fast), color var(--transition-fast);
+}
+
+.sc-embed .wpdt-c.wdt-skin-mojito .wpDataTablesWrapper table.wpDataTable thead th.wdtheader:hover {
+  background: var(--carbon-panel-strong) !important;
+  color: var(--ink) !important;
+}
+
+.sc-embed .wpdt-c.wdt-skin-mojito .wpDataTablesWrapper table.wpDataTable thead th.wdtheader:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -3px;
+  background: var(--carbon-panel-strong) !important;
+  box-shadow: inset 0 0 0 3px var(--accent-glow);
+}
+
+.sc-embed .wpdt-c.wdt-skin-mojito .wpDataTablesWrapper table.wpDataTable tbody td {
+  border-bottom: 1px solid var(--hairline) !important;
+  padding: 11px 14px !important;
+  background: transparent !important;
+  color: var(--muted) !important;
+  font-family: inherit !important;
+  font-variant-numeric: tabular-nums;
+  transition: background var(--transition-fast), color var(--transition-fast);
+}
+
+.sc-embed .wpdt-c.wdt-skin-mojito .wpDataTablesWrapper table.wpDataTable tbody tr:nth-child(even) td {
+  background: var(--wash-soft) !important;
+}
+
+.sc-embed .wpdt-c.wdt-skin-mojito .wpDataTablesWrapper table.wpDataTable tbody tr:hover td,
+.sc-embed .wpdt-c.wdt-skin-mojito .wpDataTablesWrapper table.wpDataTable tbody tr:focus-within td {
+  background: var(--control-bg) !important;
+  color: var(--ink) !important;
+  cursor: pointer;
+}
+
+.sc-embed .wpdt-c.wdt-skin-mojito .wpDataTablesWrapper table.wpDataTable tbody tr:last-child td {
+  border-bottom: 0 !important;
+}
+
 /* pagination */
-.sc-embed .wpDataTablesWrapper .dataTables_paginate .paginate_button {
+.sc-embed .dataTables_paginate .paginate_button {
   display: inline-flex;
   align-items: center;
   min-height: 36px;
@@ -382,31 +518,41 @@
   background: var(--control-bg) !important;
   color: #cfd3d6 !important;
   font-weight: var(--weight-semibold);
-  transition: border-color var(--transition-fast), background var(--transition-fast);
+  font-variant-numeric: tabular-nums;
+  transition: border-color var(--transition-fast), background var(--transition-fast), box-shadow var(--transition-fast);
 }
 
-.sc-embed .wpDataTablesWrapper .dataTables_paginate .paginate_button:hover {
+.sc-embed .dataTables_paginate .paginate_button:hover {
   border-color: var(--control-border-hover) !important;
   color: #ffffff !important;
+  box-shadow: var(--hover-lift-shadow);
 }
 
-.sc-embed .wpDataTablesWrapper .dataTables_paginate .paginate_button.current {
+.sc-embed .wpdt-c.wdt-skin-mojito .wpDataTablesWrapper .dataTables_paginate a.paginate_button:focus-visible {
+  outline: 2px solid var(--accent) !important;
+  outline-offset: 2px;
+  border-color: var(--accent) !important;
+  box-shadow: 0 0 0 3px var(--accent-glow) !important;
+}
+
+.sc-embed .dataTables_paginate .paginate_button.current {
   border-color: var(--accent) !important;
   background: var(--accent) !important;
   color: var(--on-accent) !important;
 }
 
-.sc-embed .wpDataTablesWrapper .dataTables_paginate .paginate_button.disabled {
+.sc-embed .dataTables_paginate .paginate_button.disabled {
   opacity: 0.4;
   pointer-events: none;
 }
 
-.sc-embed .wpDataTablesWrapper .dataTables_info {
+.sc-embed .dataTables_info {
   color: var(--dim);
   font-size: 0.78rem;
+  font-variant-numeric: tabular-nums;
 }
 
-/* row-detail popup (wpDataTables uses a bootstrap-style modal) */
+/* row-detail popup (wpDataTables mounts this outside .sc-embed) */
 .wdt-frontend-modal .modal-content,
 .wpDataTablesPopover,
 .wdt-popup {

@@ -1,318 +1,198 @@
 # Current Readiness Report
 
-Updated: 2026-07-07 after the latest committed pass.
+Updated: 2026-07-09 after staging deployment and browser QA of theme candidate `0.1.5`.
 
-Current readiness: the theme is structurally ready for final plugin-enabled/staging QA, but it is not yet live-ready. The latest pass changed plugin-backed embeds from hard-coded shortcodes in templates to page-owned shortcode custom fields. That is a good deployment-flexibility improvement, but it adds a required launch setup step: the `stingray_embed_shortcode` custom field must be populated on the live/staging WordPress pages before those embeds can render.
+## Release decision
 
-No deployment was performed by this report update.
+**Current decision: NO-GO for production.**
 
-## Repo state
+The theme-owned implementation is now a viable staging candidate: static gates pass, all public routes serve version `0.1.5`, Formidable controls inherit the dark theme, and wpDataTables no longer shows the white/Mojito stock skin. Production deployment remains blocked by three plugin/integration defects and one business-content approval gate documented below.
 
-- Branch: `main`
-- origin/main relation: `0 0` — local and origin are in sync.
-- Working tree before this report update: clean.
-- Latest commits:
-  - `d3f323d feat: implement dynamic embed shortcode rendering for deposit, build-and-price, and factory pages`
-  - `f29854d feat: add current readiness report with QA status and next steps`
-  - `60f5e1d feat: update build-and-price page with improved summary and share instructions`
-- Theme version: `style.css` `Version: 0.1.0`
-- Cache-busting: local enqueued assets still use `STINGRAY_CORVETTE_VERSION`, sourced from `style.css`.
+No production deployment, live-site mutation, or real order submission was performed.
 
-## Material change since prior report
+## Candidate and staging state
 
-Plugin-backed page templates no longer hard-code these shortcodes:
+- Repo branch: `main`
+- Candidate version: `style.css` `Version: 0.1.5`
+- Staging theme: active, version `0.1.5`
+- Staging base URL: `https://staging-427b-stingraychevroletcorvette.wpcomstaging.com/`
+- Every versioned theme CSS/JS asset on all seven public routes uses `?ver=0.1.5`.
+- All seven routes return HTTP 200.
+- Required page custom fields are populated on staging:
+  - `/deposit/`: `[formidable id=8]`
+  - `/build-and-price/`: `[formidable id=30]`
+  - `/factory/`: `[wpdatatable id=7 table_view=regular]`
+- Formidable, wpDataTables, and the order-submit plugin are active on staging.
+- The old local WP Studio install remains non-authoritative because its plugins are inactive.
 
-- `/deposit/`: formerly `[formidable id=8]`
-- `/build-and-price/`: formerly `[formidable id=30]`
-- `/factory/`: formerly `[wpdatatable id=7 table_view=regular]`
+## Theme changes in the candidate
 
-Instead, all three pages now call:
+### Embed loading
 
-- `stingray_corvette_render_page_embed_shortcode()`
+- `functions.php` loads `assets/css/embeds.css` normally for `/deposit/` and `/build-and-price/`.
+- wpDataTables registers page-specific styles only after rendering its shortcode. `/factory/` therefore prints the theme embed skin from `wp_footer` after the registered Mojito/core styles.
+- Staging HTML proves all wpDataTables 7.5.1 styles load before one `embeds.css?ver=0.1.5` occurrence.
 
-That function reads the current page custom field:
+### Formidable
 
-- `stingray_embed_shortcode`
+- Existing field, label, radio, checkbox, submit, validation, and message styles were retained.
+- HTML-container images are responsive.
+- Radio/checkbox labels, upload buttons, and submit buttons have visible keyboard focus treatment.
+- No field-ID-specific theme overrides or broad inline-style normalization were added.
 
-Behavior:
+### wpDataTables
 
-- If the shortcode custom field is present, the function runs `do_shortcode()`.
-- If the shortcode is missing, public visitors see an empty embed area.
-- If the shortcode is missing and the viewer can edit the post, WordPress shows an admin-only setup note.
-- If the shortcode does not render because the plugin is inactive or the shortcode is invalid, public visitors see an empty embed area and editors see an admin-only plugin/shortcode warning.
+- The outer wrapper now uses the dark carbon surface, theme border/radius, inherited ChevySans typography, and contained horizontal overflow.
+- Filter sections wrap responsively and preserve DOM/tab order.
+- Filter labels and inputs are readable and theme-aligned.
+- The clear-filter control is a 42px dark button with hover/focus treatment.
+- Headers and body cells no longer use Mojito teal/white surfaces or dark-on-dark text.
+- Table headers, body cells, pagination, and modal surfaces use scoped theme selectors.
+- Narrow layouts keep the 680px table inside the plugin wrapper's horizontal scroller instead of creating page-level overflow.
 
-Launch implication: the live/staging pages must have the `stingray_embed_shortcode` custom field populated:
+## Static gates
 
-- `/deposit/`: `[formidable id=8]`
-- `/build-and-price/`: `[formidable id=30]`
-- `/factory/`: `[wpdatatable id=7 table_view=regular]`
+Passed after the final changes:
 
-This is now a required launch checklist item, not optional.
+- PHP lint: all 14 root/include PHP files
+- JavaScript syntax: six theme scripts
+- Enqueued local asset existence: 18 paths
+- Homepage spin inventory: five paints with 30 frames each
+- Embed CSS brace/token validation: all 46 referenced tokens resolve
+- Mock enqueue harness:
+  - Formidable routes enqueue normally
+  - Factory prefers registered `wdt-skin-mojito`
+  - Factory falls back to registered `wdt-wpdatatables`
+  - Factory remains safe when neither handle is registered
+  - Unrelated routes do not enqueue or print the embed skin
+- `git diff --check`
+- Independent final review: pass
 
-## Static gates run after latest pass
+## Browser QA completed
 
-PHP lint passed:
+### Responsive matrix
 
-- `front-page.php`
-- `page-order.php`
-- `page-deposit.php`
-- `page-build-and-price.php`
-- `page-calculator.php`
-- `page-factory.php`
-- `page-process.php`
-- `page.php`
-- `header.php`
-- `footer.php`
-- `functions.php`
-- `inc/topbar.php`
-- `inc/site-footer.php`
-- `index.php`
+Checked at 390px, 768px, and 1440px:
 
-JS syntax checks passed:
+- `/`
+- `/order/`
+- `/deposit/`
+- `/build-and-price/`
+- `/calculator/`
+- `/factory/`
+- `/process/`
 
-- `assets/js/nav.js`
-- `assets/homepage/spin.js`
-- `assets/order/app.js`
-- `assets/order/data.js`
-- `assets/calculator/script.js`
-- `assets/calculator/qp-new.js`
+Results:
 
-## Asset/enqueue audit
+- No page-level horizontal overflow on any tested route/width.
+- All tested pages served theme version `0.1.5`.
+- Shared navigation, page shell, and footer rendered on all routes.
+- The only failed image was the known Formidable-owned ZR1 image described under blockers.
 
-- All local assets referenced by `functions.php` exist.
-- No missing local enqueue references found.
-- Homepage spin frame sets exist:
-  - `g26-orange`: 30
-  - `g4z-green`: 30
-  - `gbk-yellow`: 30
-  - `gkz-red`: 30
-  - `gtr-blue`: 30
-- Order vehicle PNG assets found: 10
-- No legacy replaced-surface URL slugs found in public templates.
+### Homepage
 
-## Local WP Studio state
+- `#spinCanvas` rendered at the mobile viewport.
+- The correct theme spin base was present.
+- All 30 current-paint frames loaded.
+- A synthetic pointer drag changed the canvas frame.
 
-Local preview install:
+### Order form
 
-- `/Users/seandm/Projects/WP-Studio/stingraychevroletcorvettecom`
+- Twelve-step app rendered without page overflow.
+- Representative required path completed with Arctic White and Jet Black selections.
+- Download and Submit controls enabled after required selections.
+- Dealer modal opened.
+- Turnstile attempted to render; the domain-authorization blocker below prevented a valid challenge.
+- No POST was sent.
 
-Theme symlink target:
+### Calculator
 
-- `/Users/seandm/Projects/stingray-vettes-theme`
+- Mobile layout had no page overflow.
+- Monthly payment test `70000 / 72 / 6.9` returned `$1,194.24`.
 
-Local WordPress options checked:
+### Formidable
 
-- `stylesheet=stingray-corvette`
-- `template=stingray-corvette`
-- `show_on_front=page`
-- `page_on_front=5`
-- `active_plugins=[]`
+- Deposit and Build & Price forms render beneath `.sc-embed`.
+- Inputs, radios, labels, buttons, and validation errors are readable on the dark theme.
+- Build & Price blank-submit validation rendered 18 themed error/blank-field states and did not submit.
+- Build & Price images stay within the 390px layout and none failed.
+- Formidable's stock frontend stylesheet is not required for the current presentation.
 
-Local pages exist:
+### wpDataTables
 
-- `home`: published
-- `order`: published
-- `deposit`: published
-- `build-and-price`: published
-- `calculator`: published
-- `factory`: published
-- `process`: published
+- Desktop computed styles confirm a dark wrapper, dark headers, muted readable cells, ChevySans inheritance, 42px controls, and no page overflow.
+- At 390px, filters wrap in DOM order and the wide table remains inside the plugin's horizontal scroller.
+- Keyboard traversal exposes visible focus glow on filter controls, the clear button, and sortable headers.
 
-Local embed custom field status:
+## Production blockers
 
-- `deposit`: empty `stingray_embed_shortcode`
-- `build-and-price`: empty `stingray_embed_shortcode`
-- `factory`: empty `stingray_embed_shortcode`
+### 1. Turnstile staging hostname is not authorized
 
-Because local plugins are inactive and local custom fields are empty, local WP Studio still cannot prove Formidable/wpDataTables rendering. It can only prove the non-plugin static surfaces and theme asset loading.
+Opening the order submission modal produces Cloudflare Turnstile error `110200`.
 
-## Route readiness summary
+Cloudflare's current documentation defines `110200` as **Domain not authorized** and directs the owner to add the current domain in Hostname Management.
 
-### `/`
+Required action:
 
-Status: likely ready pending final responsive visual QA.
+1. Add `staging-427b-stingraychevroletcorvette.wpcomstaging.com` to the Turnstile widget's allowed hostnames.
+2. Re-open the staging order modal and obtain a valid challenge/token.
+3. Approve a test lead identity, recipient, and cleanup procedure.
+4. Perform one controlled end-to-end POST and verify delivery plus server-side Turnstile validation.
 
-Previously verified:
+This cannot be cleared by theme CSS or a browser-only test.
 
-- Homepage rendered in local WP preview.
-- `#spinCanvas` present.
-- `window.SC_SPIN_BASE` set correctly.
-- Initial spin frame resources loaded.
-- No console/resource errors observed in the prior browser pass.
+### 2. wpDataTables table 7 points at a Google `pubhtml` page
 
-Still needed:
+Table `7` (`Orders at Factory_v0`) is configured as `google_spreadsheet`, but its source returns a Google HTML document rather than spreadsheet rows. wpDataTables consequently renders one malformed row:
 
-- Final mobile/desktop visual pass.
-- Confirm 360 drag/spin interaction manually in launch/staging context.
+- `Group"`
+- `Model`
 
-### `/order/`
+A non-mutating test of the corresponding CSV export endpoint returned HTTP 200, `text/csv`, 29 data rows, and these headers:
 
-Status: likely ready pending final responsive/manual flow QA.
+- `Order #`
+- `Last Updated @ Factory`
+- `Current`
 
-Previously verified:
+Required action: after plugin-configuration approval, back up table 7 and change only its source from the published HTML endpoint to the equivalent CSV export endpoint. Then verify filters, real rows, pagination, and row-detail modal behavior.
 
-- Order app rendered.
-- Step rail and initial vehicle setup loaded.
-- `window.SC_FORM_ASSET_BASE` set correctly.
-- Turnstile script scoped to `/order/`.
-- No console/resource errors observed in the prior browser pass.
+### 3. Deposit form 8 contains a broken ZR1 image and legacy inline colors
 
-Still needed:
+Formidable field `696` (`ZR1 LIST CLOSED`) references:
 
-- Mobile drawer and summary drawer checks.
-- Non-submitting primary path through required selections/customer modal.
-- Confirm Turnstile/submission behavior only in an approved test path.
+`https://stingraychevroletcorvette.com/wp-content/uploads/pictures/zr1-closed-150x150.png`
 
-### `/deposit/`
+That URL returns HTTP 404. The existing attachment resolves at:
 
-Status: blocked until page custom field and Formidable rendering are verified in a plugin-enabled environment.
+`/wp-content/uploads/pictures/deposit-form/zr1-closed.png`
 
-Current template behavior:
+The deposit form also contains six inline-color declarations, including a stock-blue `Instructions:` link that is visually inconsistent and low-emphasis on the dark surface. Relevant HTML fields include `696`, `699`, `1729`, and `2221`.
 
-- Static deposit instructions render from `page-deposit.php`.
-- Embed is dynamic via `stingray_corvette_render_page_embed_shortcode()`.
-- Required live page custom field: `stingray_embed_shortcode = [formidable id=8]`.
+Required action: after Formidable-content approval, replace the broken image URL and remove legacy inline color formatting so theme styles can control presentation. CSS should not hide the failed asset or hard-code Formidable field IDs.
 
-Still needed:
+### 4. `/process/` business and policy copy needs human approval
 
-- Set/confirm live/staging page custom field.
-- Confirm Formidable form renders inside `.sc-embed`.
-- Record Formidable styling setting: enabled, disabled, or intentionally unchanged.
-- Verify labels, fields, validation, submit button, confirmation/payment-link behavior, and readability.
+The route is structurally and responsively sound, but production still requires Sean's acceptance of:
 
-### `/build-and-price/`
+- deposit/refund rules
+- open and closed model lists
+- dealer fee and tag-agency fee
+- restricted-state/customer language
+- pricing and timing disclaimers
+- external ZR1 process link
 
-Status: blocked until page custom field and Formidable rendering are verified in a plugin-enabled environment.
+## Gates intentionally not run
 
-Current template behavior:
+- No real order-form POST or lead creation.
+- No success-confirmation/payment-link submission path.
+- No wpDataTables real-row modal test because table 7 currently has malformed source data.
+- No production upload, activation, cache flush, or live smoke test.
 
-- Static Build & Price guidance renders from `page-build-and-price.php`.
-- Chevrolet configurator URLs remain external and intentional.
-- Embed is dynamic via `stingray_corvette_render_page_embed_shortcode()`.
-- Required live page custom field: `stingray_embed_shortcode = [formidable id=30]`.
+## Required path to GO
 
-Still needed:
-
-- Set/confirm live/staging page custom field.
-- Confirm Formidable form renders inside `.sc-embed`.
-- Verify form readability and validation states with the chosen Formidable styling setting.
-- Re-check Chevrolet configurator links during final launch QA.
-
-### `/calculator/`
-
-Status: likely ready pending final responsive visual QA.
-
-Previously verified:
-
-- Calculator rendered.
-- Monthly payment test: `70000 / 72 / 6.9` returned `$1,194.24`.
-- Income calculator produced output when populated.
-- Quick Pencil produced an itemized summary for `$90,000` MSRP/selling price.
-- No console/resource errors observed in the prior browser pass.
-
-Still needed:
-
-- Mobile layout QA.
-- One final staging/live browser pass after deployment target is configured.
-
-### `/factory/`
-
-Status: blocked until page custom field and wpDataTables rendering are verified in a plugin-enabled environment.
-
-Current template behavior:
-
-- Static factory/status-code content renders from `page-factory.php`.
-- The earlier local `/learning-center/` link card was removed from this template.
-- Embed is dynamic via `stingray_corvette_render_page_embed_shortcode()`.
-- Required live page custom field: `stingray_embed_shortcode = [wpdatatable id=7 table_view=regular]`.
-
-Still needed:
-
-- Set/confirm live/staging page custom field.
-- Confirm wpDataTables renders inside `.sc-embed`.
-- Verify search/filter input, table header/rows, pagination, row hover/focus, and row details/modal readability.
-- If the table shows a service/data error, compare against existing live/source behavior before treating it as a theme regression.
-
-### `/process/`
-
-Status: structurally ready, but business-content review is still required before live deployment.
-
-Static contract present:
-
-- `Deposit Lists — Current Status`
-- `Grand Sport X`
-- `ZR1X`
-- `Dealer Fee` / `$999`
-- `Tag Agency Fee` / `$362`
-- `smccann@stingraychevrolet.com`
-- `813-359-5000`
-
-Still needed:
-
-- Sean review/acceptance of policy/legal-adjacent content.
-- Final mobile/desktop visual pass.
-- Confirm intentional external ZR1 process link remains acceptable.
-
-## Link audit
-
-No legacy replaced-surface slugs were found in public templates:
-
-- `order-landing-page/deposit-form`
-- `order-landing-page/build-and-price-link-share`
-- `orders-in-production`
-- `corvette-process-guide`
-- `process-links`
-
-Intentional external links still present:
-
-- Chevrolet configurator links in `page-build-and-price.php`
-- Existing ZR1 process page links in `page-process.php`
-- Chevrolet.com and StingrayChevrolet.com footer/drawer links
-
-## Necessary actions before going live
-
-1. Populate required page custom fields in the plugin-enabled staging/live-equivalent WordPress environment:
-   - `/deposit/`: `stingray_embed_shortcode = [formidable id=8]`
-   - `/build-and-price/`: `stingray_embed_shortcode = [formidable id=30]`
-   - `/factory/`: `stingray_embed_shortcode = [wpdatatable id=7 table_view=regular]`
-
-2. Run plugin-backed QA with Formidable and wpDataTables active:
-   - Confirm embeds render for public visitors.
-   - Confirm editor-only setup/error notes do not appear to public visitors.
-   - Confirm form/table controls are readable on the dark theme.
-   - Record Formidable styling setting.
-
-3. Run final responsive visual QA on all seven routes:
-   - Mobile around 390px.
-   - Desktop around 1440px.
-   - Tablet around 768px if time allows.
-   - Check duplicate chrome, horizontal overflow, overlaps, unreadable controls, focus states, and excessive nesting.
-
-4. Complete Sean’s business-content review for `/process/`.
-
-5. After plugin QA and content review are accepted, bump `style.css` from `0.1.0` to a release/cache-busting version such as `0.2.0`.
-
-6. Deploy only after explicit approval, then verify live routes and cache-busted asset URLs.
-
-7. Keep CarSales / `sales.stingraychevroletcorvette.com` out of this WordPress deployment path. That Worker/subdomain remains separate from `stingraychevroletcorvette.com` and `www`.
-
-## Current project status summary
-
-- Static code gates: pass
-- Asset existence/enqueue audit: pass
-- Local WP route setup: present
-- Homepage initial local browser pass: pass from prior report
-- Order app initial local browser pass: pass from prior report
-- Calculator primary local browser checks: pass from prior report
-- Dynamic embed helper: present
-- Required embed page custom fields: pending in live/staging, empty in local WP Studio
-- Formidable rendering: pending plugin-enabled environment
-- wpDataTables rendering: pending plugin-enabled environment
-- Mobile/tablet visual QA: pending
-- Business-content approval: pending
-- Version/cache-bust bump: pending
-- Deployment: not performed
-
-## Recommended next commit, if committing this report update
-
-- `docs: update readiness report`
+1. Authorize the staging hostname in Turnstile and complete one approved, removable test submission.
+2. Correct wpDataTables table 7's source to CSV and verify real-row behavior.
+3. Correct Formidable form 8's broken image and inline presentation content.
+4. Obtain business approval for `/process/` copy.
+5. Re-run the affected staging checks and update this report to GO.
+6. Obtain separate explicit approval before any production deployment.

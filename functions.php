@@ -102,13 +102,55 @@ function stingray_corvette_enqueue_styles() {
 		wp_enqueue_script( 'stingray-calculator', $uri . '/assets/calculator/script.js', array(), $ver, true );
 		wp_enqueue_script( 'stingray-calculator-qp', $uri . '/assets/calculator/qp-new.js', array( 'stingray-calculator' ), $ver, true );
 	}
-
-	// Dark skins for third-party embeds: Formidable (deposit, B&P) + wpDataTables (@Factory).
-	if ( is_page( array( 'deposit', 'build-and-price', 'factory' ) ) ) {
-		wp_enqueue_style( 'stingray-embeds', $uri . '/assets/css/embeds.css', array( 'stingray-surfaces' ), $ver );
-	}
 }
 add_action( 'wp_enqueue_scripts', 'stingray_corvette_enqueue_styles' );
+
+/**
+ * Load dark embed skins for Formidable-backed pages.
+ *
+ * wpDataTables registers its page-specific skin while rendering the shortcode,
+ * after wp_head has printed normal theme styles, so Factory is handled below.
+ */
+function stingray_corvette_enqueue_embed_styles() {
+	if ( ! is_page( array( 'deposit', 'build-and-price' ) ) ) {
+		return;
+	}
+
+	wp_enqueue_style(
+		'stingray-embeds',
+		get_template_directory_uri() . '/assets/css/embeds.css',
+		array( 'stingray-surfaces' ),
+		STINGRAY_CORVETTE_VERSION
+	);
+}
+add_action( 'wp_enqueue_scripts', 'stingray_corvette_enqueue_embed_styles', 100 );
+
+/**
+ * Print the Factory embed skin after wpDataTables has rendered its shortcode
+ * and registered the active table skin.
+ */
+function stingray_corvette_print_factory_embed_styles() {
+	if ( ! is_page( 'factory' ) ) {
+		return;
+	}
+
+	$dependencies = array( 'stingray-surfaces' );
+
+	if ( wp_style_is( 'wdt-skin-mojito', 'registered' ) ) {
+		$dependencies[] = 'wdt-skin-mojito';
+	} elseif ( wp_style_is( 'wdt-wpdatatables', 'registered' ) ) {
+		$dependencies[] = 'wdt-wpdatatables';
+	}
+
+	wp_enqueue_style(
+		'stingray-embeds',
+		get_template_directory_uri() . '/assets/css/embeds.css',
+		$dependencies,
+		STINGRAY_CORVETTE_VERSION
+	);
+	wp_print_styles( 'stingray-embeds' );
+}
+add_action( 'wp_footer', 'stingray_corvette_print_factory_embed_styles', 100 );
 
 /**
  * Render a page-owned embed shortcode.
