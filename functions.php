@@ -96,6 +96,11 @@ function stingray_corvette_enqueue_styles() {
 		);
 	}
 
+	// Factory order lookup: compact table plus an accessible full-row dialog.
+	if ( is_page( 'factory' ) ) {
+		wp_enqueue_script( 'stingray-factory-table', $uri . '/assets/js/factory-table.js', array(), $ver, true );
+	}
+
 	// Payment calculator (/calculator/): vendored Stingcalc logic, DS-authored skin.
 	if ( is_page( 'calculator' ) ) {
 		wp_enqueue_style( 'stingray-calculator', $uri . '/assets/calculator/calculator.css', array( 'stingray-surfaces' ), $ver );
@@ -151,6 +156,125 @@ function stingray_corvette_print_factory_embed_styles() {
 	wp_print_styles( 'stingray-embeds' );
 }
 add_action( 'wp_footer', 'stingray_corvette_print_factory_embed_styles', 100 );
+
+/**
+ * Select the published worksheet requested by wpDataTables table 7.
+ *
+ * wpDataTables 7.5.1 drops the gid when it converts a published 2PACX Google
+ * Sheets URL to CSV, which loads the publication's first tab instead of the
+ * Factory sheet. Fetch the requested tab and return its public columns while
+ * preserving the page-owned source URL in wpDataTables.
+ *
+ * @param array  $sheet_rows Parsed rows supplied by wpDataTables.
+ * @param int    $table_id   wpDataTables table ID.
+ * @param string $sheet_url  Configured published Google Sheets URL.
+ * @return array
+ */
+function stingray_corvette_filter_factory_sheet_rows( $sheet_rows, $table_id, $sheet_url ) {
+	if ( 7 !== (int) $table_id || ! is_string( $sheet_url ) ) {
+		return $sheet_rows;
+	}
+
+	$url_parts = wp_parse_url( $sheet_url );
+	if (
+		empty( $url_parts['scheme'] ) ||
+		empty( $url_parts['host'] ) ||
+		empty( $url_parts['path'] ) ||
+		'docs.google.com' !== strtolower( $url_parts['host'] ) ||
+		0 !== strpos( $url_parts['path'], '/spreadsheets/d/e/' )
+	) {
+		return $sheet_rows;
+	}
+
+	$query_args = array();
+	if ( ! empty( $url_parts['query'] ) ) {
+		parse_str( $url_parts['query'], $query_args );
+	}
+
+	if ( empty( $query_args['gid'] ) ) {
+		return $sheet_rows;
+	}
+
+	$csv_path = preg_replace( '#/pubhtml$#', '/pub', $url_parts['path'] );
+	if ( $csv_path === $url_parts['path'] ) {
+		return $sheet_rows;
+	}
+
+	$csv_url = add_query_arg(
+		array(
+			'gid'    => sanitize_text_field( $query_args['gid'] ),
+			'single' => 'true',
+			'output' => 'csv',
+		),
+		$url_parts['scheme'] . '://' . $url_parts['host'] . $csv_path
+	);
+
+	$response = wp_safe_remote_get(
+		$csv_url,
+		array(
+			'timeout'     => 20,
+			'redirection' => 3,
+		)
+	);
+
+	if ( is_wp_error( $response ) || 200 !== wp_remote_retrieve_response_code( $response ) ) {
+		return $sheet_rows;
+	}
+
+	$csv_body = wp_remote_retrieve_body( $response );
+	if ( '' === $csv_body ) {
+		return $sheet_rows;
+	}
+
+	$stream = fopen( 'php://temp', 'r+' );
+	if ( false === $stream ) {
+		return $sheet_rows;
+	}
+
+	fwrite( $stream, $csv_body );
+	rewind( $stream );
+	$source_headers = fgetcsv( $stream, 0, ',', '"', '\\' );
+
+	if ( ! is_array( $source_headers ) || count( $source_headers ) < 3 ) {
+		fclose( $stream );
+		return $sheet_rows;
+	}
+
+	$source_headers = array_map(
+		static function ( $header ) {
+			return trim( preg_replace( '/\s+/', ' ', (string) $header ) );
+		},
+		$source_headers
+	);
+
+	if (
+		'Order #' !== $source_headers[0] ||
+		'Last Updated @ Factory' !== $source_headers[1] ||
+		'Current Event' !== $source_headers[2]
+	) {
+		fclose( $stream );
+		return $sheet_rows;
+	}
+
+	$factory_rows = array();
+	while ( false !== ( $row = fgetcsv( $stream, 0, ',', '"', '\\' ) ) ) {
+		if ( count( $row ) < count( $source_headers ) || '' === trim( implode( '', $row ) ) ) {
+			continue;
+		}
+
+		$row = array_map( 'trim', array_slice( $row, 0, count( $source_headers ) ) );
+		$row = array_combine( $source_headers, $row );
+
+		if ( false !== $row ) {
+			$factory_rows[] = $row;
+		}
+	}
+
+	fclose( $stream );
+
+	return $factory_rows ? $factory_rows : $sheet_rows;
+}
+add_filter( 'wpdatatables_filter_google_sheet_array', 'stingray_corvette_filter_factory_sheet_rows', 10, 3 );
 
 /**
  * Render a page-owned embed shortcode.

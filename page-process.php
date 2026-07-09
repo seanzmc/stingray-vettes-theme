@@ -15,7 +15,7 @@ $process_status_cards = array(
 		'status'  => __( 'OPEN', 'stingray-corvette' ),
 		'details' => array(
 			__( 'Deposit: $500', 'stingray-corvette' ),
-			__( 'Fully refundable until order placed', 'stingray-corvette' ),
+			__( 'Fully refundable until the order is submitted to the factory', 'stingray-corvette' ),
 			__( 'Sold at MSRP unless specifically noted', 'stingray-corvette' ),
 		),
 	),
@@ -24,7 +24,7 @@ $process_status_cards = array(
 		'status'  => __( 'OPEN', 'stingray-corvette' ),
 		'details' => array(
 			__( 'Deposit: $500 + $2,500 at order', 'stingray-corvette' ),
-			__( 'Full deposit becomes non-refundable at order', 'stingray-corvette' ),
+			__( 'Full deposit becomes non-refundable when the order is submitted to the factory', 'stingray-corvette' ),
 			__( 'Sold at MSRP unless specifically noted', 'stingray-corvette' ),
 		),
 	),
@@ -33,7 +33,7 @@ $process_status_cards = array(
 		'status'  => __( 'OPEN', 'stingray-corvette' ),
 		'details' => array(
 			__( 'Deposit: $500', 'stingray-corvette' ),
-			__( 'Fully refundable until order placed', 'stingray-corvette' ),
+			__( 'Fully refundable until the order is submitted to the factory', 'stingray-corvette' ),
 			__( 'Sold at MSRP unless specifically noted', 'stingray-corvette' ),
 		),
 	),
@@ -42,7 +42,7 @@ $process_status_cards = array(
 		'status'  => __( 'OPEN', 'stingray-corvette' ),
 		'details' => array(
 			__( 'Deposit: $500 + $2,500 at order', 'stingray-corvette' ),
-			__( 'Full deposit becomes non-refundable at order', 'stingray-corvette' ),
+			__( 'Full deposit becomes non-refundable when the order is submitted to the factory', 'stingray-corvette' ),
 			__( 'Sold at MSRP unless specifically noted', 'stingray-corvette' ),
 		),
 	),
@@ -70,7 +70,8 @@ $process_status_cards = array(
 		'details' => array(
 			__( 'GM has discontinued the E-Ray', 'stingray-corvette' ),
 			__( 'No new deposits accepted', 'stingray-corvette' ),
-			__( 'Existing E-Ray depositors have been automatically transferred to the Grand Sport X list; contact us if you would like to adjust that or request a refund.', 'stingray-corvette' ),
+			__( 'Existing E-Ray deposits have been transferred to the Grand Sport X list', 'stingray-corvette' ),
+			__( 'Contact us to move a transferred deposit or request a refund', 'stingray-corvette' ),
 		),
 	),
 );
@@ -98,11 +99,12 @@ $process_model_details = array(
 	array(
 		'name'  => __( 'Grand Sport X', 'stingray-corvette' ),
 		'items' => array(
-			__( 'List is open and accepting new deposits now. Former E-Ray depositors have been automatically transferred here.', 'stingray-corvette' ),
+			__( 'List is open and accepting new deposits now.', 'stingray-corvette' ),
 			__( '$500 deposit to secure your place on the Grand Sport X list.', 'stingray-corvette' ),
 			__( 'An additional $2,500 is due when your order is placed for production.', 'stingray-corvette' ),
 			__( 'The entire deposit becomes non-refundable once your order is submitted to the factory.', 'stingray-corvette' ),
-			__( 'If you were previously on the E-Ray deposit list, your deposit has been automatically transferred to the Grand Sport X list. Contact us if you would like to move it elsewhere or request a refund instead.', 'stingray-corvette' ),
+			__( 'Former E-Ray deposits have been transferred to the Grand Sport X list.', 'stingray-corvette' ),
+			__( 'Contact us to move a transferred E-Ray deposit to another list or request a refund.', 'stingray-corvette' ),
 			__( 'Sold at MSRP unless specifically noted.', 'stingray-corvette' ),
 		),
 	),
@@ -131,10 +133,10 @@ $process_policy_cards = array(
 	array(
 		'title' => __( 'Refund Policy', 'stingray-corvette' ),
 		'items' => array(
-			__( 'Your deposit is fully refundable until your order is placed for production.', 'stingray-corvette' ),
-			__( 'Once your order is submitted to the factory, the entire deposit becomes non-refundable.', 'stingray-corvette' ),
-			__( 'If you decide to cancel, we will verify your mailing address and issue a refund check.', 'stingray-corvette' ),
-			__( 'Refunds are issued only to the individual named on the original deposit receipt.', 'stingray-corvette' ),
+			__( 'You may cancel and request a full refund before your order is submitted to the factory.', 'stingray-corvette' ),
+			__( 'The entire deposit becomes non-refundable when your order is submitted to the factory for production.', 'stingray-corvette' ),
+			__( 'To request a refund, contact us and confirm your current mailing address.', 'stingray-corvette' ),
+			__( 'Refunds are issued by check to the person named on the original deposit receipt.', 'stingray-corvette' ),
 		),
 	),
 	array(

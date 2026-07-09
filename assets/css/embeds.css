@@ -578,3 +578,193 @@
 .wdt-frontend-modal .modal-body table th {
   color: var(--ink) !important;
 }
+
+/* Factory table: the first three columns stay scannable; full row data opens
+   in the theme-owned dialog below. The source columns remain in the DOM so the
+   live Google Sheet row is available without widening every table row. */
+.sc-embed table.wpDataTableID-7 {
+  min-width: 0 !important;
+  table-layout: fixed !important;
+}
+
+.sc-embed table.wpDataTableID-7 th:nth-child(n + 4),
+.sc-embed table.wpDataTableID-7 td:nth-child(n + 4) {
+  display: none !important;
+}
+
+.sc-embed table.wpDataTableID-7 th:nth-child(1) {
+  width: 30% !important;
+}
+
+.sc-embed table.wpDataTableID-7 th:nth-child(2) {
+  width: 44% !important;
+}
+
+.sc-embed table.wpDataTableID-7 th:nth-child(3) {
+  width: 26% !important;
+}
+
+.sc-embed table.wpDataTableID-7 .sc-factory-row:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -3px;
+  box-shadow: inset 0 0 0 3px var(--accent-glow);
+}
+
+.sc-dialog-open {
+  overflow: hidden;
+}
+
+.sc-factory-modal[hidden] {
+  display: none;
+}
+
+.sc-factory-modal {
+  position: fixed;
+  z-index: 10000;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: var(--space-4);
+  background: rgba(0, 0, 0, 0.78);
+}
+
+.sc-factory-modal__panel {
+  width: min(720px, 100%);
+  max-height: min(760px, calc(100vh - 32px));
+  overflow: auto;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-xl);
+  background: var(--carbon-panel);
+  box-shadow: var(--shadow-modal);
+  color: var(--ink);
+}
+
+.sc-factory-modal__header {
+  position: sticky;
+  z-index: 1;
+  top: 0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-4);
+  border-bottom: 1px solid var(--hairline);
+  padding: var(--space-5);
+  background: var(--carbon-panel);
+}
+
+.sc-factory-modal__eyebrow {
+  margin: 0 0 var(--space-1);
+  color: var(--accent);
+  font-size: 0.72rem;
+  font-weight: var(--weight-heavy);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.sc-factory-modal__header h2 {
+  margin: 0;
+  color: var(--ink);
+  font-family: var(--font-primary);
+  font-size: clamp(1.35rem, 3vw, 1.75rem);
+  letter-spacing: var(--tracking-display);
+  text-transform: uppercase;
+}
+
+.sc-factory-modal__close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 42px;
+  width: 42px;
+  height: 42px;
+  border: 1px solid var(--control-border);
+  border-radius: var(--radius-sm);
+  padding: 0;
+  background: var(--control-bg);
+  color: var(--ink);
+  font: inherit;
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: border-color var(--transition-fast), background var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.sc-factory-modal__close:hover {
+  border-color: var(--accent);
+  background: var(--ghost-hover-bg);
+  box-shadow: var(--hover-lift-shadow);
+}
+
+.sc-factory-modal__close:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 3px var(--accent-glow);
+}
+
+.sc-factory-modal__details {
+  margin: 0;
+  padding: 0 var(--space-5) var(--space-5);
+}
+
+.sc-factory-modal__detail {
+  display: grid;
+  grid-template-columns: minmax(140px, 0.42fr) minmax(0, 1fr);
+  gap: var(--space-4);
+  border-bottom: 1px solid var(--hairline);
+  padding: var(--space-4) 0;
+}
+
+.sc-factory-modal__detail:last-child {
+  border-bottom: 0;
+}
+
+.sc-factory-modal__detail dt {
+  color: var(--dim);
+  font-size: 0.72rem;
+  font-weight: var(--weight-heavy);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.sc-factory-modal__detail dd {
+  min-width: 0;
+  margin: 0;
+  color: var(--ink);
+  font-size: var(--text-body-sm);
+  line-height: var(--leading-relaxed);
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 640px) {
+  .sc-embed table.wpDataTableID-7 th:nth-child(2),
+  .sc-embed table.wpDataTableID-7 td:nth-child(2) {
+    display: none !important;
+  }
+
+  .sc-embed table.wpDataTableID-7 th:nth-child(1) {
+    width: 60% !important;
+  }
+
+  .sc-embed table.wpDataTableID-7 th:nth-child(3) {
+    width: 40% !important;
+  }
+
+  .sc-factory-modal {
+    padding: var(--space-2);
+  }
+
+  .sc-factory-modal__panel {
+    max-height: calc(100vh - 16px);
+  }
+
+  .sc-factory-modal__header,
+  .sc-factory-modal__details {
+    padding-right: var(--space-4);
+    padding-left: var(--space-4);
+  }
+
+  .sc-factory-modal__detail {
+    grid-template-columns: 1fr;
+    gap: var(--space-1);
+  }
+}
