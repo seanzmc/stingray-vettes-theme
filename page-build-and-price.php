@@ -12,24 +12,34 @@
 
 $configurator_links = array(
 	array(
-		'label' => __( 'Stingray Configurator', 'stingray-corvette' ),
-		'model' => __( 'Corvette Stingray', 'stingray-corvette' ),
-		'url'   => 'https://www.chevrolet.com/shopping/configurator/performance/2026/corvette/corvette/config',
+		'label' => __( 'Stingray', 'stingray-corvette' ),
+		'model' => __( '2027 Corvette', 'stingray-corvette' ),
+		'url'   => 'https://www.chevrolet.com/shopping/configurator/performance/2027/corvette/corvette',
 	),
 	array(
-		'label' => __( 'E-Ray Configurator', 'stingray-corvette' ),
-		'model' => __( 'Corvette E-Ray', 'stingray-corvette' ),
-		'url'   => 'https://www.chevrolet.com/shopping/configurator/performance/2026/corvette/corvette-eray/config',
+		'label' => __( 'Grand Sport', 'stingray-corvette' ),
+		'model' => __( '2027 Corvette', 'stingray-corvette' ),
+		'url'   => 'https://www.chevrolet.com/shopping/configurator/performance/2027/corvette/corvette-gs',
 	),
 	array(
-		'label' => __( 'Z06 Configurator', 'stingray-corvette' ),
-		'model' => __( 'Corvette Z06', 'stingray-corvette' ),
-		'url'   => 'https://www.chevrolet.com/shopping/configurator/performance/2026/corvette/corvette-z06/config',
+		'label'  => __( 'Grand Sport X', 'stingray-corvette' ),
+		'model'  => __( '2027 Corvette', 'stingray-corvette' ),
+		'status' => __( 'Coming soon', 'stingray-corvette' ),
 	),
 	array(
-		'label' => __( 'ZR1 Configurator', 'stingray-corvette' ),
-		'model' => __( 'Corvette ZR1', 'stingray-corvette' ),
-		'url'   => 'https://www.chevrolet.com/shopping/configurator/performance/2026/corvette/corvette-zr1/config',
+		'label' => __( 'Z06', 'stingray-corvette' ),
+		'model' => __( '2027 Corvette', 'stingray-corvette' ),
+		'url'   => 'https://www.chevrolet.com/shopping/configurator/performance/2027/corvette/corvette-z06',
+	),
+	array(
+		'label' => __( 'ZR1', 'stingray-corvette' ),
+		'model' => __( '2027 Corvette', 'stingray-corvette' ),
+		'url'   => 'https://www.chevrolet.com/shopping/configurator/performance/2027/corvette/corvette-zr1',
+	),
+	array(
+		'label' => __( 'ZR1X', 'stingray-corvette' ),
+		'model' => __( '2027 Corvette', 'stingray-corvette' ),
+		'url'   => 'https://www.chevrolet.com/shopping/configurator/performance/2027/corvette/corvette-zr1x',
 	),
 );
 
@@ -50,6 +60,7 @@ get_header();
 
 			<div class="sc-grid">
 				<?php foreach ( $configurator_links as $configurator_link ) : ?>
+					<?php if ( ! empty( $configurator_link['url'] ) ) : ?>
 					<a class="sc-link-card" href="<?php echo esc_url( $configurator_link['url'] ); ?>" target="_blank" rel="noopener noreferrer">
 						<span>
 							<span class="sc-link-eyebrow"><?php echo esc_html( $configurator_link['model'] ); ?></span>
@@ -57,6 +68,15 @@ get_header();
 						</span>
 						<span class="sc-link-arrow" aria-hidden="true">&#8599;</span>
 					</a>
+					<?php else : ?>
+					<div class="sc-link-card sc-link-card--disabled" aria-disabled="true">
+						<span>
+							<span class="sc-link-eyebrow"><?php echo esc_html( $configurator_link['model'] ); ?></span>
+							<span class="sc-link-title"><?php echo esc_html( $configurator_link['label'] ); ?></span>
+						</span>
+						<span class="sc-link-status"><?php echo esc_html( $configurator_link['status'] ); ?></span>
+					</div>
+					<?php endif; ?>
 				<?php endforeach; ?>
 			</div>
 		</section>

@@ -140,6 +140,16 @@
   box-shadow: var(--hover-lift-shadow);
 }
 
+.sc-link-card--disabled {
+  cursor: not-allowed;
+  color: var(--muted);
+}
+
+.sc-link-card--disabled:hover {
+  border-color: var(--line);
+  box-shadow: none;
+}
+
 .sc-link-eyebrow {
   display: block;
   font-size: 0.68rem;
@@ -160,6 +170,18 @@
   flex: 0 0 auto;
   color: var(--accent);
   font-size: 1.2rem;
+}
+
+.sc-link-status {
+  flex: 0 0 auto;
+  border: 1px solid var(--control-border);
+  border-radius: 999px;
+  padding: 4px 10px;
+  color: var(--dim);
+  font-size: 0.7rem;
+  font-weight: var(--weight-bold);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 /* ---- Numbered step list (instructions) ---- */
