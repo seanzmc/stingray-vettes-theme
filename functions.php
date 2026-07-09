@@ -208,11 +208,21 @@ function stingray_corvette_filter_factory_sheet_rows( $sheet_rows, $table_id, $s
 		),
 		$url_parts['scheme'] . '://' . $url_parts['host'] . $csv_path
 	);
+	$cache_key = 'stingray_factory_sheet_' . md5( $csv_url );
+	$cached    = get_transient( $cache_key );
+
+	if (
+		is_array( $cached ) &&
+		array_key_exists( 'rows', $cached ) &&
+		is_array( $cached['rows'] )
+	) {
+		return $cached['rows'];
+	}
 
 	$response = wp_safe_remote_get(
 		$csv_url,
 		array(
-			'timeout'     => 20,
+			'timeout'     => 8,
 			'redirection' => 3,
 		)
 	);
@@ -258,10 +268,11 @@ function stingray_corvette_filter_factory_sheet_rows( $sheet_rows, $table_id, $s
 
 	$factory_rows = array();
 	while ( false !== ( $row = fgetcsv( $stream, 0, ',', '"', '\\' ) ) ) {
-		if ( count( $row ) < count( $source_headers ) || '' === trim( implode( '', $row ) ) ) {
+		if ( '' === trim( implode( '', $row ) ) ) {
 			continue;
 		}
 
+		$row = array_pad( $row, count( $source_headers ), '' );
 		$row = array_map( 'trim', array_slice( $row, 0, count( $source_headers ) ) );
 		$row = array_combine( $source_headers, $row );
 
@@ -271,8 +282,13 @@ function stingray_corvette_filter_factory_sheet_rows( $sheet_rows, $table_id, $s
 	}
 
 	fclose( $stream );
+	set_transient(
+		$cache_key,
+		array( 'rows' => $factory_rows ),
+		5 * MINUTE_IN_SECONDS
+	);
 
-	return $factory_rows ? $factory_rows : $sheet_rows;
+	return $factory_rows;
 }
 add_filter( 'wpdatatables_filter_google_sheet_array', 'stingray_corvette_filter_factory_sheet_rows', 10, 3 );
 

@@ -1,198 +1,193 @@
 # Current Readiness Report
 
-Updated: 2026-07-09 after staging deployment and browser QA of theme candidate `0.1.5`.
+Updated: 2026-07-09 after staging deployment, two independent-review remediation passes, and affected-route QA of theme candidate `0.1.12`.
 
 ## Release decision
 
-**Current decision: NO-GO for production.**
+**Current decision: NO-GO for production pending one controlled staging submission and separate production-deployment approval.**
 
-The theme-owned implementation is now a viable staging candidate: static gates pass, all public routes serve version `0.1.5`, Formidable controls inherit the dark theme, and wpDataTables no longer shows the white/Mojito stock skin. Production deployment remains blocked by three plugin/integration defects and one business-content approval gate documented below.
+The four previously documented implementation/content blockers are cleared on staging:
 
-No production deployment, live-site mutation, or real order submission was performed.
+1. Cloudflare now authorizes the staging hostname and renders the Turnstile challenge instead of error `110200`.
+2. wpDataTables table 7 reads the requested Google worksheet and renders real factory-order rows.
+3. Formidable form 8 uses the valid ZR1 image and no longer applies the identified legacy inline colors.
+4. `/process/` copy is approved and its cancellation/refund language has been clarified.
+
+The remaining validation gate is a real end-to-end staging POST. That requires separate approval for a test lead identity, recipient, and cleanup procedure; a human may also need to complete the Turnstile challenge. No production deployment or real order submission was performed.
 
 ## Candidate and staging state
 
 - Repo branch: `main`
-- Candidate version: `style.css` `Version: 0.1.5`
-- Staging theme: active, version `0.1.5`
+- Base candidate commit: `7c5c172`
+- Review-remediation diff and readiness report: local, uncommitted
+- Candidate version: `style.css` `Version: 0.1.12`
+- Staging theme: active, version `0.1.12`
 - Staging base URL: `https://staging-427b-stingraychevroletcorvette.wpcomstaging.com/`
-- Every versioned theme CSS/JS asset on all seven public routes uses `?ver=0.1.5`.
-- All seven routes return HTTP 200.
-- Required page custom fields are populated on staging:
+- All seven public routes return HTTP 200 and emit only `?ver=0.1.12` theme assets.
+- All 21 rendered local theme assets return HTTP 200.
+- Required staging page custom fields remain populated:
   - `/deposit/`: `[formidable id=8]`
   - `/build-and-price/`: `[formidable id=30]`
   - `/factory/`: `[wpdatatable id=7 table_view=regular]`
-- Formidable, wpDataTables, and the order-submit plugin are active on staging.
-- The old local WP Studio install remains non-authoritative because its plugins are inactive.
+- Formidable, wpDataTables, and the order-submit plugin remain active on staging.
 
-## Theme changes in the candidate
+## Candidate changes
 
-### Embed loading
+### Google Sheet / wpDataTables integration
 
-- `functions.php` loads `assets/css/embeds.css` normally for `/deposit/` and `/build-and-price/`.
-- wpDataTables registers page-specific styles only after rendering its shortcode. `/factory/` therefore prints the theme embed skin from `wp_footer` after the registered Mojito/core styles.
-- Staging HTML proves all wpDataTables 7.5.1 styles load before one `embeds.css?ver=0.1.5` occurrence.
+- `functions.php` adds a table-7-scoped `wpdatatables_filter_google_sheet_array` filter.
+- wpDataTables 7.5.1 drops the worksheet `gid` when adapting a published `2PACX` URL. The theme filter preserves the configured publication URL, fetches its requested worksheet as CSV, normalizes multiline headers, and fails back to the plugin-provided rows on invalid host, URL, response, or schema.
+- Successful parsed responses, including a valid empty worksheet, are cached for five minutes; the uncached request timeout is eight seconds.
+- CSV records with omitted trailing empty fields are padded to the header count instead of discarded.
+- Table 7 metadata now matches all 14 source columns.
+- Identifier-like values such as Ship-to, Model Year, and MSRP remain source strings instead of receiving inappropriate numeric formatting.
+- Public filters are limited to Order # and Current.
+- The plugin's responsive row mutation is disabled for table 7; the theme owns the compact responsive presentation and details interaction.
 
-### Formidable
+### Factory table presentation
 
-- Existing field, label, radio, checkbox, submit, validation, and message styles were retained.
-- HTML-container images are responsive.
-- Radio/checkbox labels, upload buttons, and submit buttons have visible keyboard focus treatment.
-- No field-ID-specific theme overrides or broad inline-style normalization were added.
+- The public table presents Order #, Last Updated @ Factory, and Current at desktop width.
+- At 390px it presents Order # and Current without page overflow.
+- The complete 14-column row remains in the DOM and opens in an accessible theme-owned dialog.
+- Rows are mouse- and keyboard-operable; Enter/Space opens the dialog, Escape closes it, focus moves to the close control, and the dialog traps Tab focus.
+- Empty source values are omitted from the detail list rather than shown as blank rows.
 
-### wpDataTables
+### Formidable form 8
 
-- The outer wrapper now uses the dark carbon surface, theme border/radius, inherited ChevySans typography, and contained horizontal overflow.
-- Filter sections wrap responsively and preserve DOM/tab order.
-- Filter labels and inputs are readable and theme-aligned.
-- The clear-filter control is a 42px dark button with hover/focus treatment.
-- Headers and body cells no longer use Mojito teal/white surfaces or dark-on-dark text.
-- Table headers, body cells, pagination, and modal surfaces use scoped theme selectors.
-- Narrow layouts keep the 680px table inside the plugin wrapper's horizontal scroller instead of creating page-level overflow.
+- Field 696 now uses:
+  `https://stingraychevroletcorvette.com/wp-content/uploads/pictures/deposit-form/zr1-closed.png`
+- Legacy inline `color` declarations were removed from Formidable fields 696, 699, 1729, and 2221 while preserving non-color emphasis/layout declarations.
+- The form content now inherits the theme's dark-surface typography and link colors.
 
-## Static gates
+### Process copy
 
-Passed after the final changes:
+- Refund eligibility now states directly that a customer may cancel and request a full refund before the order is submitted to the factory.
+- The non-refundable point is consistently described as factory submission for production.
+- Refund request, address-confirmation, check-payee, E-Ray transfer, list-move, and refund instructions are separated into single-purpose bullets.
+- The approved business policy itself was not changed.
 
-- PHP lint: all 14 root/include PHP files
-- JavaScript syntax: six theme scripts
-- Enqueued local asset existence: 18 paths
-- Homepage spin inventory: five paints with 30 frames each
-- Embed CSS brace/token validation: all 46 referenced tokens resolve
-- Mock enqueue harness:
-  - Formidable routes enqueue normally
-  - Factory prefers registered `wdt-skin-mojito`
-  - Factory falls back to registered `wdt-wpdatatables`
-  - Factory remains safe when neither handle is registered
-  - Unrelated routes do not enqueue or print the embed skin
+## Static and rendered gates
+
+Passed against candidate `0.1.12`:
+
+- PHP lint: all 14 root/include PHP files plus the Factory Sheet regression harness
+- JavaScript syntax: all seven theme scripts plus the Factory table regression test
+- Factory Sheet regression test: valid empty worksheet, trailing-empty-field padding, and short-lived response caching
+- Factory table regression test: real rows remain operable; rows that start invalid or later become empty/child/group/malformed are unprepared and non-interactive
 - `git diff --check`
-- Independent final review: pass
+- Seven-route HTTP gate: `/`, `/order/`, `/deposit/`, `/build-and-price/`, `/calculator/`, `/factory/`, `/process/`
+- Version alignment: every rendered route reports only `0.1.12` theme asset versions
+- Rendered asset gate: 21 of 21 local theme assets return HTTP 200
+- Staging database gate:
+  - table 7 has 14 synchronized columns
+  - `responsive=0`
+  - `display_length=10`
+  - Formidable field backup set contains all four expected records
+  - old ZR1 URL absent
+  - new ZR1 URL present
+  - identified inline color styles absent
 
-## Browser QA completed
+## Affected browser QA
 
-### Responsive matrix
+### Factory
 
-Checked at 390px, 768px, and 1440px:
+- Google publication ID and worksheet `gid=520639850` are preserved.
+- The source currently produces 25 rows.
+- Public headers are Order #, Last Updated @ Factory, and Current.
+- Pagination reports `Showing 1 to 10 of 25 entries`.
+- The prior malformed `Group"` / `Model` row is absent.
+- Desktop rows are 44px high instead of expanding to the height of the Ordered Options field.
+- Filtering to zero results leaves the DataTables placeholder non-focusable and non-interactive; clicking it does not open a dialog.
+- Clearing the filter restores ten prepared rows and `Showing 1 to 10 of 25 entries`.
+- A staging DOM mutation that converted a prepared row into a DataTables child row removed its trigger class, tabindex, and dialog ARIA attributes; a subsequent click did not open the dialog.
+- The row dialog opened by keyboard and a synthetic browser mouse event, displayed 13 populated fields for the sampled row, and rendered with the dark theme.
+- At an asserted 390px iframe width:
+  - no page-level horizontal overflow
+  - visible headers are Order # and Current
+  - all 14 source cells remain available to the dialog
+  - the sampled dialog displayed correctly with aligned labels/values
+- No JavaScript errors were reported.
 
-- `/`
-- `/order/`
-- `/deposit/`
-- `/build-and-price/`
-- `/calculator/`
-- `/factory/`
-- `/process/`
+### Order / Turnstile
 
-Results:
+- Representative required selections completed with Arctic White and Jet Black.
+- Download Build and Submit to Dealer became available.
+- The dealer-request modal opened.
+- Turnstile rendered a visible `Verify you are human` challenge.
+- Error `110200` / `Domain not authorized` did not recur.
+- The hidden Turnstile response control was created by the widget.
+- No challenge was automated and no POST was sent.
+- No JavaScript errors were reported.
 
-- No page-level horizontal overflow on any tested route/width.
-- All tested pages served theme version `0.1.5`.
-- Shared navigation, page shell, and footer rendered on all routes.
-- The only failed image was the known Formidable-owned ZR1 image described under blockers.
+### Deposit / Formidable
 
-### Homepage
+- Selecting Yes revealed the conditional model fields.
+- The new ZR1 image loaded completely at natural size 1000×1000.
+- The old `zr1-closed-150x150.png` URL is absent from rendered form HTML.
+- The new `/pictures/deposit-form/zr1-closed.png` URL is present.
+- Rendered Formidable content contains zero inline color declarations.
+- No JavaScript errors were reported.
 
-- `#spinCanvas` rendered at the mobile viewport.
-- The correct theme spin base was present.
-- All 30 current-paint frames loaded.
-- A synthetic pointer drag changed the canvas frame.
+### Process
 
-### Order form
+- All four revised refund-policy sentences are present in staging HTML.
+- E-Ray transfer, list-move, and refund instructions are present as separate items.
+- Superseded cancellation/refund wording is absent.
+- The page has no horizontal overflow at the tested desktop viewport.
+- The route serves candidate version `0.1.12`; the Process code did not change in the review follow-up.
 
-- Twelve-step app rendered without page overflow.
-- Representative required path completed with Arctic White and Jet Black selections.
-- Download and Submit controls enabled after required selections.
-- Dealer modal opened.
-- Turnstile attempted to render; the domain-authorization blocker below prevented a valid challenge.
-- No POST was sent.
+## Independent review follow-up
 
-### Calculator
+The independent reviews found no XSS, SSRF, enqueue/version, or process-copy defect. Their edge cases are corrected and covered by regression tests in the `0.1.12` staging deployment:
 
-- Mobile layout had no page overflow.
-- Monthly payment test `70000 / 72 / 6.9` returned `$1,194.24`.
+- a valid header-only worksheet no longer falls back to the wrong/default worksheet;
+- CSV records with omitted trailing fields are retained and padded;
+- parsed responses are cached for five minutes and the uncached request is bounded to eight seconds;
+- DataTables empty-result, child, group, and malformed rows no longer become order-dialog triggers.
+- a previously prepared row is actively unprepared if a later DataTables redraw turns it into an invalid row, and event handling revalidates the row before opening a dialog.
 
-### Formidable
+The final focused re-review passed with no remaining logic or security errors. It independently reran both Factory regression suites, JavaScript syntax validation, and `git diff --check`.
 
-- Deposit and Build & Price forms render beneath `.sc-embed`.
-- Inputs, radios, labels, buttons, and validation errors are readable on the dark theme.
-- Build & Price blank-submit validation rendered 18 themed error/blank-field states and did not submit.
-- Build & Price images stay within the 390px layout and none failed.
-- Formidable's stock frontend stylesheet is not required for the current presentation.
+Staging cache verification returned the same 25 rows on both calls: the uncached request completed in 253ms and the immediate cached call completed in less than 1ms.
 
-### wpDataTables
+## Cleared blockers
 
-- Desktop computed styles confirm a dark wrapper, dark headers, muted readable cells, ChevySans inheritance, 42px controls, and no page overflow.
-- At 390px, filters wrap in DOM order and the wide table remains inside the plugin's horizontal scroller.
-- Keyboard traversal exposes visible focus glow on filter controls, the clear button, and sortable headers.
+### Turnstile hostname authorization — cleared
 
-## Production blockers
+The staging hostname is accepted by the configured widget. The challenge now renders normally and no longer emits Cloudflare error `110200`.
 
-### 1. Turnstile staging hostname is not authorized
+### wpDataTables worksheet selection and row details — cleared
 
-Opening the order submission modal produces Cloudflare Turnstile error `110200`.
+Table 7 now renders the requested worksheet's current rows, has synchronized metadata, retains all details, paginates normally, and provides a usable compact/mobile presentation.
 
-Cloudflare's current documentation defines `110200` as **Domain not authorized** and directs the owner to add the current domain in Hostname Management.
+### Formidable image and inline colors — cleared
 
-Required action:
+The replacement image loads and the identified inline colors are absent from both the stored field definitions and rendered form.
 
-1. Add `staging-427b-stingraychevroletcorvette.wpcomstaging.com` to the Turnstile widget's allowed hostnames.
-2. Re-open the staging order modal and obtain a valid challenge/token.
-3. Approve a test lead identity, recipient, and cleanup procedure.
-4. Perform one controlled end-to-end POST and verify delivery plus server-side Turnstile validation.
+### Process business-copy approval — cleared
 
-This cannot be cleared by theme CSS or a browser-only test.
+The approved copy is deployed with the requested cancellation/refund refinements.
 
-### 2. wpDataTables table 7 points at a Google `pubhtml` page
+## Remaining production gate
 
-Table `7` (`Orders at Factory_v0`) is configured as `google_spreadsheet`, but its source returns a Google HTML document rather than spreadsheet rows. wpDataTables consequently renders one malformed row:
+### Controlled staging submission — not run
 
-- `Group"`
-- `Model`
+A real submission would create an external lead/order record and therefore still requires explicit approval beyond browser QA. Before production GO:
 
-A non-mutating test of the corresponding CSV export endpoint returned HTTP 200, `text/csv`, 29 data rows, and these headers:
-
-- `Order #`
-- `Last Updated @ Factory`
-- `Current`
-
-Required action: after plugin-configuration approval, back up table 7 and change only its source from the published HTML endpoint to the equivalent CSV export endpoint. Then verify filters, real rows, pagination, and row-detail modal behavior.
-
-### 3. Deposit form 8 contains a broken ZR1 image and legacy inline colors
-
-Formidable field `696` (`ZR1 LIST CLOSED`) references:
-
-`https://stingraychevroletcorvette.com/wp-content/uploads/pictures/zr1-closed-150x150.png`
-
-That URL returns HTTP 404. The existing attachment resolves at:
-
-`/wp-content/uploads/pictures/deposit-form/zr1-closed.png`
-
-The deposit form also contains six inline-color declarations, including a stock-blue `Instructions:` link that is visually inconsistent and low-emphasis on the dark surface. Relevant HTML fields include `696`, `699`, `1729`, and `2221`.
-
-Required action: after Formidable-content approval, replace the broken image URL and remove legacy inline color formatting so theme styles can control presentation. CSS should not hide the failed asset or hard-code Formidable field IDs.
-
-### 4. `/process/` business and policy copy needs human approval
-
-The route is structurally and responsively sound, but production still requires Sean's acceptance of:
-
-- deposit/refund rules
-- open and closed model lists
-- dealer fee and tag-agency fee
-- restricted-state/customer language
-- pricing and timing disclaimers
-- external ZR1 process link
+1. Approve a test name, email/phone, destination recipient, and cleanup owner.
+2. Complete the Turnstile challenge in staging; a human may need to perform this step.
+3. Submit exactly one controlled staging request.
+4. Verify the server validates the Turnstile token and the intended recipient receives the complete build.
+5. Remove or clearly mark the test record.
 
 ## Gates intentionally not run
 
+- No automated CAPTCHA/Turnstile solving.
 - No real order-form POST or lead creation.
-- No success-confirmation/payment-link submission path.
-- No wpDataTables real-row modal test because table 7 currently has malformed source data.
 - No production upload, activation, cache flush, or live smoke test.
 
 ## Required path to GO
 
-1. Authorize the staging hostname in Turnstile and complete one approved, removable test submission.
-2. Correct wpDataTables table 7's source to CSV and verify real-row behavior.
-3. Correct Formidable form 8's broken image and inline presentation content.
-4. Obtain business approval for `/process/` copy.
-5. Re-run the affected staging checks and update this report to GO.
-6. Obtain separate explicit approval before any production deployment.
+1. Complete and clean up one explicitly approved staging test submission.
+2. Update this report with the delivery/server-validation result and issue GO if it passes.
+3. Obtain separate explicit approval before production deployment.

@@ -52,10 +52,39 @@
 
 	var previousFocus = null;
 
+	function isFactoryRow(row) {
+		if (!row || row.cells.length !== headers.length) return false;
+		if (
+			row.classList.contains('child') ||
+			row.classList.contains('dtrg-group') ||
+			row.classList.contains('group')
+		) return false;
+
+		var orderCell = row.cells[0];
+		if (
+			!orderCell ||
+			orderCell.colSpan > 1 ||
+			orderCell.classList.contains('dataTables_empty') ||
+			!orderCell.textContent.trim()
+		) return false;
+
+		return true;
+	}
+
+	function unprepareRow(row) {
+		row.classList.remove('sc-factory-row');
+		row.removeAttribute('tabindex');
+		row.removeAttribute('aria-haspopup');
+		row.removeAttribute('aria-label');
+	}
+
 	function prepareRows() {
 		Array.prototype.forEach.call(table.querySelectorAll('tbody tr'), function (row) {
+			if (!isFactoryRow(row)) {
+				unprepareRow(row);
+				return;
+			}
 			var orderCell = row.cells[0];
-			if (!orderCell) return;
 			row.classList.add('sc-factory-row');
 			row.tabIndex = 0;
 			row.setAttribute('aria-haspopup', 'dialog');
@@ -102,7 +131,11 @@
 	function rowFromEvent(event) {
 		if (event.target.closest('a, button, input, select, textarea')) return null;
 		var row = event.target.closest('tbody tr');
-		return row && table.contains(row) ? row : null;
+		if (!row || !table.contains(row) || !isFactoryRow(row)) {
+			if (row && table.contains(row)) unprepareRow(row);
+			return null;
+		}
+		return row.classList.contains('sc-factory-row') ? row : null;
 	}
 
 	table.addEventListener('click', function (event) {
