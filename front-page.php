@@ -135,6 +135,26 @@
 	</div>
 </section>
 
+<!-- ===================== EXTERNAL DESTINATIONS ===================== -->
+<section class="sc-home-external" aria-label="<?php esc_attr_e( 'Explore more', 'stingray-corvette' ); ?>">
+	<div class="sc-ext-grid">
+		<a class="sc-ext-card" href="https://www.chevrolet.com/">
+			<div>
+				<div class="sc-ext-eyebrow"><?php esc_html_e( 'Explore the lineup', 'stingray-corvette' ); ?></div>
+				<div class="sc-ext-title">Chevrolet.com</div>
+			</div>
+			<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="8 7 17 7 17 16"></polyline></svg>
+		</a>
+		<a class="sc-ext-card" href="https://www.stingraychevrolet.com/">
+			<div>
+				<div class="sc-ext-eyebrow"><?php esc_html_e( 'The full dealership', 'stingray-corvette' ); ?></div>
+				<div class="sc-ext-title">Stingray Chevrolet</div>
+			</div>
+			<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="8 7 17 7 17 16"></polyline></svg>
+		</a>
+	</div>
+</section>
+
 <?php get_template_part( 'inc/site-footer' ); ?>
 
 <?php wp_footer(); ?>
