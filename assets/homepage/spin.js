@@ -18,7 +18,7 @@
     spinBehavior: 'Scroll to spin',   // 'Continuous loop' | 'Spin once, then rest' | 'Interact to spin' | 'Scroll to spin'
     spinDirection: 'Clockwise',       // 'Clockwise' | 'Counter-clockwise'
     spinSpeed: 3,                     // seconds per revolution (auto modes only)
-    scrollPerRev: 500,                // px of page scroll per full revolution (scroll mode)
+    scrollPerRev: 600,                // px of sticky page scroll per full revolution
     dragToSpin: true,                 // allow grab + drag on the car
     autoCycle: true,                  // advance paint color after N revolutions
     revsPerColor: 1,                  // revolutions before the paint changes
@@ -40,6 +40,8 @@
   var loader = document.getElementById('spinLoader');
   var hint = document.getElementById('spinHint');
   if (!canvas) return;
+  var hero = canvas.closest ? canvas.closest('.sc-hero') : null;
+  var topbar = document.querySelector('.sc-topbar');
   var ctx = canvas.getContext('2d');
   var root = document.documentElement;
 
@@ -57,13 +59,58 @@
   var fade = null;       // paint cross-fade state
   var accentRaf = 0, spinRaf = 0;
   var live = null;
+  var scrollQuery = window.matchMedia
+    ? window.matchMedia('(min-width: 900px) and (min-height: 700px) and (prefers-reduced-motion: no-preference)')
+    : null;
+  var scrollEligible = false;
+  var lastScrollProgress = 0;
+  var nextPaintRequested = false;
+
+  if (hero) hero.style.setProperty('--spin-scroll-distance', pxPerRev + 'px');
+
+  function scrollIsEligible() {
+    return behavior === 'Scroll to spin' && !!hero && !!scrollQuery && scrollQuery.matches;
+  }
+
+  function getScrollProgress() {
+    if (!hero) return 0;
+    var anchor = topbar ? topbar.getBoundingClientRect().bottom : 0;
+    var traveled = anchor - hero.getBoundingClientRect().top;
+    return Math.max(0, Math.min(1, traveled / pxPerRev));
+  }
+
+  function updateHint() {
+    if (!hint) return;
+    hint.textContent = scrollEligible
+      ? '360° · Scroll to spin'
+      : (CONFIG.dragToSpin ? '360° · Drag to spin' : '360° View');
+  }
+
+  function syncScrollMode(options) {
+    var wasEligible = scrollEligible;
+    scrollEligible = scrollIsEligible();
+    var progress = scrollEligible ? getScrollProgress() : 0;
+    if (options && options.applyInitialProgress && scrollEligible) {
+      var initialDelta = dir * progress;
+      rev += initialDelta;
+      addRotation(Math.abs(initialDelta));
+    }
+    lastScrollProgress = progress;
+    if (!scrollEligible) {
+      nextPaintRequested = false;
+    } else if ((!wasEligible || (options && options.applyInitialProgress)) && progress >= 0.7) {
+      nextPaintRequested = true;
+      preloadColor((colorIdx + 1) % COLORS.length);
+    }
+    updateHint();
+    drawFrame();
+  }
 
   var colorIdx = 0;
   if (!CONFIG.autoCycle) {
     for (var i = 0; i < COLORS.length; i++) if (COLORS[i].name === CONFIG.manualColor) colorIdx = i;
   }
 
-  if (hint) hint.textContent = (behavior === 'Scroll to spin') ? '360° · Scroll to spin' : (CONFIG.dragToSpin ? '360° · Drag to spin' : '360° View');
   canvas.style.cursor = CONFIG.dragToSpin ? 'grab' : 'default';
 
   function frameUrl(color, i) {
@@ -197,14 +244,23 @@
     ctx.globalAlpha = 1;
   }
 
-  /* ---------- Scroll to spin ---------- */
-  var lastScrollY = window.scrollY;
+  /* ---------- Bounded hero scroll to spin ---------- */
   window.addEventListener('scroll', function () {
-    var y = window.scrollY;
-    var dy = y - lastScrollY;
-    lastScrollY = y;
-    if (behavior !== 'Scroll to spin' || dragging) return;
-    var df = dir * (dy / pxPerRev);
+    if (!scrollEligible) return;
+    var progress = getScrollProgress();
+    if (dragging) {
+      lastScrollProgress = progress;
+      return;
+    }
+    var delta = progress - lastScrollProgress;
+    lastScrollProgress = progress;
+    if (!delta) return;
+    if (progress < 0.7) nextPaintRequested = false;
+    if (!nextPaintRequested && progress >= 0.7) {
+      nextPaintRequested = true;
+      preloadColor((colorIdx + 1) % COLORS.length);
+    }
+    var df = dir * delta;
     rev += df;
     addRotation(Math.abs(df));
     drawFrame();
@@ -259,7 +315,16 @@
   setAccentInstant(COLORS[colorIdx]);
   preloadColor(colorIdx);
   sizeCanvas();
-  window.addEventListener('resize', sizeCanvas);
+  syncScrollMode({ applyInitialProgress: true });
+  window.addEventListener('resize', function () {
+    sizeCanvas();
+    syncScrollMode();
+  });
+  if (scrollQuery && scrollQuery.addEventListener) {
+    scrollQuery.addEventListener('change', function () { syncScrollMode(); });
+  } else if (scrollQuery && scrollQuery.addListener) {
+    scrollQuery.addListener(function () { syncScrollMode(); });
+  }
   if (typeof ResizeObserver !== 'undefined') new ResizeObserver(sizeCanvas).observe(canvas);
   startLoop();
 })();
