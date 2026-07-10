@@ -30,6 +30,18 @@ WordPress owns the discoverable local entry point `/order/`; the theme redirects
 
 This design is preferred over reverse-proxying the app through WordPress because it preserves the current fast static delivery path and avoids extra cache, asset-path, and routing failure modes. It is preferred over vendoring an active theme copy because a second maintained runtime would drift from 27vette.
 
+## Performance Strategy
+
+Do not add a CSS/JavaScript compiler, minifier, package manifest, dependency, or build step during cutover. The current delivery path already provides the material optimizations needed for this release:
+
+- WordPress conditionally enqueues surface-specific CSS and JavaScript;
+- the homepage lazy-loads 360-frame paint sets instead of requesting every frame set at boot;
+- theme asset URLs use the theme version as a cache key;
+- WordPress.com serves current theme CSS and JavaScript with transfer compression and long-lived versioned caching; and
+- the canonical order runtime remains static and Cloudflare-served with compressed responses.
+
+The cutover must verify those properties on staging and production, record the non-frame source-size baseline, check for unexpected resource growth or failed requests, and preserve current asset scoping. A future compiler or bundler requires a separately measured bottleneck and its own approved design; a synthetic score by itself is not sufficient reason to add build infrastructure.
+
 ## Source-of-Truth Boundaries
 
 - Theme templates, theme redirects, shared chrome, and theme documentation live in `stingray-vettes-theme`.
