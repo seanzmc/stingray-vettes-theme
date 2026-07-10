@@ -28,6 +28,24 @@ function stingray_corvette_setup() {
 add_action( 'after_setup_theme', 'stingray_corvette_setup' );
 
 /**
+ * Keep the local /order/ route while sending customers to the canonical app.
+ *
+ * The 27vette main branch deploys the authoritative order runtime at the
+ * dedicated order subdomain. A temporary redirect keeps this launch reversible
+ * and prevents the theme's dormant vendored fallback from drifting into use.
+ */
+function stingray_corvette_redirect_order_page() {
+	if ( ! is_page( 'order' ) ) {
+		return;
+	}
+
+	nocache_headers();
+	wp_redirect( 'https://order.stingraychevroletcorvette.com/', 302, 'Stingray Corvette' );
+	exit;
+}
+add_action( 'template_redirect', 'stingray_corvette_redirect_order_page', 1 );
+
+/**
  * Global style layer.
  *
  * Load order is normative — it comes from the design system's
@@ -74,7 +92,7 @@ function stingray_corvette_enqueue_styles() {
 		);
 	}
 
-	// Order form (/order/): vendored form-app in its 1a "Full Carbon" skin.
+	// Dormant local fallback if the canonical /order/ redirect is intentionally disabled.
 	if ( is_page( 'order' ) ) {
 		wp_enqueue_style( 'stingray-order', $uri . '/assets/order/order.css', array( 'stingray-surfaces' ), $ver );
 		wp_enqueue_script(

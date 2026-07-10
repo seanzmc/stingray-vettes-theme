@@ -81,8 +81,10 @@ Vendored from `/Users/seandm/Projects/Stingcalc/` into `assets/calculator/`:
 
 - `front-page.php` — the ported marketing homepage (full-bleed, own document,
   shares the topbar/footer partials in `inc/`).
-- `page-order.php` — mounted 2027 Corvette order form at `/order/`, using the
-  vendored form-app assets in `assets/order/`.
+- `/order/` — temporary redirect to the canonical 27vette runtime at
+  `https://order.stingraychevroletcorvette.com/`; `page-order.php` and
+  `assets/order/` remain dormant rollback material and are not maintained as a
+  second order-form runtime.
 - `page-calculator.php` — mounted payment calculator at `/calculator/`, using
   the vendored Stingcalc logic in `assets/calculator/`.
 - `page-deposit.php` — DS-styled deposit instructions and Formidable form embed
@@ -97,6 +99,14 @@ Vendored from `/Users/seandm/Projects/Stingcalc/` into `assets/calculator/`:
   template yet.
 - All planned dedicated public surface templates are now present; final
   WordPress preview, cache-busting/versioning, and deployment are still pending.
+
+### Order form ownership
+
+The 27vette repository is the only source of truth for order-form markup, data,
+behavior, styling, vehicle renders, Turnstile, and dealer submission. Its
+`main` branch deploys `order.stingraychevroletcorvette.com`. Keep theme links on
+the local `/order/` slug; WordPress redirects that route to the canonical app so
+27vette releases do not require a theme sync or WordPress deployment.
 
 ### Embed shortcode configuration
 

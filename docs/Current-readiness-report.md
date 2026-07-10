@@ -1,10 +1,10 @@
 # Current Readiness Report
 
-Updated: 2026-07-09 after staging deployment, two independent-review remediation passes, and affected-route QA of theme candidate `0.1.12`.
+Updated: 2026-07-09 after approval and local verification of the canonical order-runtime redirect candidate `0.1.13`.
 
 ## Release decision
 
-**Current decision: NO-GO for production pending one controlled staging submission and separate production-deployment approval.**
+**Current decision: NO-GO for production pending staging deployment and redirect QA of candidate `0.1.13`, followed by separate production-deployment approval.**
 
 The four previously documented implementation/content blockers are cleared on staging:
 
@@ -13,18 +13,17 @@ The four previously documented implementation/content blockers are cleared on st
 3. Formidable form 8 uses the valid ZR1 image and no longer applies the identified legacy inline colors.
 4. `/process/` copy is approved and its cancellation/refund language has been clarified.
 
-The remaining validation gate is a real end-to-end staging POST. That requires separate approval for a test lead identity, recipient, and cleanup procedure; a human may also need to complete the Turnstile challenge. No production deployment or real order submission was performed.
+The order form is now explicitly owned by the 27vette repository and its existing customer-facing runtime at `https://order.stingraychevroletcorvette.com/`. Candidate `0.1.13` keeps all theme links on `/order/` and adds a temporary redirect to that canonical runtime, eliminating the stale duplicate as a launch dependency. The redirect has passed a local WordPress-function harness but has not yet been deployed to staging. No production deployment or real order submission was performed.
 
 ## Candidate and staging state
 
 - Repo branch: `main`
-- Base candidate commit: `7c5c172`
-- Review-remediation diff and readiness report: local, uncommitted
-- Candidate version: `style.css` `Version: 0.1.12`
+- Base candidate commit: `61404c7`
+- Canonical-order redirect and documentation diff: local, uncommitted
+- Candidate version: `style.css` `Version: 0.1.13`
 - Staging theme: active, version `0.1.12`
 - Staging base URL: `https://staging-427b-stingraychevroletcorvette.wpcomstaging.com/`
-- All seven public routes return HTTP 200 and emit only `?ver=0.1.12` theme assets.
-- All 21 rendered local theme assets return HTTP 200.
+- Candidate `0.1.13` has not been deployed; the seven-route and rendered-asset staging results below still describe `0.1.12`.
 - Required staging page custom fields remain populated:
   - `/deposit/`: `[formidable id=8]`
   - `/build-and-price/`: `[formidable id=30]`
@@ -32,6 +31,13 @@ The remaining validation gate is a real end-to-end staging POST. That requires s
 - Formidable, wpDataTables, and the order-submit plugin remain active on staging.
 
 ## Candidate changes
+
+### Canonical order runtime
+
+- `functions.php` redirects the local `/order/` page to `https://order.stingraychevroletcorvette.com/` with HTTP 302 during the reversible launch phase.
+- Existing homepage, navigation, footer, and Process links remain on the planned local `/order/` slug.
+- The authoritative runtime's `app.js`, `data.js`, and `styles.css` match 27vette `origin/main` byte-for-byte by SHA-256.
+- `page-order.php` and `assets/order/` remain dormant rollback material; they are no longer an independently maintained runtime or a launch source of truth.
 
 ### Google Sheet / wpDataTables integration
 
@@ -68,13 +74,18 @@ The remaining validation gate is a real end-to-end staging POST. That requires s
 
 ## Static and rendered gates
 
-Passed against candidate `0.1.12`:
+Passed locally against candidate `0.1.13`:
 
 - PHP lint: all 14 root/include PHP files plus the Factory Sheet regression harness
 - JavaScript syntax: all seven theme scripts plus the Factory table regression test
 - Factory Sheet regression test: valid empty worksheet, trailing-empty-field padding, and short-lived response caching
 - Factory table regression test: real rows remain operable; rows that start invalid or later become empty/child/group/malformed are unprepared and non-interactive
+- Redirect harness: `/order/` returns the canonical HTTPS location with status 302; a non-Order page does not redirect
+- Canonical runtime parity: `app.js`, `data.js`, and `styles.css` each return HTTP 200 and SHA-256-match 27vette `origin/main`
 - `git diff --check`
+
+Previously passed on staging against `0.1.12`; this is the historical pre-redirect baseline, not the expected `/order/` status after deploying `0.1.13`:
+
 - Seven-route HTTP gate: `/`, `/order/`, `/deposit/`, `/build-and-price/`, `/calculator/`, `/factory/`, `/process/`
 - Version alignment: every rendered route reports only `0.1.12` theme asset versions
 - Rendered asset gate: 21 of 21 local theme assets return HTTP 200
@@ -110,14 +121,10 @@ Passed against candidate `0.1.12`:
 
 ### Order / Turnstile
 
-- Representative required selections completed with Arctic White and Jet Black.
-- Download Build and Submit to Dealer became available.
-- The dealer-request modal opened.
-- Turnstile rendered a visible `Verify you are human` challenge.
-- Error `110200` / `Domain not authorized` did not recur.
-- The hidden Turnstile response control was created by the widget.
-- No challenge was automated and no POST was sent.
-- No JavaScript errors were reported.
+- The canonical order runtime currently serves Stingray, Grand Sport, and Z06 from the 27vette deployment.
+- Its `app.js`, `data.js`, and `styles.css` match current 27vette `origin/main` exactly.
+- The prior staging-hosted `0.1.12` non-submitting Turnstile checks are superseded by the canonical-runtime ownership decision.
+- Browser verification that staging `/order/` redirects to the canonical runtime remains pending deployment of `0.1.13`.
 
 ### Deposit / Formidable
 
@@ -170,24 +177,27 @@ The approved copy is deployed with the requested cancellation/refund refinements
 
 ## Remaining production gate
 
-### Controlled staging submission — not run
+### Canonical redirect staging QA — not run
 
-A real submission would create an external lead/order record and therefore still requires explicit approval beyond browser QA. Before production GO:
+Before production GO:
 
-1. Approve a test name, email/phone, destination recipient, and cleanup owner.
-2. Complete the Turnstile challenge in staging; a human may need to perform this step.
-3. Submit exactly one controlled staging request.
-4. Verify the server validates the Turnstile token and the intended recipient receives the complete build.
-5. Remove or clearly mark the test record.
+1. Deploy exact candidate `0.1.13` to staging under the existing staging-only approval boundary.
+2. Verify staging `/order/` returns HTTP 302 with `Location: https://order.stingraychevroletcorvette.com/`.
+3. Verify the redirect occurs before the dormant local order CSS, JavaScript, Turnstile, or page template is emitted.
+4. Follow the redirect on desktop and mobile and verify the canonical runtime loads without console or required-resource errors.
+5. Re-run the remaining six local staging routes and version/asset gates to confirm the redirect change did not affect them.
+
+A controlled submission on the canonical runtime is not part of this redirect pass. It can create a real dealer record and still requires separate explicit approval for test identity, recipient, and cleanup.
 
 ## Gates intentionally not run
 
 - No automated CAPTCHA/Turnstile solving.
 - No real order-form POST or lead creation.
+- No staging upload or redirect browser QA for `0.1.13`.
 - No production upload, activation, cache flush, or live smoke test.
 
 ## Required path to GO
 
-1. Complete and clean up one explicitly approved staging test submission.
-2. Update this report with the delivery/server-validation result and issue GO if it passes.
+1. Deploy `0.1.13` to staging and complete the redirect plus unaffected-route QA above.
+2. Update this report with the staging result and issue GO if it passes.
 3. Obtain separate explicit approval before production deployment.

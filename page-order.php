@@ -1,14 +1,13 @@
 <?php
 /**
- * /order/ — the 2027 Corvette Order Form (SiteWireframe item 2).
+ * Dormant local fallback for the 2027 Corvette Order Form.
  *
- * Binds by slug: page-order.php ↔ the "order" page. The configurator is the
- * vendored form-app (27vette repo) in its form-style-1a "Full Carbon" skin:
- * markup below mirrors form-app/index.html's <body> with one mount delta —
- * the in-form brand block is omitted because the shared sc-topbar directly
- * above already carries the crossflags + wordmark. Assets enqueue from
- * assets/order/ in functions.php; window.SC_FORM_ASSET_BASE points the app
- * at the vendored vehicle renders.
+ * The normal /order/ request redirects to the canonical 27vette runtime before
+ * this template renders. If that redirect is intentionally disabled for a
+ * rollback, resynchronize and revalidate this vendored form-app first. The
+ * in-form brand block is omitted because the shared sc-topbar directly above
+ * already carries the crossflags + wordmark. Assets enqueue from assets/order/
+ * in functions.php; window.SC_FORM_ASSET_BASE points at the vendored renders.
  *
  * @package Stingray_Corvette
  */

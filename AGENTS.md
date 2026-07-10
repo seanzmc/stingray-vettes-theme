@@ -26,10 +26,14 @@ This theme vendors a copy. Do not treat `assets/css/tokens/*`,
 design system changes, re-copy intentionally, preserve the documented deltas in
 `README.md`, and mirror any manifest load-order change in `functions.php`.
 
-Order-form assets under `assets/order/` are vendored from the 27vette form app.
-Do not alter pricing, RPO rules, generated data, dependencies, or submission
-logic in this theme unless the task explicitly asks for that and the source of
-truth has been identified.
+The order form is canonical in `/Users/seandm/Projects/27vette/form-app/` and at
+`https://order.stingraychevroletcorvette.com/`; updates to the 27vette `main`
+branch deploy that runtime. Theme links keep the local `/order/` slug, which
+redirects to the canonical app. `page-order.php` and `assets/order/` are dormant
+rollback material, not an independently maintained runtime. Do not update their
+pricing, RPO rules, generated data, dependencies, or submission logic here, and
+do not reactivate them without first resynchronizing and revalidating them
+against the canonical 27vette runtime.
 
 Calculator assets under `assets/calculator/` are vendored from Stingcalc logic
 with a theme-authored skin. Preserve JS selector contracts when changing
