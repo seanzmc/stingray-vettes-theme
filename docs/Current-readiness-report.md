@@ -1,203 +1,122 @@
 # Current Readiness Report
 
-Updated: 2026-07-09 after approval and local verification of the canonical order-runtime redirect candidate `0.1.13`.
+Updated: 2026-07-10 after staging approval of theme `0.1.16` and review of the prepared production page and plugin configuration.
 
 ## Release decision
 
-**Current decision: NO-GO for production pending staging deployment and redirect QA of candidate `0.1.13`, followed by separate production-deployment approval.**
+**Current decision: GO for the controlled production upload and activation of theme `0.1.16` at commit `a60a10c46f6d029c562ba1492565966d29306871`.**
 
-The four previously documented implementation/content blockers are cleared on staging:
+All pre-activation gates are passing. Production activation has **not** occurred: production still runs Hello Elementor, and the production smoke, cache, queryless Order, and legacy-redirect gates remain post-activation checks. Any failure in those gates requires rollback to the prior theme and changes the decision to NO-GO pending diagnosis.
 
-1. Cloudflare now authorizes the staging hostname and renders the Turnstile challenge instead of error `110200`.
-2. wpDataTables table 7 reads the requested Google worksheet and renders real factory-order rows.
-3. Formidable form 8 uses the valid ZR1 image and no longer applies the identified legacy inline colors.
-4. `/process/` copy is approved and its cancellation/refund language has been clarified.
+## Release identity and ownership
 
-The order form is now explicitly owned by the 27vette repository and its existing customer-facing runtime at `https://order.stingraychevroletcorvette.com/`. Candidate `0.1.13` keeps all theme links on `/order/` and adds a temporary redirect to that canonical runtime, eliminating the stale duplicate as a launch dependency. The redirect has passed a local WordPress-function harness but has not yet been deployed to staging. No production deployment or real order submission was performed.
-
-## Candidate and staging state
-
-- Repo branch: `main`
-- Base candidate commit: `61404c7`
-- Canonical-order redirect and documentation diff: local, uncommitted
-- Candidate version: `style.css` `Version: 0.1.13`
-- Staging theme: active, version `0.1.12`
+- Theme repository branch: `main`
+- Theme release commit: `a60a10c46f6d029c562ba1492565966d29306871`
+- Theme version: `0.1.16`
+- Staging active theme: `stingray-corvette` version `0.1.16`
 - Staging base URL: `https://staging-427b-stingraychevroletcorvette.wpcomstaging.com/`
-- Candidate `0.1.13` has not been deployed; the seven-route and rendered-asset staging results below still describe `0.1.12`.
-- Required staging page custom fields remain populated:
-  - `/deposit/`: `[formidable id=8]`
-  - `/build-and-price/`: `[formidable id=30]`
-  - `/factory/`: `[wpdatatable id=7 table_view=regular]`
-- Formidable, wpDataTables, and the order-submit plugin remain active on staging.
+- Canonical order repository commit: `702ef1cc468315a20a397310b98e2eeb3d49bdde`
+- Canonical order runtime: `https://order.stingraychevroletcorvette.com/`
 
-## Candidate changes
+The 27vette deployment is live at the canonical runtime. Its crossed-flags/wordmark link points to `https://stingraychevroletcorvette.com/`, exposes the accessible label `Return to Stingray Corvette home`, and retains the deployed visible-focus rule. The theme continues to keep public links on `/order/`, which redirects to that single canonical runtime. `page-order.php` and `assets/order/` remain dormant rollback material, not a second maintained order runtime.
 
-### Canonical order runtime
+## Staging release gate
 
-- `functions.php` redirects the local `/order/` page to `https://order.stingraychevroletcorvette.com/` with HTTP 302 during the reversible launch phase.
-- Existing homepage, navigation, footer, and Process links remain on the planned local `/order/` slug.
-- The authoritative runtime's `app.js`, `data.js`, and `styles.css` match 27vette `origin/main` byte-for-byte by SHA-256.
-- `page-order.php` and `assets/order/` remain dormant rollback material; they are no longer an independently maintained runtime or a launch source of truth.
+The three changed runtime files on staging match the committed `0.1.16` files byte-for-byte. After the WordPress object cache and edge cache were purged, the exact queryless `/order/` route produced stable results:
 
-### Google Sheet / wpDataTables integration
+| Request | Status | Location | Body |
+|---|---:|---|---:|
+| Cold after confirmed purge | `302` | `https://order.stingraychevroletcorvette.com/` | 0 bytes |
+| Immediate warm repeat | `302` | `https://order.stingraychevroletcorvette.com/` | 0 bytes |
 
-- `functions.php` adds a table-7-scoped `wpdatatables_filter_google_sheet_array` filter.
-- wpDataTables 7.5.1 drops the worksheet `gid` when adapting a published `2PACX` URL. The theme filter preserves the configured publication URL, fetches its requested worksheet as CSV, normalizes multiline headers, and fails back to the plugin-provided rows on invalid host, URL, response, or schema.
-- Successful parsed responses, including a valid empty worksheet, are cached for five minutes; the uncached request timeout is eight seconds.
-- CSV records with omitted trailing empty fields are padded to the header count instead of discarded.
-- Table 7 metadata now matches all 14 source columns.
-- Identifier-like values such as Ship-to, Model Year, and MSRP remain source strings instead of receiving inappropriate numeric formatting.
-- Public filters are limited to Order # and Current.
-- The plugin's responsive row mutation is disabled for table 7; the theme owns the compact responsive presentation and details interaction.
+Both responses identified `Stingray Corvette` as the redirect source and sent private, no-store/no-cache headers. The initial stale edge response was purged and was not accepted as passing evidence.
 
-### Factory table presentation
+The version-aligned staging route matrix passed:
 
-- The public table presents Order #, Last Updated @ Factory, and Current at desktop width.
-- At 390px it presents Order # and Current without page overflow.
-- The complete 14-column row remains in the DOM and opens in an accessible theme-owned dialog.
-- Rows are mouse- and keyboard-operable; Enter/Space opens the dialog, Escape closes it, focus moves to the close control, and the dialog traps Tab focus.
-- Empty source values are omitted from the detail list rather than shown as blank rows.
+| Route | Result |
+|---|---:|
+| `/` | `200` |
+| `/deposit/` | `200` |
+| `/build-and-price/` | `200` |
+| `/calculator/` | `200` |
+| `/factory/` | `200` |
+| `/process/` | `200` |
+| `/order/` | `302` to the canonical order runtime |
 
-### Formidable form 8
+Desktop checks at 1440×900 and mobile checks at 390×844 passed for the homepage 360 viewer, navigation/drawer, footer, forms, Factory table/details, calculator, Process page, and Order redirect/return link. No checked surface had page-level overflow or a console error. A required-resource sweep across the six locally rendered surfaces found no failed request or HTTP 4xx/5xx response.
 
-- Field 696 now uses:
-  `https://stingraychevroletcorvette.com/wp-content/uploads/pictures/deposit-form/zr1-closed.png`
-- Legacy inline `color` declarations were removed from Formidable fields 696, 699, 1729, and 2221 while preserving non-color emphasis/layout declarations.
-- The form content now inherits the theme's dark-surface typography and link colors.
+## Staging legacy redirects
 
-### Process copy
+Every approved first hop returned `302` to the exact local replacement:
 
-- Refund eligibility now states directly that a customer may cancel and request a full refund before the order is submitted to the factory.
-- The non-refundable point is consistently described as factory submission for production.
-- Refund request, address-confirmation, check-payee, E-Ray transfer, list-move, and refund instructions are separated into single-purpose bullets.
-- The approved business policy itself was not changed.
+| Legacy path | Replacement |
+|---|---|
+| `/order-landing-page/` | `/order/` |
+| `/order-and-production-update/` | `/order/` |
+| `/order-landing-page/deposit-form/` | `/deposit/` |
+| `/order-landing-page/build-and-price-link-share/` | `/build-and-price/` |
+| `/orders-in-production/` | `/factory/` |
+| `/corvette-process-guide/` | `/process/` |
+| `/process-links/` | `/process/` |
 
-## Static and rendered gates
+The local redirect regression also verifies the exact map, query-string handling, missing-trailing-slash normalization, unchanged unmapped paths, and no destination-to-legacy-source loop.
 
-Passed locally against candidate `0.1.13`:
+## Prepared production configuration
 
-- PHP lint: all 14 root/include PHP files plus the Factory Sheet regression harness
-- JavaScript syntax: all seven theme scripts plus the Factory table regression test
-- Factory Sheet regression test: valid empty worksheet, trailing-empty-field padding, and short-lived response caching
-- Factory table regression test: real rows remain operable; rows that start invalid or later become empty/child/group/malformed are unprepared and non-interactive
-- Redirect harness: `/order/` returns the canonical HTTPS location with status 302; a non-Order page does not redirect
-- Canonical runtime parity: `app.js`, `data.js`, and `styles.css` each return HTTP 200 and SHA-256-match 27vette `origin/main`
-- `git diff --check`
+Production remains on Hello Elementor. The replacement records are published, parentless, use the default template, and have empty editor content so the Stingray theme's dedicated templates can own their rendering after activation.
 
-Previously passed on staging against `0.1.12`; this is the historical pre-redirect baseline, not the expected `/order/` status after deploying `0.1.13`:
+| Page ID | Title | Path | Status |
+|---:|---|---|---|
+| `68288` | Order | `/order/` | Published |
+| `68294` | Deposit | `/deposit/` | Published |
+| `68291` | Build & Price | `/build-and-price/` | Published |
+| `68297` | Payment Calculator | `/calculator/` | Published |
+| `68300` | Orders @ Factory | `/factory/` | Published |
+| `68303` | Process Guidelines | `/process/` | Published |
 
-- Seven-route HTTP gate: `/`, `/order/`, `/deposit/`, `/build-and-price/`, `/calculator/`, `/factory/`, `/process/`
-- Version alignment: every rendered route reports only `0.1.12` theme asset versions
-- Rendered asset gate: 21 of 21 local theme assets return HTTP 200
-- Staging database gate:
-  - table 7 has 14 synchronized columns
-  - `responsive=0`
-  - `display_length=10`
-  - Formidable field backup set contains all four expected records
-  - old ZR1 URL absent
-  - new ZR1 URL present
-  - identified inline color styles absent
+The production embed configuration was reopened and verified with these exact raw values:
 
-## Affected browser QA
+- Page `68294`, Deposit: `[formidable id=8]`
+- Page `68291`, Build & Price: `[formidable id=30]`
+- Page `68300`, Orders @ Factory: `[wpdatatable id=12 table_view=regular]`
 
-### Factory
+Formidable form 8 (`Deposit Form`, key `deposit-form`) and form 30 (`Chevy Build and Price Link Share`, key `chevbp23`) were verified as the intended production records. Both forms rendered with submit controls during `0.1.16` staging QA without submission. Their production rendering remains an explicit post-activation smoke gate; no production Formidable definition was changed.
 
-- Google publication ID and worksheet `gid=520639850` are preserved.
-- The source currently produces 25 rows.
-- Public headers are Order #, Last Updated @ Factory, and Current.
-- Pagination reports `Showing 1 to 10 of 25 entries`.
-- The prior malformed `Group"` / `Model` row is absent.
-- Desktop rows are 44px high instead of expanding to the height of the Ordered Options field.
-- Filtering to zero results leaves the DataTables placeholder non-focusable and non-interactive; clicking it does not open a dialog.
-- Clearing the filter restores ten prepared rows and `Showing 1 to 10 of 25 entries`.
-- A staging DOM mutation that converted a prepared row into a DataTables child row removed its trigger class, tabindex, and dialog ARIA attributes; a subsequent click did not open the dialog.
-- The row dialog opened by keyboard and a synthetic browser mouse event, displayed 13 populated fields for the sampled row, and rendered with the dark theme.
-- At an asserted 390px iframe width:
-  - no page-level horizontal overflow
-  - visible headers are Order # and Current
-  - all 14 source cells remain available to the dialog
-  - the sampled dialog displayed correctly with aligned labels/values
-- No JavaScript errors were reported.
+Production wpDataTable 12 (`Orders_v2`) was reviewed against the Google Sheet source and is ready for the Factory binding. It has all 14 expected columns, plugin responsive mode disabled, pagination enabled at 10 rows per page, and a credible 23-row preview (`Showing 1 to 10 of 23 entries`). Its source, ID, columns, and pagination were preserved; only the approved responsive toggle was disabled. The theme's PHP and JavaScript regressions explicitly exercise table 12, and active runtime CSS/JavaScript has no dependency on the former staging table ID.
 
-### Order / Turnstile
+## Performance and delivery evidence
 
-- The canonical order runtime currently serves Stingray, Grand Sport, and Z06 from the 27vette deployment.
-- Its `app.js`, `data.js`, and `styles.css` match current 27vette `origin/main` exactly.
-- The prior staging-hosted `0.1.12` non-submitting Turnstile checks are superseded by the canonical-runtime ownership decision.
-- Browser verification that staging `/order/` redirects to the canonical runtime remains pending deployment of `0.1.13`.
+- Representative versioned `0.1.16` CSS and JavaScript assets returned `200` with gzip transfer compression, ETag validators, and `Cache-Control: max-age=315360000` on staging.
+- Theme version `0.1.16` remains the cache-busting version attached to enqueued assets.
+- Homepage, Order, Factory, Calculator, and embed assets retain their conditional page ownership; surface assets were not made global.
+- Homepage frame loading remains lazy: mobile loaded only the selected paint's 30 frames at rest, while desktop loaded the next 30-frame paint set only near the scroll threshold.
+- The measured CSS/JavaScript/PHP source total is 266,283 bytes, 5,319 bytes below the approved ceiling.
+- No compiler, minifier, package manifest, dependency, lockfile, or build step was introduced.
 
-### Deposit / Formidable
+## Validation summary
 
-- Selecting Yes revealed the conditional model fields.
-- The new ZR1 image loaded completely at natural size 1000×1000.
-- The old `zr1-closed-150x150.png` URL is absent from rendered form HTML.
-- The new `/pictures/deposit-form/zr1-closed.png` URL is present.
-- Rendered Formidable content contains zero inline color declarations.
-- No JavaScript errors were reported.
+Passed against release commit `a60a10c`:
 
-### Process
+- PHP lint: 17 of 17 root, include, and regression PHP files
+- JavaScript syntax: 6 of 6 theme/regression scripts
+- Factory Sheet, Factory row-preparation, and legacy redirect regression suites
+- Production table-12 PHP/JavaScript contract and no-active-table-7 runtime scan
+- Conditional-loading, source-size, no-build-tool, asset-reference, and whitespace gates
+- Exact staging upload round-trip checksums
+- Queryless cold/warm Order redirect, seven-route matrix, and seven-path legacy redirect matrix
+- Desktop/mobile functional browser QA and required-resource sweep
+- Canonical 27vette remote commit alignment and live homepage-link deployment
 
-- All four revised refund-policy sentences are present in staging HTML.
-- E-Ray transfer, list-move, and refund instructions are present as separate items.
-- Superseded cancellation/refund wording is absent.
-- The page has no horizontal overflow at the tested desktop viewport.
-- The route serves candidate version `0.1.12`; the Process code did not change in the review follow-up.
+No order, lead, deposit, or customer form was submitted during validation.
 
-## Independent review follow-up
+## Production activation boundary and rollback
 
-The independent reviews found no XSS, SSRF, enqueue/version, or process-copy defect. Their edge cases are corrected and covered by regression tests in the `0.1.12` staging deployment:
+The GO authorizes the separate controlled production task; it does not record production as deployed. Before activation, back up the active production theme and affected configuration, upload the exact candidate as inactive, and verify remote checksums. After activation, purge caches and require all seven public entry points, both queryless cold/warm `/order/` checks, the full legacy redirect matrix, forms 8 and 30, Factory table 12, calculator, homepage, shared chrome, asset versions, and required resources to pass.
 
-- a valid header-only worksheet no longer falls back to the wrong/default worksheet;
-- CSV records with omitted trailing fields are retained and padded;
-- parsed responses are cached for five minutes and the uncached request is bounded to eight seconds;
-- DataTables empty-result, child, group, and malformed rows no longer become order-dialog triggers.
-- a previously prepared row is actively unprepared if a later DataTables redraw turns it into an invalid row, and event handling revalidates the row before opening a dialog.
+If any hard gate fails, reactivate Hello Elementor, purge caches, confirm the prior homepage and critical legacy paths, and record the failed gate before another attempt. The six prepared page records and table 12 remain available for diagnosis unless a new page conflicts with restored routing.
 
-The final focused re-review passed with no remaining logic or security errors. It independently reran both Factory regression suites, JavaScript syntax validation, and `git diff --check`.
+## Remaining risk
 
-Staging cache verification returned the same 25 rows on both calls: the uncached request completed in 253ms and the immediate cached call completed in less than 1ms.
-
-## Cleared blockers
-
-### Turnstile hostname authorization — cleared
-
-The staging hostname is accepted by the configured widget. The challenge now renders normally and no longer emits Cloudflare error `110200`.
-
-### wpDataTables worksheet selection and row details — cleared
-
-Table 7 now renders the requested worksheet's current rows, has synchronized metadata, retains all details, paginates normally, and provides a usable compact/mobile presentation.
-
-### Formidable image and inline colors — cleared
-
-The replacement image loads and the identified inline colors are absent from both the stored field definitions and rendered form.
-
-### Process business-copy approval — cleared
-
-The approved copy is deployed with the requested cancellation/refund refinements.
-
-## Remaining production gate
-
-### Canonical redirect staging QA — not run
-
-Before production GO:
-
-1. Deploy exact candidate `0.1.13` to staging under the existing staging-only approval boundary.
-2. Verify staging `/order/` returns HTTP 302 with `Location: https://order.stingraychevroletcorvette.com/`.
-3. Verify the redirect occurs before the dormant local order CSS, JavaScript, Turnstile, or page template is emitted.
-4. Follow the redirect on desktop and mobile and verify the canonical runtime loads without console or required-resource errors.
-5. Re-run the remaining six local staging routes and version/asset gates to confirm the redirect change did not affect them.
-
-A controlled submission on the canonical runtime is not part of this redirect pass. It can create a real dealer record and still requires separate explicit approval for test identity, recipient, and cleanup.
-
-## Gates intentionally not run
-
-- No automated CAPTCHA/Turnstile solving.
-- No real order-form POST or lead creation.
-- No staging upload or redirect browser QA for `0.1.13`.
-- No production upload, activation, cache flush, or live smoke test.
-
-## Required path to GO
-
-1. Deploy `0.1.13` to staging and complete the redirect plus unaffected-route QA above.
-2. Update this report with the staging result and issue GO if it passes.
-3. Obtain separate explicit approval before production deployment.
+- Production rendering under the Stingray theme cannot be verified until the separately approved activation occurs.
+- The canonical order runtime requests an optional production favicon URL that returns `404`; Chromium blocks it via ORB. Required order-form resources and customer flows passed, so this is non-blocking follow-up work in 27vette.
+- Browser QA covered Chromium at the approved desktop/mobile viewports, not a full browser or physical-device lab.

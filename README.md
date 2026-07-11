@@ -97,8 +97,9 @@ Vendored from `/Users/seandm/Projects/Stingcalc/` into `assets/calculator/`:
   rebuilt from the live policy/process page content.
 - `page.php` — generic DS-styled interior wrapper for pages without a dedicated
   template yet.
-- All planned dedicated public surface templates are now present; final
-  WordPress preview, cache-busting/versioning, and deployment are still pending.
+- All planned dedicated public surface templates are present. Theme `0.1.16` at
+  commit `a60a10c` passed version-aligned desktop/mobile staging QA; production
+  upload and activation remain pending.
 
 ### Order form ownership
 
@@ -118,4 +119,4 @@ Suggested current values:
 
 - `/deposit/`: `[formidable id=8]`
 - `/build-and-price/`: `[formidable id=30]`
-- `/factory/`: `[wpdatatable id=NEW_ID table_view=regular]`
+- `/factory/`: `[wpdatatable id=12 table_view=regular]`
