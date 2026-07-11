@@ -6,7 +6,7 @@ Updated: 2026-07-11 after three controlled production activation attempts and th
 
 **Current decision: NO-GO / ROLLED BACK — production is restored to Hello Elementor `3.4.9`; Stingray Corvette `0.1.16` is installed and inactive after all three controlled activation attempts rolled back completely.**
 
-The first attempt established the Cloudflare `/process-links/` redirect conflict. The second attempt proved the target-only Cloudflare correction and failed Gate 5 because Elementor Pro Theme Builder document `12977` replaced all five slug-specific theme templates. The explicitly approved third attempt proved the five supported-UI Elementor exclusions, activated the candidate within the five-minute bound, passed strict Gates 1–4, and proved all five candidate templates plus their required content and embeds executed. It nevertheless failed the literal Gate 5 body-class predicate because WordPress continued to emit `page-template-default` rather than the runbook-required `page-template-page-{slug}` class. The full symmetric rollback is complete. Any future activation requires a new reviewed runbook and new explicit approval.
+The first attempt established the Cloudflare `/process-links/` redirect conflict. The second attempt proved the target-only Cloudflare correction and failed Gate 5 because Elementor Pro Theme Builder document `12977` replaced all five slug-specific theme templates. The explicitly approved third attempt proved the five supported-UI Elementor exclusions, activated the candidate within the five-minute bound, passed strict Gates 1–4, and proved all five candidate templates plus their required content and embeds executed. It nevertheless failed closed on the then-authoritative literal Gate 5 body-class predicate. Installed WordPress core now proves that predicate was technically invalid for these hierarchy-bound pages. The full symmetric rollback is complete. Attempt 3 approval is exhausted; any future activation requires this corrected runbook to pass independent review and then receive new explicit approval.
 
 ## Release identity and ownership
 
@@ -62,6 +62,12 @@ Attempt 3 ran under new explicit approval for the five Elementor exclusions and 
 - The same HTML reported `page-template-default` on all five pages. Because the authoritative strict gate required a `page-template-page-{slug}` class rather than `page-template-default`, the operator failed closed before the asset sweep, browser gate, or delivery/performance gate and triggered rollback.
 - Rollback reactivated Hello first; restored template `12977` through the supported UI to exactly `include/singular/page` and `exclude/singular/front_page`; restored the original Cloudflare `/corvette-process-guide/` target/configuration; cleared object then global edge caches; and repeated all effective/public baseline checks. Final proof showed Hello active, Stingray inactive, the five targets again using document `12977`, front page excluded, two consecutive original Cloudflare first hops, Hello CSS `200`, prior `/order-landing-page/` and `/order/` behavior, and the exact retained 202-file candidate.
 
+Independent review found evidence and sequence defects that prevent the retained Attempt 3 material from serving as independently replayable approval evidence, even though the rollback itself is verified:
+
+- The retained Elementor baseline predates the Cloudflare mutation. It does not prove the required baseline timing strictly after Cloudflare propagation and immediately before the supported-UI save.
+- Supported-UI before/save-confirmation/after evidence, normalized readback, raw Gates 1–5 responses, and the complete final Cloudflare field readback were not all retained in independently replayable form.
+- Timestamps do not establish the complete required evidence order. A future attempt must retain raw headers and sanitized HTML/marker extracts for every gate, exact raw plus normalized Elementor conditions before and after, supported-UI evidence without secrets, complete Cloudflare rule readbacks before/update/final-or-rollback, and timestamps tying the sequence together.
+
 The current retained state is therefore Hello Elementor `3.4.9` active, Stingray `0.1.16` installed inactive, template `12977` restored to its original two conditions, and the original enabled Cloudflare `/process-links/` target restored. The third-attempt authorization is exhausted.
 
 ## Proven production root causes
@@ -91,7 +97,9 @@ The smallest reviewed correction was to retain the two existing conditions and a
 
 ### Attempt 3: body-class gate predicate
 
-Attempt 3 proved the five slug-owned candidate files executed and rendered their required content while each page still had default/empty `_wp_page_template` state. The resulting `page-template-default` body class therefore did not mean Elementor still owned template selection: document `12977` was absent and the candidate-only content was present on every target. Before another cutover, the release owner must either revise the acceptance predicate to use direct candidate-output/template evidence or separately approve a source/configuration change that intentionally creates a custom-template body class. The strict requirement cannot be waived during an active production run.
+Attempt 3 proved the five slug-owned candidate files executed and rendered their required content while each page still had default/empty `_wp_page_template` state. Installed WordPress core explains the result exactly: `get_page_template()` adds `page-{pagename}.php` to the page hierarchy independently of page-template metadata, while `get_body_class()` bases its template class on `is_page_template()` and `get_page_template_slug()`. `get_page_template_slug()` returns an empty string for missing or `default` `_wp_page_template`, so `is_page_template()` is false and core emits `page-template-default`.
+
+That class is expected here. The five files are hierarchy-bound `page-{slug}.php` templates without `Template Name` headers, and all five page records intentionally retain default/empty `_wp_page_template` metadata. Neither the presence of `page-template-default` nor the absence of `page-template-page-{slug}` can accept or reject candidate ownership. The corrected gate instead requires the correct page ID, active `wp-theme-stingray-corvette` marker, absence of Elementor document `12977`, and the direct candidate content, embed, selector, shortcode-rendering, and asset evidence specified in the runbook.
 
 ## Staging release gate
 
@@ -184,7 +192,7 @@ No order, lead, deposit, or customer form was submitted during validation.
 
 ## Future activation authorization boundary
 
-**No further activation is currently authorized.** The third-attempt authorization was consumed and ended in complete rollback. A new attempt requires a reviewed correction to the body-class acceptance predicate, updated operative runbook language, and new explicit approval for the Elementor save and reactivation of Stingray `0.1.16`.
+**No further activation is currently authorized.** The third-attempt authorization was consumed and ended in complete rollback. A future attempt requires independent review of the corrected direct-output acceptance gate and evidence sequence in the operative runbook, followed by new explicit approval for the Elementor save and reactivation of Stingray `0.1.16`.
 
 The intended successful cutover state remains an enabled Cloudflare `/process-links/` rule whose only changed contract field is the direct target `/process/`. The proven Elementor correction retains document `12977`'s existing all-pages include and front-page exclusion while adding exactly five page-specific exclusions for IDs `68291`, `68294`, `68297`, `68300`, and `68303`. Page `68288` (`/order/`) remains intentionally outside the exclusions. None of those cutover changes is currently applied or authorized.
 
@@ -192,7 +200,8 @@ The intended successful cutover state remains an enabled Cloudflare `/process-li
 
 - The Cloudflare correction is proven, but its original target is currently restored. A future cutover must again prove that only the target changed and preserve the approved split: Cloudflare `301` for `/process-links/`, theme `302` for the other six legacy routes, and the theme's `/process-links/` `302` only as fallback.
 - The Elementor correction is now proven in production but currently rolled back. Its future save remains a live routing mutation with a maximum five-minute save-to-activation window and mandatory symmetric rollback.
-- Attempt 3's literal body-class predicate conflicts with the observed successful candidate-template output while the pages retain default/empty page-template metadata. That gate must be reviewed before another production attempt.
+- Attempt 3's literal body-class predicate was technically invalid for hierarchy-bound `page-{slug}.php` files with default/empty page-template metadata. The corrected direct-output gate and strengthened evidence sequence require independent review before another production attempt.
+- Attempt 3 rollback is verified, but its retained evidence does not independently replay every mutation, readback, response, and required timing transition. No future attempt may inherit an evidence waiver from Attempt 3.
 - Gates 6–7 were not run after Attempt 3's Gate 5 body-class failure. No browser or delivery/performance result from that production attempt is claimed.
 - A new explicit approval is required before the five Elementor exclusions are saved or Stingray is activated again.
 - The canonical order runtime requests an optional production favicon URL that returns `404`; Chromium blocks it via ORB. Required order-form resources and customer flows passed, so this is non-blocking follow-up work in 27vette.

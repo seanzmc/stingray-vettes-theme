@@ -685,7 +685,7 @@ git commit -m "docs: update production cutover readiness"
 git push origin main
 ```
 
-Expected: documentation is current. Task 8 may begin only when its read-only readiness checks pass and new explicit Attempt-3 approval exists; the release remains `NO-GO` until Task 10 records a successful cutover.
+Expected: documentation is current. Task 8 may begin only when its read-only readiness checks pass, this corrected runbook has passed independent review, and new explicit approval exists for a future activation attempt; the release remains `NO-GO` until Task 10 records a successful cutover.
 
 ---
 
@@ -700,9 +700,9 @@ Expected: documentation is current. Task 8 may begin only when its read-only rea
 - Consumes: passing read-only readiness checks, exact candidate manifest, production page records, and new explicit Elementor-save/activation approval.
 - Produces: checksum-matched production theme activation with immediate smoke-test evidence or a completed rollback.
 
-- [ ] **Step 1: Obtain new explicit approval for Attempt 3**
+- [ ] **Step 1: Obtain new explicit approval for a future activation attempt**
 
-Both `2026-07-11` activation attempts rolled back safely. The second-attempt authorization is exhausted and does not cover the newly diagnosed Elementor mutation or a third activation. State the exact commit/version, current Hello `3.4.9` and inactive Stingray `0.1.16` state, the five proposed exclusions, the five-minute exposure bound, and phase-aware rollback. Wait for new explicit approval covering the Elementor Display Conditions save and reactivation.
+All three `2026-07-11` activation attempts rolled back safely. Attempt 3 approval is exhausted. Before requesting another activation, obtain independent review of this corrected runbook, including its direct-output acceptance gate and evidence sequence. State the exact commit/version, current Hello `3.4.9` and inactive Stingray `0.1.16` state, the five proposed exclusions, the five-minute exposure bound, and phase-aware rollback. Then wait for new explicit approval covering the Elementor Display Conditions save and reactivation.
 
 - [ ] **Step 2: Complete all read-only readiness and rollback-operator checks**
 
@@ -710,11 +710,11 @@ Reconfirm the exact Stingray 202-file candidate manifest, Hello 116-file backup,
 
 - [ ] **Step 3: Update and prove only the Cloudflare target**
 
-Capture the complete existing enabled `/process-links/` rule, then change only its target from `https://stingraychevroletcorvette.com/corvette-process-guide/` to `https://stingraychevroletcorvette.com/process/`. Preserve its identity, position, exact source, enabled state, `301`, and query behavior. Require authenticated readback and two consecutive exact queryless direct Cloudflare-owned `301` first hops to `/process/`.
+Capture and retain the complete existing enabled `/process-links/` rule readback, then change only its target from `https://stingraychevroletcorvette.com/corvette-process-guide/` to `https://stingraychevroletcorvette.com/process/`. Preserve its identity, position, exact source, enabled state, `301`, and query behavior. Retain the complete post-update field readback, raw response headers, and two consecutive exact queryless direct Cloudflare-owned `301` first hops to `/process/`, with timestamps proving propagation completed. Do not treat a partial field summary as replayable evidence.
 
 - [ ] **Step 4: Capture Elementor template `12977` baseline**
 
-Immediately before the save, retain the exact raw serialized and normalized original conditions `include/singular/page` and `exclude/singular/front_page`. Prove effective matching for pages `68291`, `68294`, `68297`, `68300`, and `68303`; match for at least two named legacy non-front Page controls; exclusion of front page `5` under a real frontend query; and the public Hello/Elementor baseline.
+Only after the Cloudflare propagation proof is complete, and immediately before the supported-UI save, retain the exact raw serialized and normalized original conditions `include/singular/page` and `exclude/singular/front_page`. Retain sanitized supported-UI before evidence and the public Hello/Elementor baseline. Prove effective matching for pages `68291`, `68294`, `68297`, `68300`, and `68303`; match for at least two named legacy non-front Page controls; and exclusion of front page `5` under a real frontend query. Timestamp every capture so the retained record proves this baseline occurred strictly after Cloudflare propagation and immediately before the save; an earlier preflight baseline is insufficient.
 
 - [ ] **Step 5: Save exactly five exclusions through Elementor's supported UI**
 
@@ -730,13 +730,29 @@ exclude/singular/page/68303
 
 Do not edit `_elementor_conditions` directly. Do not exclude page `68288` (`/order/`): the candidate's priority-1 `template_redirect` exits before Elementor Pro's priority-11 `template_include` callback.
 
+Retain sanitized supported-UI before, save-confirmation, and after evidence without cookies, nonces, credentials, or other secrets. The UI success state alone is insufficient: retain the exact raw serialized and normalized conditions after the save and the effective target, legacy-control, and front-page results.
+
 - [ ] **Step 6: Prove the save and activate within five minutes**
 
-Start a visible timer at confirmed save. Within at most five minutes, require exact raw/normalized readback, effective non-matching for all five target IDs, continuing match for both legacy controls, continuing front-page exclusion, and no unrelated change. Then activate only the manifest-matched Stingray `0.1.16` candidate. If activation cannot begin within the bound, execute Task 9 rollback.
+Start a visible timer at confirmed save and retain its timestamp. Within at most five minutes, require exact raw/normalized readback, effective non-matching for all five target IDs, continuing match for both legacy controls, continuing front-page exclusion, and no unrelated change. Retain timestamps for readback completion, activation start/completion, and each cache clear so the sequence and five-minute save-to-activation bound are independently provable. Then activate only the manifest-matched Stingray `0.1.16` candidate. If activation cannot begin within the bound, execute Task 9 rollback.
 
 - [ ] **Step 7: Clear caches and run every strict gate**
 
-Clear object cache first, then WordPress.com global edge cache. Run the full strict route/template/embed/browser/performance sequence. Require homepage `200` and only `0.1.16` assets; two exact `/order/` first hops; all five local pages through their slug templates rather than document `12977`; the exact Cloudflare/theme redirect split; Build & Price/Formidable 30, Deposit/Formidable 8, Calculator markup/assets, Factory/wpDataTable 12, and Process candidate content; all required assets `200`; desktop/mobile browser acceptance; and delivery/performance gates. Any hard failure triggers Task 9 immediately.
+Clear object cache first, then WordPress.com global edge cache. Run the full strict route/template/embed/browser/performance sequence. Retain raw response headers and sanitized HTML/marker extracts for every gate, including failed gates. Require homepage `200` and only `0.1.16` assets; two exact `/order/` first hops; all five local pages through candidate output rather than document `12977`; the exact Cloudflare/theme redirect split; all required assets `200`; desktop/mobile browser acceptance; and delivery/performance gates.
+
+For each of the five local pages, require the correct page ID in the response and the active `wp-theme-stingray-corvette` marker, and prove Elementor document `12977` is absent. Then require these direct candidate markers:
+
+- Build & Price `68291`: `Build & Price Share` candidate content, `.sc-embed`, and rendered Formidable form `30` / key `chevbp23`.
+- Deposit `68294`: `Deposit Form` plus `How the deposit works` candidate instructions, `.sc-embed`, and rendered Formidable form `8` / key `deposit-form`.
+- Calculator `68297`: `Payment Calculator` candidate content, `#payment-form`, and successful `200` responses for the required calculator CSS and JavaScript assets.
+- Factory `68300`: `Orders in Production` candidate content, `.sc-embed`, and rendered wpDataTable `12` (`data-wpdatatable_id="12"`).
+- Process `68303`: candidate `Corvette Order Process Guide` content.
+
+For every page, reject raw shortcode text and the admin-only notices `Embed shortcode missing.` and `Embed shortcode did not render.` Require `200` for every required local CSS, JavaScript, image, and font URL extracted from the accepted HTML. Body classes are not template-ownership evidence here: these hierarchy-bound `page-{slug}.php` files have no `Template Name` headers and the records retain default/empty `_wp_page_template`, so WordPress core correctly emits `page-template-default`. Do not require `page-template-page-{slug}` and do not reject `page-template-default`. Any hard failure triggers Task 9 immediately.
+
+- [ ] **Step 8: Retain the successful final Cloudflare rule readback**
+
+After all activation gates pass and before declaring cutover success, retain a complete authenticated final readback of the enabled `/process-links/` rule. Record and compare every field that defines the approved contract: rule and ruleset identity, rule position, exact full-URI source expression, enabled state, `301` status, query-string behavior, and direct target. Prove every field equals the original baseline except the direct target, which must be exactly `https://stingraychevroletcorvette.com/process/`. Retain the raw sanitized readback and timestamp; a target-only summary or the earlier post-update readback is insufficient final evidence.
 
 ---
 
@@ -762,7 +778,7 @@ Through Elementor's supported Display Conditions UI, remove exactly the five ID-
 
 - [ ] **Step 3: Restore Cloudflare, clear caches, and prove baseline**
 
-Restore the complete captured Cloudflare rule including its original `/corvette-process-guide/` target. Clear WordPress object cache first, then WordPress.com global edge cache. Repeat the effective Elementor checks after cache clearing. Require two consecutive original direct Cloudflare first hops plus the complete public Hello baseline: homepage/Hello assets, all five target page IDs/titles with document `12977`, and previously accepted baseline routes.
+Restore the complete captured Cloudflare rule including its original `/corvette-process-guide/` target. Retain the complete final rule field readback and timestamps, not only the restored target. Clear WordPress object cache first, then WordPress.com global edge cache. Repeat the effective Elementor checks after cache clearing and retain exact raw plus normalized restored conditions, sanitized supported-UI after evidence, raw headers, and sanitized marker extracts. Require two consecutive original direct Cloudflare first hops plus the complete public Hello baseline: homepage/Hello assets, all five target page IDs/titles with document `12977`, and previously accepted baseline routes.
 
 - [ ] **Step 4: Record the failed gate**
 
