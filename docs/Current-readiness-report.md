@@ -1,26 +1,34 @@
 # Current Readiness Report
 
-Updated: 2026-07-11 after six controlled production activation attempts.
+Updated: 2026-07-11 after the user-directed production publish and final launch verification.
 
 ## Release decision
 
-**Current decision: NO-GO / ROLLED BACK — production is restored to Hello Elementor `3.4.9`; Attempt 6 exposed a concrete Factory row-detail dialog defect in Stingray Corvette `0.1.16`.**
+**Current decision: GO / LIVE FOR USER REVIEW — Stingray Corvette `0.1.16` is active in production and the user-directed minimal launch gate passed.**
 
-Attempt 6 used the user-approved cache-observation override and reached the actual public acceptance suite. HTTP routes, candidate templates/embeds, redirects, 122 local assets, responsive layout, and calculator behavior passed. Factory table 12 rendered, but its required row-detail dialog could not open because the candidate script counted 28 header/filter cells against 14-cell data rows and rejected every row. Exact symmetric rollback passed, including the single Production cache clear and final public Hello baseline. Attempt 6 approval is exhausted and no further activation is authorized.
+After Attempt 6's verified rollback, the user explicitly overrode the former acceptance boundary and directed publication as built. The final publish left Stingray `0.1.16` active, Hello Elementor inactive, the exact five Elementor exclusions in place, and the Cloudflare `/process-links/` target set to `/process/`. Homepage and the five primary local pages returned `200` with the Stingray marker; `/order/` and `/process-links/` reached their intended destinations in one hop; and the required theme assets in the retained launch sweep returned `200`. The known Factory row-detail dialog defect is now a post-launch follow-up, not a launch blocker.
 
 ## Release identity and ownership
 
 - Theme repository branch: `main`
 - Theme release commit: `a60a10c46f6d029c562ba1492565966d29306871`
 - Theme version: `0.1.16`
+- Production active theme: `stingray-corvette` version `0.1.16`
+- Production inactive fallback theme: `hello-elementor` version `3.4.9`
 - Staging active theme: `stingray-corvette` version `0.1.16`
 - Staging base URL: `https://staging-427b-stingraychevroletcorvette.wpcomstaging.com/`
 - Canonical order repository commit: `702ef1cc468315a20a397310b98e2eeb3d49bdde`
 - Canonical order runtime: `https://order.stingraychevroletcorvette.com/`
 
-The 27vette deployment is live at the canonical runtime. Its crossed-flags/wordmark link points to `https://stingraychevroletcorvette.com/`, exposes the accessible label `Return to Stingray Corvette home`, and retains the deployed visible-focus rule. When active, the Stingray theme keeps public links on `/order/`, which redirects to that single canonical runtime; the theme is currently inactive in production. `page-order.php` and `assets/order/` remain dormant rollback material, not a second maintained order runtime.
+The 27vette deployment is live at the canonical runtime. Its crossed-flags/wordmark link points to `https://stingraychevroletcorvette.com/`, exposes the accessible label `Return to Stingray Corvette home`, and retains the deployed visible-focus rule. The active Stingray theme keeps public links on `/order/`, which redirects to that single canonical runtime. `page-order.php` and `assets/order/` remain dormant rollback material, not a second maintained order runtime.
 
 ## Production activation attempts and rollbacks
+
+### User-directed final publish: live
+
+The final publish applied the approved Cloudflare public-target correction and exact five Elementor exclusions, activated Stingray `0.1.16`, flushed the WordPress object cache, and performed one WordPress.com Production `Clear all` action. Final authenticated WordPress readback showed Stingray active, Hello inactive, and exactly seven Elementor conditions: the original all-pages include and front-page exclusion plus exclusions for page IDs `68291`, `68294`, `68297`, `68300`, and `68303`. Task 15 separately proved the public Cloudflare `301` target and no-loop behavior; it did not retain a fresh authenticated full-field Cloudflare readback.
+
+The minimal launch gate passed at `2026-07-11T20:05:29Z`: all six local surfaces returned `200` with the Stingray marker and no detected fatal marker; `/order/` reached the canonical order runtime in one redirect; `/process-links/` reached `/process/` in one redirect without a loop; all 16 extracted required theme assets returned `200`; and a fresh Chromium homepage read captured no console error. Production was intentionally left live for user review. The Factory row-detail dialog remains a known non-blocking follow-up.
 
 Six controlled activation attempts ran on `2026-07-11`; each stopped at a hard gate and restored the prior production baseline.
 
@@ -116,21 +124,21 @@ Independent review found evidence and sequence defects that prevent the retained
 - Supported-UI before/save-confirmation/after evidence, normalized readback, raw Gates 1–5 responses, and the complete final Cloudflare field readback were not all retained in independently replayable form.
 - Timestamps do not establish the complete required evidence order. A future attempt must retain raw headers and sanitized HTML/marker extracts for every gate, exact raw plus normalized Elementor conditions before and after, supported-UI evidence without secrets, complete Cloudflare rule readbacks before/update/final-or-rollback, and timestamps tying the sequence together.
 
-The current retained state is therefore Hello Elementor `3.4.9` active, Stingray `0.1.16` installed inactive, template `12977` restored to its original two conditions, and the original enabled Cloudflare `/process-links/` target restored. The fourth-attempt authorization is exhausted.
+At the completion of Attempt 3, the retained state was Hello Elementor `3.4.9` active, Stingray `0.1.16` installed inactive, template `12977` restored to its original two conditions, and the original enabled Cloudflare `/process-links/` target restored. The fourth-attempt authorization was exhausted. Task 15 later superseded that historical state with the live cutover recorded at the top of this report.
 
 ## Proven production root causes
 
 ### Attempt 1: `/process-links/` ownership
 
-The failed `301` was caused by the enabled Cloudflare Dynamic Redirect named `process-links to process guide` (`ruleset_id=1423769adf114f2287d9a0280bb26599`, `rule_id=c0e8d48ecfda4ca4ac070dfc7012d0ae`), not by WordPress or the candidate theme. Its exact queryless full-URI match is `(http.request.full_uri wildcard r"https://stingraychevroletcorvette.com/process-links/")`; its `301` target is `https://stingraychevroletcorvette.com/corvette-process-guide/`. The Cloudflare redirect phase executes before WordPress, so the queryless request never reached the Stingray theme's priority-0 redirect callback. A unique query changes the full URI, does not match the queryless expression, and therefore reaches the published WordPress page instead.
+During Attempt 1, the failed `301` was caused by the then-enabled Cloudflare Dynamic Redirect named `process-links to process guide` (`ruleset_id=1423769adf114f2287d9a0280bb26599`, `rule_id=c0e8d48ecfda4ca4ac070dfc7012d0ae`), not by WordPress or the candidate theme. At that time its exact queryless full-URI match was `(http.request.full_uri wildcard r"https://stingraychevroletcorvette.com/process-links/")`, and its `301` target was `https://stingraychevroletcorvette.com/corvette-process-guide/`. The Cloudflare redirect phase executed before WordPress, so the queryless request did not reach the Stingray theme's priority-0 redirect callback. A unique query changed the full URI, did not match the queryless expression, and therefore reached the published WordPress page instead.
 
-The candidate theme code was not the root cause and requires no correction. Its `/process-links/` mapping emits the approved direct `302` to `/process/` when WordPress receives the request. The other six legacy redirects were also not the root cause and passed because no equivalent Cloudflare rule intercepted them.
+The candidate theme code was not the Attempt 1 root cause and required no correction for that failure. Its `/process-links/` mapping emitted the approved direct `302` to `/process/` when WordPress received the request. The other six legacy redirects were also not the root cause and passed because no equivalent Cloudflare rule intercepted them.
 
-The intended cutover correction remains: keep the Cloudflare rule `process-links to process guide` enabled and change only its target from `https://stingraychevroletcorvette.com/corvette-process-guide/` to `https://stingraychevroletcorvette.com/process/`. Its identity, position, exact full-URI source match, `301` status, `preserve_query_string=true` behavior, and all other configuration remain unchanged. Cloudflare therefore remains the production owner of the exact queryless `/process-links/` request. The candidate theme's `/process-links/` `302` remains a fallback if the request reaches WordPress; it is not the accepted first hop while the edge rule is enabled.
+The approved cutover correction was to change the Cloudflare target from `https://stingraychevroletcorvette.com/corvette-process-guide/` to `https://stingraychevroletcorvette.com/process/`. Task 15 now freshly proves that the exact queryless `/process-links/` request receives a Cloudflare-owned `301` to `/process/` and reaches that destination without a loop. Task 15 did not retain a fresh authenticated full-field rule readback, so no present-tense claim is made here that the stored rule identity, position, source expression, query setting, or every other non-target field remains unchanged. The candidate theme's `/process-links/` `302` remains the code-path fallback if a request reaches WordPress; it is not the observed public first hop.
 
 ### Attempt 2: Elementor Pro template override
 
-Task 9D proved that published Elementor Theme Builder document `12977` has exactly these current conditions:
+Task 9D proved that published Elementor Theme Builder document `12977` then had exactly these conditions:
 
 ```text
 include/singular/page
@@ -141,7 +149,7 @@ Those conditions match every ordinary Page except the static front page. Element
 
 The page records, slugs, default-template metadata, empty page bodies, and three embed values are correct. All five installed candidate files exist, their remote/local SHA-256 values match, and the active candidate recognized the intended page queries. This is a production Elementor configuration conflict, not a theme-code, upload, page, shortcode, wpDataTables, Cloudflare, or cache defect.
 
-The smallest reviewed correction was to retain the two existing conditions and add exactly five page-specific exclusions through Elementor's supported Display Conditions UI. Attempt 3 proved that correction removes document `12977` from only the five targets while preserving the named legacy and front-page controls. It is currently rolled back.
+The smallest reviewed correction was to retain the two existing conditions and add exactly five page-specific exclusions through Elementor's supported Display Conditions UI. Attempt 3 proved that correction removes document `12977` from only the five targets while preserving the named legacy and front-page controls. Task 15 applied and retained that correction in production.
 
 ### Attempt 3: body-class gate predicate
 
@@ -190,9 +198,9 @@ Every approved first hop returned `302` to the exact local replacement:
 
 The local redirect regression also verifies the exact map, query-string handling, missing-trailing-slash normalization, unchanged unmapped paths, and no destination-to-legacy-source loop.
 
-## Retained production configuration
+## Current production configuration
 
-Production is restored to Hello Elementor `3.4.9`; Stingray `0.1.16` remains installed inactive. The replacement records remain published, parentless, use the default template, and have empty editor content. They are retained for diagnosis; their presence does not authorize an Elementor mutation or another activation attempt.
+Production now runs Stingray `0.1.16`; Hello Elementor `3.4.9` is installed inactive. Elementor document `12977` retains its original all-pages include and front-page exclusion plus the exact five exclusions for `68291`, `68294`, `68297`, `68300`, and `68303`. The replacement records remain published, parentless, use the default template, and have empty editor content. No new activation approval is pending because the approved cutover is already live; further changes require a separate user request.
 
 | Page ID | Title | Path | Status |
 |---:|---|---|---|
@@ -224,7 +232,7 @@ Production wpDataTable 12 (`Orders_v2`) retains the reviewed Factory binding con
 
 ## Pre-attempt validation summary
 
-The following passed against release commit `a60a10c` before the production attempt. This evidence does not override the current NO-GO decision:
+The following passed against release commit `a60a10c` before the production attempts. This historical pre-attempt evidence supplements, but does not replace, the Task 15 live launch verification:
 
 - PHP lint: 17 of 17 root, include, and regression PHP files
 - JavaScript syntax: 6 of 6 theme/regression scripts
@@ -238,22 +246,22 @@ The following passed against release commit `a60a10c` before the production atte
 
 No order, lead, deposit, or customer form was submitted during validation.
 
-## Future activation authorization boundary
+## Current user-review and follow-up boundary
 
-**No further activation is currently authorized.** Attempt 6 authorization was consumed and ended in complete rollback. The concrete Factory row-detail defect must be corrected and revalidated before any new production attempt, which would also require new explicit approval for the Elementor save and reactivation of Stingray `0.1.16`.
+**The approved cutover is complete and no new activation is pending.** Stingray `0.1.16` remains live for user review, Hello remains inactive, and the exact five Elementor exclusions remain applied. The concrete Factory row-detail defect is a known post-launch follow-up and does not revoke the current GO decision. Any correction or new production mutation requires a separate user request.
 
-The intended successful cutover state remains an enabled Cloudflare `/process-links/` rule whose only changed contract field is the direct target `/process/`. The proven Elementor correction retains document `12977`'s existing all-pages include and front-page exclusion while adding exactly five page-specific exclusions for IDs `68291`, `68294`, `68297`, `68300`, and `68303`. Page `68288` (`/order/`) remains intentionally outside the exclusions. None of those cutover changes is currently applied or authorized.
+The live public cutover state is a direct Cloudflare-owned `301` from `/process-links/` to `/process/`, proven twice after publication and again by the final verifier without a loop. Task 15 did not retain a fresh authenticated full-field Cloudflare rule readback, so this report does not claim that every non-target rule field was independently reverified during Task 15. The retained Elementor readback does prove document `12977` keeps its existing all-pages include and front-page exclusion plus exactly five page-specific exclusions for IDs `68291`, `68294`, `68297`, `68300`, and `68303`. Page `68288` (`/order/`) remains intentionally outside the exclusions.
 
 ## Remaining risk
 
-- The Cloudflare correction is proven, but its original target is currently restored. A future cutover must again prove that only the target changed and preserve the approved split: Cloudflare `301` for `/process-links/`, theme `302` for the other six legacy routes, and the theme's `/process-links/` `302` only as fallback.
-- The Elementor correction is now proven in production but currently rolled back. Its future save remains a live routing mutation with a maximum five-minute save-to-activation window and mandatory symmetric rollback.
+- The live public Cloudflare target and no-loop behavior are proven. Task 15 lacks a fresh authenticated full-field rule readback, so exact preservation of every non-target Cloudflare field is not newly claimed for the final publish.
+- The Elementor correction is live and retained: the original two conditions plus the exact five approved page exclusions. Any later edit remains a live routing mutation requiring a separate user request and proportionate rollback planning.
 - Attempt 3's literal body-class predicate was technically invalid for hierarchy-bound `page-{slug}.php` files with default/empty page-template metadata. The corrected direct-output gate and strengthened evidence sequence require independent review before another production attempt.
 - Attempt 3 rollback is verified, but its retained evidence does not independently replay every mutation, readback, response, and required timing transition. No future attempt may inherit an evidence waiver from Attempt 3.
 - Attempt 4 failed the activation confirmation gate because both required messages were not observed from the single `Clear all` action; the global edge purge outcome is unknown, not proven failed. Future activation and rollback `Clear all` actions require the bounded five-minute protocol in the operative runbook, with no retry.
 - Attempt 4 rollback and public restoration are operationally convincing, but raw complete Cloudflare readbacks, normalized/reopened-row Elementor proof, and raw cache UI captures were not all retained. The operative evidence contract must pass its pre-mutation and completion index checks on any future attempt.
 - Gates 6–7 were not run after Attempt 3's Gate 5 body-class failure. No browser or delivery/performance result from that production attempt is claimed.
 - Attempt 6 reached Gate 6 and proved that the Factory row-detail dialog is broken against the live two-row wpDataTables header: the script counts 28 headers against 14 data cells and rejects every row. Gate 7 was not completed after this hard failure.
-- A new explicit approval is required before the five Elementor exclusions are saved or Stingray is activated again.
+- The five Elementor exclusions are already saved and Stingray is already active. A new explicit request is required only for a further production mutation, including a Factory-dialog fix or another theme/configuration change.
 - The canonical order runtime requests an optional production favicon URL that returns `404`; Chromium blocks it via ORB. Required order-form resources and customer flows passed, so this is non-blocking follow-up work in 27vette.
 - Browser QA covered Chromium at the approved desktop/mobile viewports, not a full browser or physical-device lab.
