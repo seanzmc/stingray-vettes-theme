@@ -178,7 +178,7 @@ function stingray_corvette_print_factory_embed_styles() {
 add_action( 'wp_footer', 'stingray_corvette_print_factory_embed_styles', 100 );
 
 /**
- * Select the published worksheet requested by wpDataTables table 7.
+ * Select the published worksheet requested by the configured Factory wpDataTable.
  *
  * wpDataTables 7.5.1 drops the gid when it converts a published 2PACX Google
  * Sheets URL to CSV, which loads the publication's first tab instead of the
@@ -191,7 +191,7 @@ add_action( 'wp_footer', 'stingray_corvette_print_factory_embed_styles', 100 );
  * @return array
  */
 function stingray_corvette_filter_factory_sheet_rows( $sheet_rows, $table_id, $sheet_url ) {
-	if ( 7 !== (int) $table_id || ! is_string( $sheet_url ) ) {
+	if ( 0 >= (int) $table_id || ! is_string( $sheet_url ) ) {
 		return $sheet_rows;
 	}
 

@@ -3,7 +3,7 @@
 (function () {
 	'use strict';
 
-	var table = document.querySelector('.sc-embed table.wpDataTableID-7');
+	var table = document.querySelector('.sc-embed table.wpDataTable');
 	if (!table) return;
 
 	var headers = Array.prototype.map.call(table.querySelectorAll('thead th'), function (header) {

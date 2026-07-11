@@ -90,7 +90,7 @@ var malformed = makeRow([makeCell('BROKEN'), makeCell(''), makeCell('')]);
 var rows = [valid, empty, child, group, malformed];
 
 var table = new FakeElement('table');
-table.className = 'wpDataTableID-7';
+table.className = 'wpDataTable wpDataTableID-12';
 table.tBodies = [];
 table.querySelectorAll = function (selector) {
 	if ('thead th' === selector) return headers;
@@ -102,11 +102,13 @@ table.contains = function (row) {
 };
 
 var body = new FakeElement('body');
+var requestedSelector = null;
 var document = {
 	body: body,
 	activeElement: body,
 	querySelector: function (selector) {
-		return '.sc-embed table.wpDataTableID-7' === selector ? table : null;
+		requestedSelector = selector;
+		return '.sc-embed table.wpDataTable' === selector ? table : null;
 	},
 	createElement: function (tagName) {
 		return new FakeElement(tagName);
@@ -132,6 +134,7 @@ function assert(condition, message) {
 	if (!condition) failures.push(message);
 }
 
+assert('.sc-embed table.wpDataTable' === requestedSelector, 'The Factory runtime must select the page-configured wpDataTable without requiring a staging table ID.');
 assert(valid.classList.contains('sc-factory-row'), 'A complete data row should be prepared for the detail dialog.');
 assert(0 === valid.tabIndex, 'A complete data row should be keyboard focusable.');
 assert(!empty.classList.contains('sc-factory-row'), 'A DataTables empty-result row must not become an order dialog trigger.');
@@ -140,7 +143,7 @@ assert(!group.classList.contains('sc-factory-row'), 'A DataTables group row must
 assert(!malformed.classList.contains('sc-factory-row'), 'A malformed row with the wrong cell count must not become an order dialog trigger.');
 
 valid.classList.add('child');
-observerCallback();
+if (observerCallback) observerCallback();
 assert(!valid.classList.contains('sc-factory-row'), 'A prepared row must be unprepared when DataTables later turns it into a child row.');
 assert(-1 === valid.tabIndex, 'A row that becomes invalid must no longer be keyboard focusable.');
 assert(null === valid.getAttribute('aria-haspopup'), 'A row that becomes invalid must lose its dialog ARIA metadata.');

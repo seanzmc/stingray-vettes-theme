@@ -81,11 +81,11 @@ function stingray_test_same( $expected, $actual, $message ) {
 }
 
 stingray_test_reset( $headers );
-$rows = stingray_corvette_filter_factory_sheet_rows( $fallback, 7, $source_url );
+$rows = stingray_corvette_filter_factory_sheet_rows( $fallback, 12, $source_url );
 stingray_test_same( array(), $rows, 'A valid header-only worksheet must return no rows instead of the wrong worksheet fallback.' );
 
 stingray_test_reset( $headers . "FMNPZX,10/13/2025,5000\n" );
-$rows = stingray_corvette_filter_factory_sheet_rows( $fallback, 7, $source_url );
+$rows = stingray_corvette_filter_factory_sheet_rows( $fallback, 12, $source_url );
 stingray_test_same(
 	array(
 		array(
@@ -100,8 +100,13 @@ stingray_test_same(
 );
 
 stingray_test_reset( $headers . "FMNPZX,10/13/2025,5000,\n" );
-stingray_corvette_filter_factory_sheet_rows( $fallback, 7, $source_url );
-stingray_corvette_filter_factory_sheet_rows( $fallback, 7, $source_url );
+$rows = stingray_corvette_filter_factory_sheet_rows( $fallback, 0, $source_url );
+stingray_test_same( $fallback, $rows, 'A non-positive table ID must return the plugin fallback unchanged.' );
+stingray_test_same( 0, $GLOBALS['stingray_remote_calls'], 'A non-positive table ID must not fetch the Factory sheet.' );
+
+stingray_test_reset( $headers . "FMNPZX,10/13/2025,5000,\n" );
+stingray_corvette_filter_factory_sheet_rows( $fallback, 12, $source_url );
+stingray_corvette_filter_factory_sheet_rows( $fallback, 12, $source_url );
 stingray_test_same( 1, $GLOBALS['stingray_remote_calls'], 'A successful worksheet response must be reused from a short-lived cache.' );
 
 if ( $failures ) {
