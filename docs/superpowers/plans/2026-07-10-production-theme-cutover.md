@@ -633,7 +633,7 @@ Record each new page ID. Confirm the old theme remains active and its homepage i
 
 **Interfaces:**
 - Consumes: theme `0.1.16`, staging QA evidence, production page IDs/configuration, table 12, and canonical order commit/deployment evidence.
-- Produces: an accurate GO/NO-GO report and current operating documentation before activation.
+- Produces: an accurate readiness assessment and current operating documentation before any approved activation attempt.
 
 - [ ] **Step 1: Rewrite the readiness report from current evidence**
 
@@ -649,7 +649,7 @@ The report must state:
 - legacy redirect matrix results;
 - performance evidence: compressed CSS/JS, versioned long-lived theme caching, conditional loading preserved, no compiler introduced;
 - production deployment status remains not activated; and
-- explicit GO or NO-GO with any failed gate named.
+- explicit readiness-check status with any failed gate named; the release decision remains `NO-GO` until successful Task 10 closure.
 
 Delete superseded claims that `0.1.13` is uncommitted or staging is on `0.1.12`.
 
@@ -685,95 +685,88 @@ git commit -m "docs: update production cutover readiness"
 git push origin main
 ```
 
-Expected: documentation commit is pushed and the readiness report gives a supported GO before activation. A NO-GO stops the plan before Task 8.
+Expected: documentation is current. Task 8 may begin only when its read-only readiness checks pass and new explicit Attempt-3 approval exists; the release remains `NO-GO` until Task 10 records a successful cutover.
 
 ---
 
 ### Task 8: Activate the Replacement Theme in Production
 
 **Files:**
-- Deploy the complete committed theme artifact to `/wp-content/themes/stingray-corvette/`.
-- Production WordPress active-theme setting changes only after approval.
+- No repository file change during cutover.
+- The complete manifest-matched candidate is already installed inactive at `/wp-content/themes/stingray-corvette/`.
+- Production Elementor conditions and the active-theme setting change only after new explicit approval.
 
 **Interfaces:**
-- Consumes: readiness GO, exact pushed commit, production page records, and explicit production upload/activation approval.
+- Consumes: passing read-only readiness checks, exact candidate manifest, production page records, and new explicit Elementor-save/activation approval.
 - Produces: checksum-matched production theme activation with immediate smoke-test evidence or a completed rollback.
 
-- [ ] **Step 1: Obtain explicit production deployment approval**
+- [ ] **Step 1: Obtain new explicit approval for Attempt 3**
 
-State the exact commit, version, remote theme directory, page/table readiness, known rollback theme, and cutover checks. Wait for explicit approval covering upload and activation.
+Both `2026-07-11` activation attempts rolled back safely. The second-attempt authorization is exhausted and does not cover the newly diagnosed Elementor mutation or a third activation. State the exact commit/version, current Hello `3.4.9` and inactive Stingray `0.1.16` state, the five proposed exclusions, the five-minute exposure bound, and phase-aware rollback. Wait for new explicit approval covering the Elementor Display Conditions save and reactivation.
 
-- [ ] **Step 2: Back up the current production theme and settings**
+- [ ] **Step 2: Complete all read-only readiness and rollback-operator checks**
 
-Download the active production theme to a timestamped backup outside the repository. Record its slug, front-page setting, six page records, three embed values, and table 12 configuration.
+Reconfirm the exact Stingray 202-file candidate manifest, Hello 116-file backup, six page records, three embed values, table 12, forms 8 and 30, current theme state, both cache-clear paths, and every rollback operator. Any failure stops NO-GO with no mutation.
 
-Expected: the prior theme can be reactivated without reconstructing files or settings.
+- [ ] **Step 3: Update and prove only the Cloudflare target**
 
-- [ ] **Step 3: Upload the exact inactive theme artifact**
+Capture the complete existing enabled `/process-links/` rule, then change only its target from `https://stingraychevroletcorvette.com/corvette-process-guide/` to `https://stingraychevroletcorvette.com/process/`. Preserve its identity, position, exact source, enabled state, `301`, and query behavior. Require authenticated readback and two consecutive exact queryless direct Cloudflare-owned `301` first hops to `/process/`.
 
-Upload the committed `stingray-corvette` theme without activating it. Download a verification copy and compare SHA-256 for every tracked theme file, excluding Git/docs/tests from the deploy artifact if the established deployment package omits them.
+- [ ] **Step 4: Capture Elementor template `12977` baseline**
 
-Expected: every runtime file matches the approved commit; mismatch restores the backup and stops activation.
+Immediately before the save, retain the exact raw serialized and normalized original conditions `include/singular/page` and `exclude/singular/front_page`. Prove effective matching for pages `68291`, `68294`, `68297`, `68300`, and `68303`; match for at least two named legacy non-front Page controls; exclusion of front page `5` under a real frontend query; and the public Hello/Elementor baseline.
 
-- [ ] **Step 4: Confirm page records immediately before activation**
+- [ ] **Step 5: Save exactly five exclusions through Elementor's supported UI**
 
-Recheck all six page IDs/slugs and the exact embed values for forms 8, 30, and table 12.
+Retain both original conditions and add only:
 
-Expected: all records are published and exact.
+```text
+exclude/singular/page/68291
+exclude/singular/page/68294
+exclude/singular/page/68297
+exclude/singular/page/68300
+exclude/singular/page/68303
+```
 
-- [ ] **Step 5: Activate and purge caches**
+Do not edit `_elementor_conditions` directly. Do not exclude page `68288` (`/order/`): the candidate's priority-1 `template_redirect` exits before Elementor Pro's priority-11 `template_include` callback.
 
-Activate `stingray-corvette`, then purge WordPress.com page/edge caches.
+- [ ] **Step 6: Prove the save and activate within five minutes**
 
-Expected: activation succeeds; no other production setting changes.
+Start a visible timer at confirmed save. Within at most five minutes, require exact raw/normalized readback, effective non-matching for all five target IDs, continuing match for both legacy controls, continuing front-page exclusion, and no unrelated change. Then activate only the manifest-matched Stingray `0.1.16` candidate. If activation cannot begin within the bound, execute Task 9 rollback.
 
-- [ ] **Step 6: Run the immediate hard-gate smoke test**
+- [ ] **Step 7: Clear caches and run every strict gate**
 
-Check in this order:
-
-1. homepage returns `200` and emits only `0.1.16` theme asset versions;
-2. `/order/` returns queryless `302` to the canonical runtime twice;
-3. `/deposit/`, `/build-and-price/`, `/calculator/`, `/factory/`, and `/process/` return `200`;
-4. every legacy path returns `302` to its mapped replacement;
-5. required local assets return `200`;
-6. no raw shortcode or admin-only missing-embed notice appears publicly.
-
-Any failure triggers Task 9 immediately before broader investigation.
-
-- [ ] **Step 7: Run production browser acceptance**
-
-At desktop and mobile widths verify homepage/nav/footer, Formidable rendering without submission, Calculator primary flows, Factory table 12, Process copy, canonical order link home, focus states, no overflow, and no console/required-resource errors.
-
-- [ ] **Step 8: Reconfirm delivery performance**
-
-Verify production theme CSS/JS uses gzip or Brotli, long-lived versioned caching, and current `0.1.16` URLs. Verify the order runtime remains Cloudflare-served and compressed. Do not add a compiler in response to a score alone; record any measured bottleneck separately with its affected resource and transfer cost.
+Clear object cache first, then WordPress.com global edge cache. Run the full strict route/template/embed/browser/performance sequence. Require homepage `200` and only `0.1.16` assets; two exact `/order/` first hops; all five local pages through their slug templates rather than document `12977`; the exact Cloudflare/theme redirect split; Build & Price/Formidable 30, Deposit/Formidable 8, Calculator markup/assets, Factory/wpDataTable 12, and Process candidate content; all required assets `200`; desktop/mobile browser acceptance; and delivery/performance gates. Any hard failure triggers Task 9 immediately.
 
 ---
 
 ### Task 9: Execute Rollback if a Production Hard Gate Fails
 
 **Files:**
-- Restore only the prior production theme/setting state recorded in Task 8.
+- Restore only the prior production theme, Elementor conditions, Cloudflare rule, and cache/public state recorded in Task 8.
 
 **Interfaces:**
 - Consumes: a named failed hard gate and the verified backup.
 - Produces: restored prior site behavior, cache purge, and failure evidence.
 
-- [ ] **Step 1: Reactivate the prior theme**
+- [ ] **Step 1: Select rollback by mutation phase**
 
-Use WordPress admin to reactivate the recorded prior theme. Do not delete the new theme or table 12 during diagnosis.
+- Before any mutation: stop NO-GO; perform no rollback mutation.
+- After Cloudflare changes but before the Elementor save: restore only the exact original Cloudflare configuration and prove two consecutive original direct first hops to `/corvette-process-guide/`.
+- After the Elementor save but before activation: keep Hello active and continue at Step 2.
+- After activation begins: reactivate Hello Elementor `3.4.9` first, then continue at Step 2.
 
-- [ ] **Step 2: Purge production caches**
+- [ ] **Step 2: Restore Elementor template `12977` exactly when its save occurred**
 
-Purge WordPress.com caches and verify the previous homepage and critical legacy paths render.
+Through Elementor's supported Display Conditions UI, remove exactly the five ID-specific exclusions and restore only `include/singular/page` and `exclude/singular/front_page`. Require exact raw and normalized readback, effective matching for all five target pages and both legacy controls, continuing exclusion of front page `5` under a real frontend query, and no unrelated Theme Builder change. Metadata readback or a UI success message alone is insufficient.
 
-- [ ] **Step 3: Resolve page conflicts conservatively**
+- [ ] **Step 3: Restore Cloudflare, clear caches, and prove baseline**
 
-If a newly published page conflicts with restored routing, unpublish only that new page. Preserve page data and custom fields for diagnosis.
+Restore the complete captured Cloudflare rule including its original `/corvette-process-guide/` target. Clear WordPress object cache first, then WordPress.com global edge cache. Repeat the effective Elementor checks after cache clearing. Require two consecutive original direct Cloudflare first hops plus the complete public Hello baseline: homepage/Hello assets, all five target page IDs/titles with document `12977`, and previously accepted baseline routes.
 
 - [ ] **Step 4: Record the failed gate**
 
-Update `docs/Current-readiness-report.md` with the exact failure, rollback time, restored theme, and evidence. Mark production status NO-GO and commit the report.
+Update `docs/Current-readiness-report.md` with the exact failure, rollback time, restored theme, Elementor conditions, Cloudflare state, cache confirmations, and public evidence. Mark production status NO-GO. Do not commit or push unless separately instructed.
 
 ---
 
