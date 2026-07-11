@@ -1,12 +1,12 @@
 # Current Readiness Report
 
-Updated: 2026-07-10 after staging approval of theme `0.1.16` and review of the prepared production page and plugin configuration.
+Updated: 2026-07-11 after the controlled production activation attempt and immediate rollback.
 
 ## Release decision
 
-**Current decision: GO for the controlled production upload and activation of theme `0.1.16` at commit `a60a10c46f6d029c562ba1492565966d29306871`.**
+**Current decision: NO-GO — production was rolled back to Hello Elementor `3.4.9` after the `0.1.16` candidate failed the `/process-links/` legacy-redirect hard gate.**
 
-All pre-activation gates are passing. Production activation has **not** occurred: production still runs Hello Elementor, and the production smoke, cache, queryless Order, and legacy-redirect gates remain post-activation checks. Any failure in those gates requires rollback to the prior theme and changes the decision to NO-GO pending diagnosis.
+This report does not authorize another production activation attempt. The next step is a read-only redirect-precedence diagnosis followed by production-equivalent proof and new explicit activation approval.
 
 ## Release identity and ownership
 
@@ -18,7 +18,25 @@ All pre-activation gates are passing. Production activation has **not** occurred
 - Canonical order repository commit: `702ef1cc468315a20a397310b98e2eeb3d49bdde`
 - Canonical order runtime: `https://order.stingraychevroletcorvette.com/`
 
-The 27vette deployment is live at the canonical runtime. Its crossed-flags/wordmark link points to `https://stingraychevroletcorvette.com/`, exposes the accessible label `Return to Stingray Corvette home`, and retains the deployed visible-focus rule. The theme continues to keep public links on `/order/`, which redirects to that single canonical runtime. `page-order.php` and `assets/order/` remain dormant rollback material, not a second maintained order runtime.
+The 27vette deployment is live at the canonical runtime. Its crossed-flags/wordmark link points to `https://stingraychevroletcorvette.com/`, exposes the accessible label `Return to Stingray Corvette home`, and retains the deployed visible-focus rule. When active, the Stingray theme keeps public links on `/order/`, which redirects to that single canonical runtime; the theme is currently inactive in production. `page-order.php` and `assets/order/` remain dormant rollback material, not a second maintained order runtime.
+
+## Production activation attempt and rollback
+
+The controlled production attempt ran on `2026-07-11` within the recorded `01:13:20–01:22:28 EDT` window: production key attachment was recorded at `01:13:20`, candidate commit `a60a10c46f6d029c562ba1492565966d29306871` / theme version `0.1.16` was uploaded and activated after backup/checksum gates, and rollback verification completed at `01:22:28`.
+
+- Sean's existing account key `seanzmc9613-default` was attached to the **Production** environment only. Staging remained unattached, and the stale SFTP password was not reset.
+- The active Hello Elementor theme was downloaded outside the repository before activation. Its 116-file remote/local SHA-256 manifests matched exactly.
+- The complete 202-file candidate was uploaded inactive to `/srv/htdocs/wp-content/themes/stingray-corvette/`. The approved, remote, and fresh round-trip SHA-256 manifests matched exactly at `b2d900f18b768ed1b760407b337267f34e2a2ad7d3724e9eef96c09f3f3c8e6b`.
+- All six published production page records, the three exact embed values, and wpDataTable 12 were reconfirmed before activation.
+- Production WP-CLI activated `stingray-corvette` `0.1.16`. `wp cache flush` succeeded, and WordPress.com Hosting Configuration `Clear all` reported both object and global edge caches cleared.
+- The candidate returned the required status for the homepage and six primary routes checked, and six legacy routes returned their required direct `302` first hop.
+- `/process-links/` failed the hard gate: it returned `301` to `/corvette-process-guide/` instead of the required direct `302` to `/process/`.
+- Gate 1's asset-version subcheck was not completed, and Gate 2 received only the first required queryless `/order/` `302`; the required immediate second queryless redirect check was not completed. Neither gate is claimed as fully passed.
+- Task 9 rollback started immediately. Production WP-CLI reactivated Hello Elementor `3.4.9`; object-cache flush and WordPress.com object/global-edge `Clear all` were repeated successfully.
+- Post-rollback evidence showed Hello Elementor `3.4.9` active, `stingray-corvette` `0.1.16` retained inactive, homepage `200` with the `wp-theme-hello-elementor` marker, Hello Elementor CSS `200`, and the prior `/order-landing-page/`, `/order/`, `/deposit/`, and `/process-links/` behavior restored.
+- No order, deposit, lead, or customer form was submitted. No page record, embed, plugin, table, front-page, or posts-page setting was changed during activation or rollback.
+
+The retained inactive candidate and verified Hello Elementor backup are diagnostic and rollback evidence only; their presence does not authorize reactivation.
 
 ## Staging release gate
 
@@ -61,9 +79,9 @@ Every approved first hop returned `302` to the exact local replacement:
 
 The local redirect regression also verifies the exact map, query-string handling, missing-trailing-slash normalization, unchanged unmapped paths, and no destination-to-legacy-source loop.
 
-## Prepared production configuration
+## Retained production configuration
 
-Production remains on Hello Elementor. The replacement records are published, parentless, use the default template, and have empty editor content so the Stingray theme's dedicated templates can own their rendering after activation.
+Production is restored to Hello Elementor `3.4.9`. The replacement records remain published, parentless, use the default template, and have empty editor content. They are retained for diagnosis and do not authorize another activation.
 
 | Page ID | Title | Path | Status |
 |---:|---|---|---|
@@ -80,9 +98,9 @@ The production embed configuration was reopened and verified with these exact ra
 - Page `68291`, Build & Price: `[formidable id=30]`
 - Page `68300`, Orders @ Factory: `[wpdatatable id=12 table_view=regular]`
 
-Formidable form 8 (`Deposit Form`, key `deposit-form`) and form 30 (`Chevy Build and Price Link Share`, key `chevbp23`) were verified as the intended production records. Both forms rendered with submit controls during `0.1.16` staging QA without submission. Their production rendering remains an explicit post-activation smoke gate; no production Formidable definition was changed.
+Formidable form 8 (`Deposit Form`, key `deposit-form`) and form 30 (`Chevy Build and Price Link Share`, key `chevbp23`) were verified as the intended production records. Both forms rendered with submit controls during `0.1.16` staging QA without submission. Production rendering was not reached before rollback; no production Formidable definition was changed.
 
-Production wpDataTable 12 (`Orders_v2`) was reviewed against the Google Sheet source and is ready for the Factory binding. It has all 14 expected columns, plugin responsive mode disabled, pagination enabled at 10 rows per page, and a credible 23-row preview (`Showing 1 to 10 of 23 entries`). Its source, ID, columns, and pagination were preserved; only the approved responsive toggle was disabled. The theme's PHP and JavaScript regressions explicitly exercise table 12, and active runtime CSS/JavaScript has no dependency on the former staging table ID.
+Production wpDataTable 12 (`Orders_v2`) retains the reviewed Factory binding configuration against the Google Sheet source. It has all 14 expected columns, plugin responsive mode disabled, pagination enabled at 10 rows per page, and a credible 23-row preview (`Showing 1 to 10 of 23 entries`). Its source, ID, columns, and pagination were preserved; only the approved responsive toggle was disabled. The theme's PHP and JavaScript regressions explicitly exercise table 12, and active runtime CSS/JavaScript has no dependency on the former staging table ID.
 
 ## Performance and delivery evidence
 
@@ -93,9 +111,9 @@ Production wpDataTable 12 (`Orders_v2`) was reviewed against the Google Sheet so
 - The measured CSS/JavaScript/PHP source total is 266,283 bytes, 5,319 bytes below the approved ceiling.
 - No compiler, minifier, package manifest, dependency, lockfile, or build step was introduced.
 
-## Validation summary
+## Pre-attempt validation summary
 
-Passed against release commit `a60a10c`:
+The following passed against release commit `a60a10c` before the production attempt. This evidence does not override the current NO-GO decision:
 
 - PHP lint: 17 of 17 root, include, and regression PHP files
 - JavaScript syntax: 6 of 6 theme/regression scripts
@@ -109,14 +127,13 @@ Passed against release commit `a60a10c`:
 
 No order, lead, deposit, or customer form was submitted during validation.
 
-## Production activation boundary and rollback
+## Reactivation boundary
 
-The GO authorizes the separate controlled production task; it does not record production as deployed. Before activation, back up the active production theme and affected configuration, upload the exact candidate as inactive, and verify remote checksums. After activation, purge caches and require all seven public entry points, both queryless cold/warm `/order/` checks, the full legacy redirect matrix, forms 8 and 30, Factory table 12, calculator, homepage, shared chrome, asset versions, and required resources to pass.
-
-If any hard gate fails, reactivate Hello Elementor, purge caches, confirm the prior homepage and critical legacy paths, and record the failed gate before another attempt. The six prepared page records and table 12 remain available for diagnosis unless a new page conflicts with restored routing.
+Reactivation is blocked. First perform a read-only diagnosis of redirect precedence for `/process-links/`, including the observed production `301` to `/corvette-process-guide/` versus the theme contract's direct `302` to `/process/`. Prove the corrected first hop in a production-equivalent environment, update the release evidence, and obtain new explicit production activation approval. A future approval must again require the complete backup, exact checksum, cache, two-request queryless Order, legacy matrix, asset-version, required-resource, browser, form/table/calculator, and performance gates; this report supplies no standing authorization.
 
 ## Remaining risk
 
-- Production rendering under the Stingray theme cannot be verified until the separately approved activation occurs.
+- The production `/process-links/` redirect precedence is unresolved and blocked the release.
+- Gate 1 asset-version evidence, Gate 2's second immediate queryless Order redirect, and later browser/performance gates were not completed before rollback.
 - The canonical order runtime requests an optional production favicon URL that returns `404`; Chromium blocks it via ORB. Required order-form resources and customer flows passed, so this is non-blocking follow-up work in 27vette.
 - Browser QA covered Chromium at the approved desktop/mobile viewports, not a full browser or physical-device lab.
