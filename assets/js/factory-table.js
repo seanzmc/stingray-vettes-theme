@@ -6,7 +6,7 @@
 	var table = document.querySelector('.sc-embed table.wpDataTable');
 	if (!table) return;
 
-	var headers = Array.prototype.map.call(table.querySelectorAll('thead th'), function (header) {
+	var headers = Array.prototype.map.call(table.querySelectorAll('thead tr:first-child th'), function (header) {
 		return header.textContent.trim();
 	});
 	if (headers.length < 4) return;
