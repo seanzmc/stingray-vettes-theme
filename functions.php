@@ -27,6 +27,8 @@ function stingray_corvette_setup() {
 }
 add_action( 'after_setup_theme', 'stingray_corvette_setup' );
 
+require_once get_template_directory() . '/inc/legacy-redirects.php';
+
 /**
  * Keep the local /order/ route while sending customers to the canonical app.
  *
