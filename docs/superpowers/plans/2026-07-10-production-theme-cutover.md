@@ -687,6 +687,18 @@ git push origin main
 
 Expected: documentation is current. Task 8 may begin only when its read-only readiness checks pass, this corrected runbook has passed independent review, and new explicit approval exists for a future activation attempt; the release remains `NO-GO` until Task 10 records a successful cutover.
 
+#### Future-attempt replayable evidence contract
+
+Before any future production mutation, create an attempt evidence index that names every required artifact path and template below. Fail closed before mutation if any path/template is missing or not writable. At completion, fail the evidence gate if any required artifact is absent; operator prose or a synthesized summary does not substitute for a required raw artifact.
+
+- Retain raw sanitized Cloudflare API JSON, or an equivalent complete authenticated machine-readable readback, before update, after update, at final success, and after rollback when applicable. Include every rule contract field and a normalized semantic diff for each transition.
+- Retain the raw serialized and normalized ordered Elementor conditions before save, after save, after rollback, and after cache confirmation. Retain sanitized screenshot/DOM captures showing the exact rows before save, visible save success, and the exact reopened rows after save at each applicable phase.
+- Retain raw sanitized cache UI screenshot/DOM files under the attempt evidence directory, not only an operator narrative.
+- Retain raw headers, sanitized HTML/marker extracts, explicit `200` proof for every required Hello asset during rollback, manifests, and timestamps already required by the gates.
+- Retain the no-submission boundary evidence from the operator record and read-only requests. Do not represent it as a separate submission audit unless such an audit is actually performed.
+
+Attempt 4's rollback is operationally convincing and its public baseline passed, but its synthesized Cloudflare summaries/screenshots, incomplete normalized/reopened-row Elementor proof, and lack of raw cache UI captures mean not every exact full-spec field/UI claim is independently replayable. Attempt 4 approval is exhausted. This corrected protocol requires independent review and then new explicit approval before another production mutation.
+
 ---
 
 ### Task 8: Activate the Replacement Theme in Production
@@ -702,19 +714,19 @@ Expected: documentation is current. Task 8 may begin only when its read-only rea
 
 - [ ] **Step 1: Obtain new explicit approval for a future activation attempt**
 
-All three `2026-07-11` activation attempts rolled back safely. Attempt 3 approval is exhausted. Before requesting another activation, obtain independent review of this corrected runbook, including its direct-output acceptance gate and evidence sequence. State the exact commit/version, current Hello `3.4.9` and inactive Stingray `0.1.16` state, the five proposed exclusions, the five-minute exposure bound, and phase-aware rollback. Then wait for new explicit approval covering the Elementor Display Conditions save and reactivation.
+All four `2026-07-11` activation attempts rolled back safely. Attempt 4 approval is exhausted. Before requesting another activation, obtain independent review of this corrected runbook, including its direct-output acceptance gate, bounded cache-confirmation protocol, and replayable-evidence contract. State the exact commit/version, current Hello `3.4.9` and inactive Stingray `0.1.16` state, the five proposed exclusions, the five-minute exposure bound, and phase-aware rollback. Then wait for new explicit approval covering the Elementor Display Conditions save and reactivation.
 
 - [ ] **Step 2: Complete all read-only readiness and rollback-operator checks**
 
-Reconfirm the exact Stingray 202-file candidate manifest, Hello 116-file backup, six page records, three embed values, table 12, forms 8 and 30, current theme state, both cache-clear paths, and every rollback operator. Any failure stops NO-GO with no mutation.
+Reconfirm the exact Stingray 202-file candidate manifest, Hello 116-file backup, six page records, three embed values, table 12, forms 8 and 30, current theme state, both cache-clear paths, and every rollback operator. Run the pre-mutation evidence-index check and prove every required path/template is present and writable. Any failure stops NO-GO with no mutation.
 
 - [ ] **Step 3: Update and prove only the Cloudflare target**
 
-Capture and retain the complete existing enabled `/process-links/` rule readback, then change only its target from `https://stingraychevroletcorvette.com/corvette-process-guide/` to `https://stingraychevroletcorvette.com/process/`. Preserve its identity, position, exact source, enabled state, `301`, and query behavior. Retain the complete post-update field readback, raw response headers, and two consecutive exact queryless direct Cloudflare-owned `301` first hops to `/process/`, with timestamps proving propagation completed. Do not treat a partial field summary as replayable evidence.
+Capture and retain raw sanitized Cloudflare API JSON, or an equivalent complete authenticated machine-readable readback, for the complete existing enabled `/process-links/` rule, then change only its target from `https://stingraychevroletcorvette.com/corvette-process-guide/` to `https://stingraychevroletcorvette.com/process/`. Preserve its identity, position, exact source, enabled state, `301`, and query behavior. Retain the raw complete post-update readback, a normalized semantic diff of every rule contract field, raw response headers, and two consecutive exact queryless direct Cloudflare-owned `301` first hops to `/process/`, with timestamps proving propagation completed. A screenshot, synthesized field summary, or partial readback is not replayable evidence.
 
 - [ ] **Step 4: Capture Elementor template `12977` baseline**
 
-Only after the Cloudflare propagation proof is complete, and immediately before the supported-UI save, retain the exact raw serialized and normalized original conditions `include/singular/page` and `exclude/singular/front_page`. Retain sanitized supported-UI before evidence and the public Hello/Elementor baseline. Prove effective matching for pages `68291`, `68294`, `68297`, `68300`, and `68303`; match for at least two named legacy non-front Page controls; and exclusion of front page `5` under a real frontend query. Timestamp every capture so the retained record proves this baseline occurred strictly after Cloudflare propagation and immediately before the save; an earlier preflight baseline is insufficient.
+Only after the Cloudflare propagation proof is complete, and immediately before the supported-UI save, retain the exact raw serialized and normalized ordered original conditions `include/singular/page` and `exclude/singular/front_page`. Retain a sanitized supported-UI screenshot/DOM capture of the exact rows before save and the public Hello/Elementor baseline. Prove effective matching for pages `68291`, `68294`, `68297`, `68300`, and `68303`; match for at least two named legacy non-front Page controls; and exclusion of front page `5` under a real frontend query. Timestamp every capture so the retained record proves this baseline occurred strictly after Cloudflare propagation and immediately before the save; an earlier preflight baseline is insufficient.
 
 - [ ] **Step 5: Save exactly five exclusions through Elementor's supported UI**
 
@@ -730,7 +742,7 @@ exclude/singular/page/68303
 
 Do not edit `_elementor_conditions` directly. Do not exclude page `68288` (`/order/`): the candidate's priority-1 `template_redirect` exits before Elementor Pro's priority-11 `template_include` callback.
 
-Retain sanitized supported-UI before, save-confirmation, and after evidence without cookies, nonces, credentials, or other secrets. The UI success state alone is insufficient: retain the exact raw serialized and normalized conditions after the save and the effective target, legacy-control, and front-page results.
+Retain sanitized supported-UI screenshot/DOM evidence of the exact rows before save, visible save success, and the exact reopened rows after save without cookies, nonces, credentials, or other secrets. The UI success state alone is insufficient: retain the exact raw serialized and normalized ordered conditions after the save and the effective target, legacy-control, and front-page results.
 
 - [ ] **Step 6: Prove the save and activate within five minutes**
 
@@ -738,7 +750,16 @@ Start a visible timer at confirmed save and retain its timestamp. Within at most
 
 - [ ] **Step 7: Clear caches and run every strict gate**
 
-Clear object cache first, then WordPress.com global edge cache. Run the full strict route/template/embed/browser/performance sequence. Retain raw response headers and sanitized HTML/marker extracts for every gate, including failed gates. Require homepage `200` and only `0.1.16` assets; two exact `/order/` first hops; all five local pages through candidate output rather than document `12977`; the exact Cloudflare/theme redirect split; all required assets `200`; desktop/mobile browser acceptance; and delivery/performance gates.
+Run production `wp cache flush`, then use this exact bounded protocol for the activation WordPress.com Production `Clear all` action:
+
+1. Before clicking, retain a sanitized raw screenshot/DOM capture proving the exact Production site/environment, global-edge enabled, one enabled `Clear all`, and the current messages/control state.
+2. Click the unique `Clear all` exactly once.
+3. Poll authenticated UI state without any second click for up to five minutes, every five seconds. Retain timestamped sanitized screenshot/DOM evidence at action time, on every state transition, and at final success/timeout.
+4. Success requires both exact messages `Object cache cleared.` and `Global edge cache cleared.` from that action. Then continue.
+5. Disabled controls without both messages mean **processing/unknown**, not failure; keep polling within the bound.
+6. If controls re-enable without both messages, the UI reports an error, the session/environment changes, or five minutes expire without both messages, classify **confirmation gate failure; purge outcome unknown**. Do not retry. Execute the phase-appropriate Task 9 rollback.
+
+Only after cache confirmation succeeds, run the full strict route/template/embed/browser/performance sequence. Retain raw response headers and sanitized HTML/marker extracts for every gate, including failed gates. Require homepage `200` and only `0.1.16` assets; two exact `/order/` first hops; all five local pages through candidate output rather than document `12977`; the exact Cloudflare/theme redirect split; all required assets `200`; desktop/mobile browser acceptance; and delivery/performance gates.
 
 For each of the five local pages, require the correct page ID in the response and the active `wp-theme-stingray-corvette` marker, and prove Elementor document `12977` is absent. Then require these direct candidate markers:
 
@@ -752,7 +773,7 @@ For every page, reject raw shortcode text and the admin-only notices `Embed shor
 
 - [ ] **Step 8: Retain the successful final Cloudflare rule readback**
 
-After all activation gates pass and before declaring cutover success, retain a complete authenticated final readback of the enabled `/process-links/` rule. Record and compare every field that defines the approved contract: rule and ruleset identity, rule position, exact full-URI source expression, enabled state, `301` status, query-string behavior, and direct target. Prove every field equals the original baseline except the direct target, which must be exactly `https://stingraychevroletcorvette.com/process/`. Retain the raw sanitized readback and timestamp; a target-only summary or the earlier post-update readback is insufficient final evidence.
+After all activation gates pass and before declaring cutover success, retain raw sanitized Cloudflare API JSON, or an equivalent complete authenticated machine-readable final readback, for the enabled `/process-links/` rule. Record and compare every field that defines the approved contract: rule and ruleset identity, rule position, exact full-URI source expression, enabled state, `301` status, query-string behavior, and direct target. Prove with a normalized semantic diff that every field equals the original baseline except the direct target, which must be exactly `https://stingraychevroletcorvette.com/process/`. Retain the raw readback and timestamp; a target-only summary or the earlier post-update readback is insufficient final evidence. Run the completion evidence-index check and do not declare success if any required artifact is absent.
 
 ---
 
@@ -778,7 +799,9 @@ Through Elementor's supported Display Conditions UI, remove exactly the five ID-
 
 - [ ] **Step 3: Restore Cloudflare, clear caches, and prove baseline**
 
-Restore the complete captured Cloudflare rule including its original `/corvette-process-guide/` target. Retain the complete final rule field readback and timestamps, not only the restored target. Clear WordPress object cache first, then WordPress.com global edge cache. Repeat the effective Elementor checks after cache clearing and retain exact raw plus normalized restored conditions, sanitized supported-UI after evidence, raw headers, and sanitized marker extracts. Require two consecutive original direct Cloudflare first hops plus the complete public Hello baseline: homepage/Hello assets, all five target page IDs/titles with document `12977`, and previously accepted baseline routes.
+Restore the complete captured Cloudflare rule including its original `/corvette-process-guide/` target. Retain raw sanitized Cloudflare API JSON, or an equivalent complete authenticated machine-readable rollback readback, timestamps, and a normalized semantic diff proving restoration of every rule contract field, not only the target. Run production `wp cache flush`, then use the exact six-step bounded five-minute Production `Clear all` protocol in Task 8 Step 7 for the rollback action: retain the pre-click raw UI state, click the unique control exactly once, poll every five seconds without a second click, require both exact success messages from that action, treat disabled controls without both messages as processing/unknown, and classify timeout or the other listed stop conditions as **confirmation gate failure; purge outcome unknown** with no retry. If rollback cache confirmation fails, remain NO-GO and report the unresolved rollback-verification concern; do not claim complete rollback.
+
+After rollback cache confirmation, repeat the effective Elementor checks and retain exact raw serialized plus normalized ordered restored conditions, sanitized supported-UI screenshot/DOM evidence of the exact reopened rows, raw headers, and sanitized marker extracts. Require explicit `200` proof for every required Hello asset, two consecutive original direct Cloudflare first hops, and the complete public Hello baseline: homepage/Hello assets, all five target page IDs/titles with document `12977`, and previously accepted baseline routes. Run the completion evidence-index check; any absent required artifact fails the evidence gate.
 
 - [ ] **Step 4: Record the failed gate**
 

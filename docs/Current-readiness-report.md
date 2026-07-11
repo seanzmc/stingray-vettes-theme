@@ -24,19 +24,28 @@ The 27vette deployment is live at the canonical runtime. Its crossed-flags/wordm
 
 Four controlled activation attempts ran on `2026-07-11`; each stopped at a hard gate and restored the prior production baseline.
 
-### Attempt 4: activation global-edge cache confirmation failure
+### Attempt 4: activation global-edge confirmation gate failure; purge outcome unknown
 
 The explicitly approved fourth attempt used the corrected direct-output runbook and strengthened evidence sequence. Fresh read-only readiness passed before mutation: Hello Elementor `3.4.9` was active, Stingray `0.1.16` inactive, the exact 202-file candidate and 116-file Hello backup matched their approved manifests, all six page records/three embeds/forms `8` and `30`/wpDataTable `12` passed, and both authenticated cache and rollback operators were ready.
 
-- The enabled Cloudflare `/process-links/` rule was changed only to target `/process/`. Complete supported-UI before/update readbacks retained its identity, first position, exact full-URI wildcard source, enabled state, `301`, and preserved-query behavior. Two consecutive direct Cloudflare-owned `301` first hops to `/process/` passed at `15:59:36Z`.
+- The enabled Cloudflare `/process-links/` rule was changed only to target `/process/`. The retained synthesized summaries and screenshots report that its identity, first position, exact full-URI wildcard source, enabled state, `301`, and preserved-query behavior were unchanged. Two consecutive direct Cloudflare-owned `301` first hops to `/process/` passed at `15:59:36Z`. The package does not contain the raw complete authenticated rule readbacks needed to replay every exact field claim independently.
 - Strictly after propagation, the immediate Elementor baseline ran from `15:59:54Z` through `16:00:44Z`. It retained the exact raw two-condition value, effective matches for all five targets and two named legacy controls, the real front-page exclusion, raw public headers/HTML, and supported-UI before evidence.
 - Elementor template `12977` was saved through the supported Display Conditions UI with exactly the original two rows plus exclusions for `68291`, `68294`, `68297`, `68300`, and `68303`. Save confirmation was retained at `16:03:58.722Z`; exact raw/effective readback completed at `16:04:47Z` and passed.
 - Stingray activation began at `16:05:48Z`, completed at `16:05:56Z`, and `wp cache flush` completed at `16:06:00Z`, within the five-minute bound.
-- The authenticated Production `Clear all` action was clicked once at `16:06:39.682Z`. `Object cache cleared.` appeared, but the required `Global edge cache cleared.` confirmation did not appear through more than 18 seconds and the controls remained disabled. No retry occurred. This was treated as a hard gate before public acceptance Gates 1–7, so none of those gates is claimed.
+- The authenticated Production `Clear all` action was clicked once at `16:06:39.682Z`. `Object cache cleared.` appeared, but the required `Global edge cache cleared.` confirmation did not appear during the retained observation window of more than 18 seconds and the controls remained disabled. That establishes a **global-edge confirmation gate failure with purge outcome unknown**; it does not prove that the global edge purge itself failed. No retry occurred. This was treated as a hard gate before public acceptance Gates 1–7, so none of those gates is claimed.
 - Full phase-aware rollback passed. Hello was active again at `16:09:40Z`; the supported Elementor UI restored exactly `include/singular/page` and `exclude/singular/front_page` at `16:11:17Z`; effective target/legacy/front checks passed; the complete original Cloudflare `/corvette-process-guide/` rule was restored and read back; rollback `wp cache flush` passed at `16:12:48Z`; and the authorized rollback `Clear all` at `16:14:01.320Z` displayed both object and global-edge success confirmations.
 - Post-clear proof passed: exact raw/effective Elementor state, two consecutive original direct Cloudflare first hops, the public Hello/document-`12977` baseline, Hello active/Stingray inactive, and the exact retained 202-file candidate hash.
 
-Attempt 4 evidence and the final report are retained under `.superpowers/sdd/task-11-attempt4-*`. No form/order was submitted and no unrelated setting, page, embed, form, table, plugin, theme file, dependency, commit, push, or deployment changed. Attempt 4 approval is exhausted.
+Attempt 4 evidence and the final report are retained under `.superpowers/sdd/task-11-attempt4-*`. The operator record and read-only requests show no form/order submission; no separate submission audit was performed. No unrelated setting, page, embed, form, table, plugin, theme file, dependency, commit, push, or deployment changed. Attempt 4 approval is exhausted.
+
+Independent review found that the rollback is operationally convincing and the restored public baseline passed, but not every exact full-spec field/UI claim is independently replayable from the retained Attempt 4 package:
+
+- Synthesized Cloudflare field summaries and screenshots were retained instead of raw complete authenticated machine-readable rule readbacks and normalized semantic diffs.
+- Raw Elementor condition values and effective checks were retained, but normalized ordered lists and supported-UI proof of the exact post-save/reopened rows were not retained for every required phase.
+- The cache report records the authenticated UI observations, but raw sanitized cache UI screenshot/DOM files were not retained under the attempt evidence directory.
+- The no-submission boundary remains operator/read-only-request evidence, not a separate submission audit.
+
+No future attempt may inherit an evidence waiver from Attempt 4.
 
 ### Attempt 1: Cloudflare redirect conflict
 
@@ -206,7 +215,7 @@ No order, lead, deposit, or customer form was submitted during validation.
 
 ## Future activation authorization boundary
 
-**No further activation is currently authorized.** The fourth-attempt authorization was consumed and ended in complete rollback. A future attempt requires new explicit approval for the Elementor save and reactivation of Stingray `0.1.16`, with the activation global-edge cache confirmation failure addressed in the operative runbook.
+**No further activation is currently authorized.** The fourth-attempt authorization was consumed and ended in complete rollback. A future attempt requires independent review of the corrected cache-confirmation and replayable-evidence protocol in the operative runbook, followed by new explicit approval for the Elementor save and reactivation of Stingray `0.1.16`.
 
 The intended successful cutover state remains an enabled Cloudflare `/process-links/` rule whose only changed contract field is the direct target `/process/`. The proven Elementor correction retains document `12977`'s existing all-pages include and front-page exclusion while adding exactly five page-specific exclusions for IDs `68291`, `68294`, `68297`, `68300`, and `68303`. Page `68288` (`/order/`) remains intentionally outside the exclusions. None of those cutover changes is currently applied or authorized.
 
@@ -216,6 +225,8 @@ The intended successful cutover state remains an enabled Cloudflare `/process-li
 - The Elementor correction is now proven in production but currently rolled back. Its future save remains a live routing mutation with a maximum five-minute save-to-activation window and mandatory symmetric rollback.
 - Attempt 3's literal body-class predicate was technically invalid for hierarchy-bound `page-{slug}.php` files with default/empty page-template metadata. The corrected direct-output gate and strengthened evidence sequence require independent review before another production attempt.
 - Attempt 3 rollback is verified, but its retained evidence does not independently replay every mutation, readback, response, and required timing transition. No future attempt may inherit an evidence waiver from Attempt 3.
+- Attempt 4 failed the activation confirmation gate because both required messages were not observed from the single `Clear all` action; the global edge purge outcome is unknown, not proven failed. Future activation and rollback `Clear all` actions require the bounded five-minute protocol in the operative runbook, with no retry.
+- Attempt 4 rollback and public restoration are operationally convincing, but raw complete Cloudflare readbacks, normalized/reopened-row Elementor proof, and raw cache UI captures were not all retained. The operative evidence contract must pass its pre-mutation and completion index checks on any future attempt.
 - Gates 6–7 were not run after Attempt 3's Gate 5 body-class failure. No browser or delivery/performance result from that production attempt is claimed.
 - A new explicit approval is required before the five Elementor exclusions are saved or Stingray is activated again.
 - The canonical order runtime requests an optional production favicon URL that returns `404`; Chromium blocks it via ORB. Required order-form resources and customer flows passed, so this is non-blocking follow-up work in 27vette.
