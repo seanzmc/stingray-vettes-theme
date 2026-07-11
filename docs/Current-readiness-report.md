@@ -1,12 +1,14 @@
 # Current Readiness Report
 
-Updated: 2026-07-11 after the user-directed production publish and final launch verification.
+Updated: 2026-07-11 after the user-directed Elementor deactivation and final public verification.
 
 ## Release decision
 
 **Current decision: GO / LIVE FOR USER REVIEW — Stingray Corvette `0.1.16` is active in production and the user-directed minimal launch gate passed.**
 
 After Attempt 6's verified rollback, the user explicitly overrode the former acceptance boundary and directed publication as built. The final publish left Stingray `0.1.16` active, Hello Elementor inactive, the exact five Elementor exclusions in place, and the Cloudflare `/process-links/` target set to `/process/`. Homepage and the five primary local pages returned `200` with the Stingray marker; `/order/` and `/process-links/` reached their intended destinations in one hop; and the required theme assets in the retained launch sweep returned `200`. The known Factory row-detail dialog defect is now a post-launch follow-up, not a launch blocker.
+
+On `2026-07-11`, the user then directed production deactivation of Elementor. Preflight confirmed Stingray `0.1.16` active and Elementor `4.1.4` plus Elementor Pro `4.1.2` installed active with a verified WP-CLI rollback path. Elementor Pro was deactivated first, then Elementor; both remain installed inactive. The WordPress object cache was flushed, one Production `Clear all` action was performed, and a URL-specific Cloudflare purge cleared stale APO entries for only the homepage and five primary pages. Fresh queryless responses for all six returned `200` with `wp-theme-stingray-corvette`, `sc-topbar`, and `sc-site-footer`; the homepage also rendered `sc-hero`; and Elementor header/footer/page output plus IDs `58074` and `32458` were absent. `/order/` remains a direct `302` to the canonical runtime, `/process-links/` remains a direct `301` to `/process/`, and all 66 extracted required local assets returned `200`. Evidence is retained under `.superpowers/sdd/task-16-elementor-deactivation-evidence/`.
 
 ## Release identity and ownership
 
