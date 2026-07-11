@@ -1,12 +1,12 @@
 # Current Readiness Report
 
-Updated: 2026-07-11 after three controlled production activation attempts and three complete rollbacks.
+Updated: 2026-07-11 after four controlled production activation attempts and four complete rollbacks.
 
 ## Release decision
 
-**Current decision: NO-GO / ROLLED BACK — production is restored to Hello Elementor `3.4.9`; Stingray Corvette `0.1.16` is installed and inactive after all three controlled activation attempts rolled back completely.**
+**Current decision: NO-GO / ROLLED BACK — production is restored to Hello Elementor `3.4.9`; Stingray Corvette `0.1.16` is installed and inactive after all four controlled activation attempts rolled back completely.**
 
-The first attempt established the Cloudflare `/process-links/` redirect conflict. The second attempt proved the target-only Cloudflare correction and failed Gate 5 because Elementor Pro Theme Builder document `12977` replaced all five slug-specific theme templates. The explicitly approved third attempt proved the five supported-UI Elementor exclusions, activated the candidate within the five-minute bound, passed strict Gates 1–4, and proved all five candidate templates plus their required content and embeds executed. It nevertheless failed closed on the then-authoritative literal Gate 5 body-class predicate. Installed WordPress core now proves that predicate was technically invalid for these hierarchy-bound pages. The full symmetric rollback is complete. Attempt 3 approval is exhausted; any future activation requires this corrected runbook to pass independent review and then receive new explicit approval.
+The first attempt established the Cloudflare `/process-links/` redirect conflict. The second attempt established the Elementor document `12977` conflict. The third attempt proved the supported-UI exclusions and candidate output but failed closed on the former body-class predicate. The explicitly approved fourth attempt used the corrected direct-output gate and strengthened evidence sequence, but the activation `Clear all` action did not confirm the global edge clear. The full symmetric rollback is complete. Attempt 4 approval is exhausted; any future activation requires new explicit approval.
 
 ## Release identity and ownership
 
@@ -22,7 +22,21 @@ The 27vette deployment is live at the canonical runtime. Its crossed-flags/wordm
 
 ## Production activation attempts and rollbacks
 
-Three controlled activation attempts ran on `2026-07-11`; each stopped at a hard gate and restored the prior production baseline.
+Four controlled activation attempts ran on `2026-07-11`; each stopped at a hard gate and restored the prior production baseline.
+
+### Attempt 4: activation global-edge cache confirmation failure
+
+The explicitly approved fourth attempt used the corrected direct-output runbook and strengthened evidence sequence. Fresh read-only readiness passed before mutation: Hello Elementor `3.4.9` was active, Stingray `0.1.16` inactive, the exact 202-file candidate and 116-file Hello backup matched their approved manifests, all six page records/three embeds/forms `8` and `30`/wpDataTable `12` passed, and both authenticated cache and rollback operators were ready.
+
+- The enabled Cloudflare `/process-links/` rule was changed only to target `/process/`. Complete supported-UI before/update readbacks retained its identity, first position, exact full-URI wildcard source, enabled state, `301`, and preserved-query behavior. Two consecutive direct Cloudflare-owned `301` first hops to `/process/` passed at `15:59:36Z`.
+- Strictly after propagation, the immediate Elementor baseline ran from `15:59:54Z` through `16:00:44Z`. It retained the exact raw two-condition value, effective matches for all five targets and two named legacy controls, the real front-page exclusion, raw public headers/HTML, and supported-UI before evidence.
+- Elementor template `12977` was saved through the supported Display Conditions UI with exactly the original two rows plus exclusions for `68291`, `68294`, `68297`, `68300`, and `68303`. Save confirmation was retained at `16:03:58.722Z`; exact raw/effective readback completed at `16:04:47Z` and passed.
+- Stingray activation began at `16:05:48Z`, completed at `16:05:56Z`, and `wp cache flush` completed at `16:06:00Z`, within the five-minute bound.
+- The authenticated Production `Clear all` action was clicked once at `16:06:39.682Z`. `Object cache cleared.` appeared, but the required `Global edge cache cleared.` confirmation did not appear through more than 18 seconds and the controls remained disabled. No retry occurred. This was treated as a hard gate before public acceptance Gates 1–7, so none of those gates is claimed.
+- Full phase-aware rollback passed. Hello was active again at `16:09:40Z`; the supported Elementor UI restored exactly `include/singular/page` and `exclude/singular/front_page` at `16:11:17Z`; effective target/legacy/front checks passed; the complete original Cloudflare `/corvette-process-guide/` rule was restored and read back; rollback `wp cache flush` passed at `16:12:48Z`; and the authorized rollback `Clear all` at `16:14:01.320Z` displayed both object and global-edge success confirmations.
+- Post-clear proof passed: exact raw/effective Elementor state, two consecutive original direct Cloudflare first hops, the public Hello/document-`12977` baseline, Hello active/Stingray inactive, and the exact retained 202-file candidate hash.
+
+Attempt 4 evidence and the final report are retained under `.superpowers/sdd/task-11-attempt4-*`. No form/order was submitted and no unrelated setting, page, embed, form, table, plugin, theme file, dependency, commit, push, or deployment changed. Attempt 4 approval is exhausted.
 
 ### Attempt 1: Cloudflare redirect conflict
 
@@ -68,7 +82,7 @@ Independent review found evidence and sequence defects that prevent the retained
 - Supported-UI before/save-confirmation/after evidence, normalized readback, raw Gates 1–5 responses, and the complete final Cloudflare field readback were not all retained in independently replayable form.
 - Timestamps do not establish the complete required evidence order. A future attempt must retain raw headers and sanitized HTML/marker extracts for every gate, exact raw plus normalized Elementor conditions before and after, supported-UI evidence without secrets, complete Cloudflare rule readbacks before/update/final-or-rollback, and timestamps tying the sequence together.
 
-The current retained state is therefore Hello Elementor `3.4.9` active, Stingray `0.1.16` installed inactive, template `12977` restored to its original two conditions, and the original enabled Cloudflare `/process-links/` target restored. The third-attempt authorization is exhausted.
+The current retained state is therefore Hello Elementor `3.4.9` active, Stingray `0.1.16` installed inactive, template `12977` restored to its original two conditions, and the original enabled Cloudflare `/process-links/` target restored. The fourth-attempt authorization is exhausted.
 
 ## Proven production root causes
 
@@ -144,7 +158,7 @@ The local redirect regression also verifies the exact map, query-string handling
 
 ## Retained production configuration
 
-Production is restored to Hello Elementor `3.4.9`; Stingray `0.1.16` remains installed inactive. The replacement records remain published, parentless, use the default template, and have empty editor content. They are retained for diagnosis; their presence does not authorize an Elementor mutation or third activation attempt.
+Production is restored to Hello Elementor `3.4.9`; Stingray `0.1.16` remains installed inactive. The replacement records remain published, parentless, use the default template, and have empty editor content. They are retained for diagnosis; their presence does not authorize an Elementor mutation or another activation attempt.
 
 | Page ID | Title | Path | Status |
 |---:|---|---|---|
@@ -192,7 +206,7 @@ No order, lead, deposit, or customer form was submitted during validation.
 
 ## Future activation authorization boundary
 
-**No further activation is currently authorized.** The third-attempt authorization was consumed and ended in complete rollback. A future attempt requires independent review of the corrected direct-output acceptance gate and evidence sequence in the operative runbook, followed by new explicit approval for the Elementor save and reactivation of Stingray `0.1.16`.
+**No further activation is currently authorized.** The fourth-attempt authorization was consumed and ended in complete rollback. A future attempt requires new explicit approval for the Elementor save and reactivation of Stingray `0.1.16`, with the activation global-edge cache confirmation failure addressed in the operative runbook.
 
 The intended successful cutover state remains an enabled Cloudflare `/process-links/` rule whose only changed contract field is the direct target `/process/`. The proven Elementor correction retains document `12977`'s existing all-pages include and front-page exclusion while adding exactly five page-specific exclusions for IDs `68291`, `68294`, `68297`, `68300`, and `68303`. Page `68288` (`/order/`) remains intentionally outside the exclusions. None of those cutover changes is currently applied or authorized.
 
