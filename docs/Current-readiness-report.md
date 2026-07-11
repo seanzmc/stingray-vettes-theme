@@ -1,12 +1,12 @@
 # Current Readiness Report
 
-Updated: 2026-07-11 after four controlled production activation attempts and four complete rollbacks.
+Updated: 2026-07-11 after six controlled production activation attempts.
 
 ## Release decision
 
-**Current decision: NO-GO / ROLLED BACK — production is restored to Hello Elementor `3.4.9`; Stingray Corvette `0.1.16` is installed and inactive after all four controlled activation attempts rolled back completely.**
+**Current decision: NO-GO / ROLLED BACK — production is restored to Hello Elementor `3.4.9`; Attempt 6 exposed a concrete Factory row-detail dialog defect in Stingray Corvette `0.1.16`.**
 
-The first attempt established the Cloudflare `/process-links/` redirect conflict. The second attempt established the Elementor document `12977` conflict. The third attempt proved the supported-UI exclusions and candidate output but failed closed on the former body-class predicate. The explicitly approved fourth attempt used the corrected direct-output gate and strengthened evidence sequence, but the activation `Clear all` action did not confirm the global edge clear. The full symmetric rollback is complete. Attempt 4 approval is exhausted; any future activation requires new explicit approval.
+Attempt 6 used the user-approved cache-observation override and reached the actual public acceptance suite. HTTP routes, candidate templates/embeds, redirects, 122 local assets, responsive layout, and calculator behavior passed. Factory table 12 rendered, but its required row-detail dialog could not open because the candidate script counted 28 header/filter cells against 14-cell data rows and rejected every row. Exact symmetric rollback passed, including the single Production cache clear and final public Hello baseline. Attempt 6 approval is exhausted and no further activation is authorized.
 
 ## Release identity and ownership
 
@@ -22,7 +22,32 @@ The 27vette deployment is live at the canonical runtime. Its crossed-flags/wordm
 
 ## Production activation attempts and rollbacks
 
-Four controlled activation attempts ran on `2026-07-11`; each stopped at a hard gate and restored the prior production baseline.
+Six controlled activation attempts ran on `2026-07-11`; each stopped at a hard gate and restored the prior production baseline.
+
+### Attempt 6: Factory row-detail dialog hard failure; complete rollback
+
+Attempt 6 passed fresh manifests/state, the target-only Cloudflare update, the immediate Elementor baseline, exact supported-UI exclusions, activation within 77 seconds, object-cache flush, and the single authorized Production `Clear all`. Under the explicit override, missing transient activation toast capture was not treated as failure; actual public results governed acceptance.
+
+- Homepage and all five candidate pages returned `200`, used Stingray `0.1.16`, rendered the required direct template/embed markers, omitted Elementor document `12977`, and contained no raw shortcode or missing-embed notice.
+- Both redirect owners and all approved first hops passed. All 122 extracted local CSS/JavaScript/image/font assets returned `200`. Desktop/mobile layouts had no horizontal overflow and browser console capture was clean. Forms rendered without submission and the calculator produced a valid test result.
+- Factory table 12 rendered 10 rows plus search/filter controls, but clicking a row did not open the required detail dialog. The live table had 28 `thead th` nodes (labels plus filters) and 14 cells per data row. `assets/js/factory-table.js` requires equality, so every row was rejected and never received its interactive class, keyboard focus, accessible label, or dialog behavior.
+- The substantive Gate 6 failure triggered immediate rollback. Hello `3.4.9`, the exact original two Elementor conditions, the complete original Cloudflare `/corvette-process-guide/` target, object cache, the single Production rollback cache clear, and the public Hello/document-`12977` baseline all passed final proof. The 202-file Stingray candidate remains installed inactive and unchanged.
+
+Evidence and report: `.superpowers/sdd/task-13-attempt6-*`. No form/order submission, plugin deactivation, unrelated production change, commit, push, or deletion occurred.
+
+### Attempt 5: activation and rollback global-edge confirmation failures; purge outcomes unknown
+
+The explicitly approved fifth attempt followed the corrected five-minute/five-second cache protocol and replayable-evidence contract. Fresh preflight passed with zero mutation: the 202-file Stingray manifest and 116-file Hello remote/backup manifests matched, Hello `3.4.9` was active, Stingray `0.1.16` inactive, all production records/embeds/forms/table checks passed, the original two Elementor conditions/effective state passed, and the exact Production cache control was ready.
+
+- The Cloudflare rule update changed only the wildcard replacement target from `/corvette-process-guide/` to `/process/`. Complete raw authenticated before/after JSON and normalized semantic diffs were retained. Two consecutive direct Cloudflare `301` first hops to `/process/` passed.
+- Strictly after propagation, a fresh Elementor baseline retained raw/normalized conditions, eight effective probes, public Hello headers/HTML/markers, and supported-UI proof. The UI saved exactly the five exclusions `68291`, `68294`, `68297`, `68300`, and `68303`; page `68288` remained unexcluded. Raw/normalized/effective and reopened-row evidence passed.
+- Save confirmation was retained at `18:15:35.815Z`. Stingray activation began at `18:17:08Z`, completed at `18:17:17Z`, and `wp cache flush` completed at `18:17:21Z`, inside the five-minute bound.
+- The activation Production `Clear all` control was clicked exactly once at `18:19:52.194Z`. `Object cache cleared.` appeared, but `Global edge cache cleared.` did not appear through `18:25:03.470Z` / `311.276s`; the control remained disabled and no retry occurred. This is a confirmation-gate failure with purge outcome unknown. Gates 1-7 were not run.
+- Phase-aware rollback reactivated Hello first, restored Elementor template `12977` through the supported UI to exactly `include/singular/page` and `exclude/singular/front_page`, restored the complete original Cloudflare rule and `/corvette-process-guide/` target, and completed rollback `wp cache flush`.
+- The rollback Production `Clear all` control was clicked exactly once at `18:29:13.765Z`. The object confirmation appeared, but the global-edge confirmation did not appear through `18:34:17.556Z` / `303.791s`; the control remained disabled and no retry occurred. Rollback global-edge purge outcome is unknown.
+- Read-only restoration proof passed after that timeout: Hello `3.4.9` active, Stingray `0.1.16` inactive, exact two-condition raw/normalized/effective and reopened-row state, complete original Cloudflare readback plus two original direct `301` first hops, public Hello/document-`12977` baseline, all extracted Hello assets `200`, and the exact retained 202-file candidate hash `b2d900f18b768ed1b760407b337267f34e2a2ad7d3724e9eef96c09f3f3c8e6b`.
+
+Evidence and the report are retained under `.superpowers/sdd/task-12-attempt5-*`. No form/order submission, plugin deactivation, unrelated production change, commit, push, or deletion occurred. Attempt 5 approval is exhausted.
 
 ### Attempt 4: activation global-edge confirmation gate failure; purge outcome unknown
 
@@ -215,7 +240,7 @@ No order, lead, deposit, or customer form was submitted during validation.
 
 ## Future activation authorization boundary
 
-**No further activation is currently authorized.** The fourth-attempt authorization was consumed and ended in complete rollback. A future attempt requires independent review of the corrected cache-confirmation and replayable-evidence protocol in the operative runbook, followed by new explicit approval for the Elementor save and reactivation of Stingray `0.1.16`.
+**No further activation is currently authorized.** Attempt 6 authorization was consumed and ended in complete rollback. The concrete Factory row-detail defect must be corrected and revalidated before any new production attempt, which would also require new explicit approval for the Elementor save and reactivation of Stingray `0.1.16`.
 
 The intended successful cutover state remains an enabled Cloudflare `/process-links/` rule whose only changed contract field is the direct target `/process/`. The proven Elementor correction retains document `12977`'s existing all-pages include and front-page exclusion while adding exactly five page-specific exclusions for IDs `68291`, `68294`, `68297`, `68300`, and `68303`. Page `68288` (`/order/`) remains intentionally outside the exclusions. None of those cutover changes is currently applied or authorized.
 
@@ -228,6 +253,7 @@ The intended successful cutover state remains an enabled Cloudflare `/process-li
 - Attempt 4 failed the activation confirmation gate because both required messages were not observed from the single `Clear all` action; the global edge purge outcome is unknown, not proven failed. Future activation and rollback `Clear all` actions require the bounded five-minute protocol in the operative runbook, with no retry.
 - Attempt 4 rollback and public restoration are operationally convincing, but raw complete Cloudflare readbacks, normalized/reopened-row Elementor proof, and raw cache UI captures were not all retained. The operative evidence contract must pass its pre-mutation and completion index checks on any future attempt.
 - Gates 6–7 were not run after Attempt 3's Gate 5 body-class failure. No browser or delivery/performance result from that production attempt is claimed.
+- Attempt 6 reached Gate 6 and proved that the Factory row-detail dialog is broken against the live two-row wpDataTables header: the script counts 28 headers against 14 data cells and rejects every row. Gate 7 was not completed after this hard failure.
 - A new explicit approval is required before the five Elementor exclusions are saved or Stingray is activated again.
 - The canonical order runtime requests an optional production favicon URL that returns `404`; Chromium blocks it via ORB. Required order-form resources and customer flows passed, so this is non-blocking follow-up work in 27vette.
 - Browser QA covered Chromium at the approved desktop/mobile viewports, not a full browser or physical-device lab.
