@@ -137,14 +137,19 @@ No order, lead, deposit, or customer form was submitted during validation.
 
 ## Controlled retry boundary
 
-The second activation attempt and target-only Cloudflare correction were explicitly authorized by Sean on `2026-07-11`, but the release remains NO-GO until the controlled attempt succeeds. Before changing either the Cloudflare rule or the active theme, the operator must execute these preflight gates:
+The second activation attempt and target-only Cloudflare correction were explicitly authorized by Sean on `2026-07-11`, but the release remains NO-GO until the controlled attempt succeeds.
+
+**Read-only preflight — gates 1–3:** Before changing the Cloudflare rule, active theme, or either cache, the operator must execute these three read-only gates. A failure in any of gates 1–3 stops the attempt, retains NO-GO, and performs no Cloudflare, theme, or cache mutation.
 
 1. Recompute the retained inactive production `stingray-corvette` `0.1.16` remote manifest and verify it still matches the approved 202-file manifest whose SHA-256 is `b2d900f18b768ed1b760407b337267f34e2a2ad7d3724e9eef96c09f3f3c8e6b`.
 2. Recompute the active production Hello Elementor 116-file remote manifest and the retained local backup manifest; require the per-file SHA-256 manifests to match exactly and the manifest SHA-256 to remain `887e92b513f4d5549828c0cb0af3420f810172d9467ed842e648dca56fc33c0a`. Verify the checksum-matched backup remains available for rollback.
 3. Capture the exact current Cloudflare rule identity, ruleset, position, enabled state, source expression, target expression, query-string behavior, `301` status, and complete configuration needed to restore it exactly. Confirm that it is still enabled and still targets `https://stingraychevroletcorvette.com/corvette-process-guide/` before mutation.
-4. Change only the target of the enabled Cloudflare Dynamic Redirect `process-links to process guide` to `https://stingraychevroletcorvette.com/process/`. Preserve its rule and ruleset IDs, position, enabled state, exact source/full-URI match, `301` status, and existing query-string behavior. Re-read the rule after mutation and require those invariants plus the new target to match before theme activation.
 
-Only after all four pre-activation gates pass may the retry proceed, in this strict order:
+**First authorized external mutation — gate 4:** Change only the target of the enabled Cloudflare Dynamic Redirect `process-links to process guide` to `https://stingraychevroletcorvette.com/process/`. Preserve its rule and ruleset IDs, position, enabled state, exact source/full-URI match, `301` status, and existing query-string behavior. Re-read the rule after mutation and require those invariants plus the new target to match before theme activation.
+
+If any failure occurs after gate 4 mutates the rule but before theme activation, restore the captured exact original Cloudflare rule configuration and verify the prior queryless `/process-links/` `301` to `https://stingraychevroletcorvette.com/corvette-process-guide/`. Do not reactivate or otherwise change the already-active Hello Elementor theme, and do not perform the later full rollback sequence because theme activation has not occurred. The release remains NO-GO.
+
+Only after all four pre-activation gates pass may theme activation proceed, in this strict order:
 
 1. Activate only the retained, manifest-matched Stingray `0.1.16` candidate.
 2. Clear the WordPress object cache and the global edge cache.
@@ -156,7 +161,7 @@ Only after all four pre-activation gates pass may the retry proceed, in this str
 8. Complete desktop and mobile browser acceptance for the approved navigation, homepage, form, Factory, calculator, Process, redirect, responsive, console, and required-resource checks.
 9. Verify transfer compression, cache headers, validators, conditional asset ownership, lazy frame loading, and the approved source-size/performance constraints.
 
-Any failed hard gate requires immediate rollback in this order: reactivate Hello Elementor `3.4.9`; restore the Cloudflare rule's exact recorded original configuration, including its enabled state, position, source expression, `301` status, query-string behavior, and original `https://stingraychevroletcorvette.com/corvette-process-guide/` target; clear both the WordPress object and global edge caches; then verify the prior queryless `/process-links/` `301` to `/corvette-process-guide/`, the prior `200` behavior for `/order-landing-page/`, `/order/`, and `/deposit/`, and the homepage `wp-theme-hello-elementor` marker.
+After theme activation begins, any failed hard gate requires immediate full rollback in this order: reactivate Hello Elementor `3.4.9`; restore the Cloudflare rule's exact recorded original configuration, including its enabled state, position, source expression, `301` status, query-string behavior, and original `https://stingraychevroletcorvette.com/corvette-process-guide/` target; clear both the WordPress object and global edge caches; then verify the prior queryless `/process-links/` `301` to `/corvette-process-guide/`, the prior `200` behavior for `/order-landing-page/`, `/order/`, and `/deposit/`, and the homepage `wp-theme-hello-elementor` marker.
 
 If every retry gate passes, leave the updated Cloudflare rule enabled with its new `/process/` target. Deleting or disabling that rule, changing its source match, status, or query-string behavior, or converting any of the other six theme-owned redirects requires separate explicit approval.
 
