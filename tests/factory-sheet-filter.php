@@ -15,6 +15,10 @@ function wp_get_theme() {
 	return new Stingray_Test_Theme();
 }
 
+function get_template_directory() {
+	return dirname( __DIR__ );
+}
+
 function add_action() {}
 function add_filter() {}
 function wp_parse_url( $url ) {
