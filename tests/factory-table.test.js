@@ -123,6 +123,7 @@ function MutationObserver(callback) {
 MutationObserver.prototype.observe = function () {};
 
 var source = fs.readFileSync(path.join(__dirname, '..', 'assets', 'js', 'factory-table.js'), 'utf8');
+var styles = fs.readFileSync(path.join(__dirname, '..', 'assets', 'css', 'embeds.css'), 'utf8');
 vm.runInNewContext(source, {
 	document: document,
 	MutationObserver: MutationObserver,
@@ -134,6 +135,15 @@ function assert(condition, message) {
 	if (!condition) failures.push(message);
 }
 
+assert(-1 === styles.indexOf('wpDataTableID-7'), 'Factory styles must not require the staging wpDataTable ID.');
+assert(
+	-1 !== styles.indexOf('.sc-embed table.wpDataTable th:nth-child(n + 4),\n.sc-embed table.wpDataTable td:nth-child(n + 4)'),
+	'Factory desktop styles must hide detail-only columns on the page-configured wpDataTable.'
+);
+assert(
+	-1 !== styles.indexOf('  .sc-embed table.wpDataTable th:nth-child(2),\n  .sc-embed table.wpDataTable td:nth-child(2)'),
+	'Factory mobile styles must hide the last-updated column on the page-configured wpDataTable.'
+);
 assert('.sc-embed table.wpDataTable' === requestedSelector, 'The Factory runtime must select the page-configured wpDataTable without requiring a staging table ID.');
 assert(valid.classList.contains('sc-factory-row'), 'A complete data row should be prepared for the detail dialog.');
 assert(0 === valid.tabIndex, 'A complete data row should be keyboard focusable.');
