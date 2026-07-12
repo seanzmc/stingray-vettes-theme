@@ -350,6 +350,12 @@
   margin-bottom: 10px;
 }
 
+/* Quick Pencil runtime visibility toggles write display:flex inline. Keep
+   visible rows on the theme-owned grid without exposing display:none rows. */
+#quick-pencil .qp-row[style*="display: flex"] {
+  display: grid !important;
+}
+
 #quick-pencil .qp-row label {
   margin: 0;
   justify-self: start;
