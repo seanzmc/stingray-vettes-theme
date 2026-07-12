@@ -579,31 +579,6 @@
   color: var(--ink) !important;
 }
 
-/* Factory table: the first three columns stay scannable; full row data opens
-   in the theme-owned dialog below. The source columns remain in the DOM so the
-   live Google Sheet row is available without widening every table row. */
-.sc-embed table.wpDataTable {
-  min-width: 0 !important;
-  table-layout: fixed !important;
-}
-
-.sc-embed table.wpDataTable th:nth-child(n + 4),
-.sc-embed table.wpDataTable td:nth-child(n + 4) {
-  display: none !important;
-}
-
-.sc-embed table.wpDataTable th:nth-child(1) {
-  width: 30% !important;
-}
-
-.sc-embed table.wpDataTable th:nth-child(2) {
-  width: 44% !important;
-}
-
-.sc-embed table.wpDataTable th:nth-child(3) {
-  width: 26% !important;
-}
-
 .sc-embed table.wpDataTable .sc-factory-row:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: -3px;
@@ -736,19 +711,6 @@
 }
 
 @media (max-width: 640px) {
-  .sc-embed table.wpDataTable th:nth-child(2),
-  .sc-embed table.wpDataTable td:nth-child(2) {
-    display: none !important;
-  }
-
-  .sc-embed table.wpDataTable th:nth-child(1) {
-    width: 60% !important;
-  }
-
-  .sc-embed table.wpDataTable th:nth-child(3) {
-    width: 40% !important;
-  }
-
   .sc-factory-modal {
     padding: var(--space-2);
   }

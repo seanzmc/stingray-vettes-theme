@@ -157,12 +157,14 @@ function assert(condition, message) {
 
 assert(-1 === styles.indexOf('wpDataTableID-7'), 'Factory styles must not require the staging wpDataTable ID.');
 assert(
-	-1 !== styles.indexOf('.sc-embed table.wpDataTable th:nth-child(n + 4),\n.sc-embed table.wpDataTable td:nth-child(n + 4)'),
-	'Factory desktop styles must hide detail-only columns on the page-configured wpDataTable.'
+	-1 === styles.indexOf('th:nth-child(n + 4)') &&
+	-1 === styles.indexOf('td:nth-child(n + 4)'),
+	'Factory styles must leave fourth and subsequent column visibility to wpDataTables.'
 );
 assert(
-	-1 !== styles.indexOf('  .sc-embed table.wpDataTable th:nth-child(2),\n  .sc-embed table.wpDataTable td:nth-child(2)'),
-	'Factory mobile styles must hide the last-updated column on the page-configured wpDataTable.'
+	-1 === styles.indexOf('table.wpDataTable th:nth-child(2)') &&
+	-1 === styles.indexOf('table.wpDataTable td:nth-child(2)'),
+	'Factory styles must not hide the last-updated column on mobile.'
 );
 assert('.sc-embed table.wpDataTable' === requestedSelector, 'The Factory runtime must select the page-configured wpDataTable without requiring a staging table ID.');
 assert(valid.classList.contains('sc-factory-row'), 'A complete data row should be prepared for the detail dialog.');
