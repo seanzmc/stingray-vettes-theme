@@ -344,9 +344,9 @@
 
 #quick-pencil .qp-row {
   display: grid;
-  grid-template-columns: minmax(140px, 190px) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr) 280px;
   align-items: center;
-  gap: 10px;
+  gap: 20px;
   margin-bottom: 10px;
 }
 
@@ -357,7 +357,8 @@
 
 #quick-pencil .qp-row input,
 #quick-pencil .qp-row select {
-  max-width: 280px;
+  width: 100%;
+  max-width: none;
 }
 
 #quick-pencil .qp-row.checkbox-group {
@@ -365,7 +366,8 @@
 }
 
 #quick-pencil .qp-row.checkbox-group input[type="checkbox"] {
-  justify-self: start;
+  width: auto;
+  justify-self: center;
 }
 
 #quick-pencil .results {
