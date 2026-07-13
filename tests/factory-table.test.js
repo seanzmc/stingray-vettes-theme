@@ -196,8 +196,9 @@ assert(valid.classList.contains('sc-factory-row'), 'A row must stay prepared aft
 assert(0 === valid.tabIndex, 'A row must stay keyboard focusable after a column-visibility change.');
 
 assert(-1 === styles.indexOf('wdt-skin-mojito'), 'Factory styles must target the wdt-skin-dark skin the live table uses, not mojito.');
-assert(-1 === styles.indexOf('wdt-frontend-modal'), 'Factory styles must target the .wdt-md-modal row-detail dialog wpDataTables actually renders.');
 assert(-1 !== styles.indexOf('.wdt-md-modal .modal-content'), 'Factory styles must skin the .wdt-md-modal row-detail dialog.');
+assert(-1 !== styles.indexOf('.wdt-frontend-modal .modal-content'), 'Factory styles must skin the .wdt-frontend-modal checkbox-filter dialog.');
+assert(-1 !== styles.indexOf('.wdt-checkbox-filter.btn'), 'Factory styles must skin the tfoot checkbox-filter toggle buttons.');
 
 if (failures.length) {
 	console.error(failures.join('\n'));

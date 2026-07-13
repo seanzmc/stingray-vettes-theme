@@ -60,8 +60,22 @@
 }
 
 /* Formidable confirmation views render outside .frm_forms in a bare
-   .sc-embed, so links (payment portal, policy pages) need the affordance
-   color at the embed scope too. */
+   .sc-embed, so body copy, emphasis, links (payment portal, policy pages),
+   and instructional images need baseline treatment at the embed scope too. */
+.sc-embed p {
+  color: var(--muted);
+  line-height: var(--leading-relaxed);
+}
+
+.sc-embed strong {
+  color: var(--ink);
+}
+
+.sc-embed img {
+  max-width: 100%;
+  height: auto;
+}
+
 .sc-embed a {
   color: var(--accent);
 }
@@ -290,6 +304,13 @@
   border-color: var(--warn) !important;
 }
 
+/* radios/checkboxes are borderless natives, so flag their option cards */
+.sc-embed .frm_forms .frm_blank_field .frm_radio label,
+.sc-embed .frm_forms .frm_blank_field .frm_checkbox label,
+.sc-embed .frm_forms .frm_blank_field .frm_opt_container label {
+  border-color: var(--warn);
+}
+
 .sc-embed .frm_forms .frm_message {
   border: 1px solid rgba(53, 184, 93, 0.4);
   border-radius: var(--radius-lg);
@@ -425,6 +446,31 @@
   box-shadow: 0 0 0 3px var(--accent-glow);
 }
 
+/* tfoot checkbox-column filter toggles ("Current Event", "Ship-to", …) */
+.sc-embed .wpDataTablesWrapper .wdt-checkbox-filter.btn {
+  min-height: var(--hit-step);
+  border: 1px solid var(--ghost-border) !important;
+  border-radius: var(--radius-sm);
+  padding: 0 12px;
+  background: var(--control-bg) !important;
+  color: var(--ink) !important;
+  font: inherit;
+  transition: border-color var(--transition-fast), background var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.sc-embed .wpDataTablesWrapper .wdt-checkbox-filter.btn:hover {
+  border-color: var(--accent) !important;
+  background: var(--ghost-hover-bg) !important;
+  box-shadow: var(--hover-lift-shadow);
+}
+
+.sc-embed .wpDataTablesWrapper .wdt-checkbox-filter.btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-color: var(--accent) !important;
+  box-shadow: 0 0 0 3px var(--accent-glow);
+}
+
 .sc-embed .wpdt-c.wdt-skin-dark .wpDataTablesWrapper table.wpDataTable {
   width: 100% !important;
   min-width: 680px;
@@ -547,9 +593,12 @@
   font-variant-numeric: tabular-nums;
 }
 
-/* row-detail dialog (#wdt-md-modal — wpDataTables mounts this Bootstrap-style
-   modal outside .sc-embed; used on responsive/mobile row taps) */
-.wdt-md-modal .modal-content {
+/* wpDataTables dialogs, mounted outside .sc-embed:
+   #wdt-md-modal — the row-detail dialog (responsive/mobile row taps);
+   #wdt-frontend-modal — the checkbox-filter dialog the tfoot column-filter
+   buttons open. Both are Bootstrap-style modals. */
+.wdt-md-modal .modal-content,
+.wdt-frontend-modal .modal-content {
   background: var(--carbon-panel) !important;
   border: 1px solid var(--line) !important;
   border-radius: var(--radius-xl);
@@ -557,33 +606,40 @@
   color: var(--ink) !important;
 }
 
-.wdt-md-modal .modal-header {
+.wdt-md-modal .modal-header,
+.wdt-frontend-modal .modal-header {
   border-bottom: 1px solid var(--hairline) !important;
   color: var(--ink);
 }
 
-.wdt-md-modal .modal-header .modal-title {
+.wdt-md-modal .modal-header .modal-title,
+.wdt-frontend-modal .modal-header .modal-title {
   color: var(--ink) !important;
 }
 
 /* Bootstrap's stock close glyph is black-on-transparent — invisible here */
-.wdt-md-modal .close {
+.wdt-md-modal .close,
+.wdt-frontend-modal .close {
   color: var(--ink) !important;
-  opacity: 0.7;
+  opacity: 0.7 !important;
   text-shadow: none;
 }
 
 .wdt-md-modal .close:hover,
-.wdt-md-modal .close:focus-visible {
+.wdt-md-modal .close:focus-visible,
+.wdt-frontend-modal .close:hover,
+.wdt-frontend-modal .close:focus-visible {
   color: var(--accent) !important;
-  opacity: 1;
+  opacity: 1 !important;
 }
 
-.wdt-md-modal .modal-body {
+.wdt-md-modal .modal-body,
+.wdt-frontend-modal .modal-body {
   color: var(--muted) !important;
 }
 
-.wdt-md-modal .modal-body p {
+.wdt-md-modal .modal-body p,
+.wdt-frontend-modal .modal-body label {
   color: var(--muted);
 }
 
@@ -599,8 +655,41 @@
   background: transparent !important;
 }
 
-.wdt-md-modal .modal-footer {
+.wdt-md-modal .modal-footer,
+.wdt-frontend-modal .modal-footer {
   border-top: 1px solid var(--hairline) !important;
+}
+
+.wdt-frontend-modal .modal-body input[type="checkbox"] {
+  accent-color: var(--accent);
+}
+
+/* dialog action buttons: OK ships lavender (btn-success), Reset near-black */
+.wdt-md-modal .btn,
+.wdt-frontend-modal .btn {
+  border: 1px solid var(--ghost-border) !important;
+  border-radius: var(--radius-sm);
+  background: var(--control-bg) !important;
+  color: var(--ink) !important;
+  transition: border-color var(--transition-fast), background var(--transition-fast);
+}
+
+.wdt-md-modal .btn:hover,
+.wdt-frontend-modal .btn:hover {
+  border-color: var(--accent) !important;
+  background: var(--ghost-hover-bg) !important;
+}
+
+.wdt-md-modal .btn.btn-success,
+.wdt-frontend-modal .btn.btn-success {
+  border-color: var(--accent) !important;
+  background: var(--accent) !important;
+  color: var(--on-accent) !important;
+}
+
+.wdt-md-modal .btn.btn-success:hover,
+.wdt-frontend-modal .btn.btn-success:hover {
+  background: var(--accent-deep) !important;
 }
 
 .sc-embed table.wpDataTable .sc-factory-row:focus-visible {
