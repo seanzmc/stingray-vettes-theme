@@ -1,0 +1,33 @@
+# Version-control and repository automation metadata.
+.git
+.git/**
+.github
+.github/**
+.gitignore
+
+# Agent and local workflow metadata.
+.claude
+.claude/**
+.superpowers
+.superpowers/**
+AGENTS.md
+
+# Project documentation and implementation notes.
+docs
+docs/**
+README.md
+SiteWireframe.md
+THEME_BUILD_BRIEF.md
+
+# Tests and development-only configuration.
+tests
+tests/**
+.env
+.env.*
+
+# Local operating-system artifacts.
+.DS_Store
+**/.DS_Store
+
+# Deployment configuration is not needed by the running theme.
+.deployignore
