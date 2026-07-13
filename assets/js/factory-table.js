@@ -6,9 +6,16 @@
 	var table = document.querySelector('.sc-embed table.wpDataTable');
 	if (!table) return;
 
-	var headers = Array.prototype.map.call(table.querySelectorAll('thead tr:first-child th'), function (header) {
-		return header.textContent.trim();
-	});
+	/* DataTables can hide columns after load, changing both the header and
+	   cell counts, so the header set is re-read on every row pass instead of
+	   being snapshotted once. */
+	function getHeaders() {
+		return Array.prototype.map.call(table.querySelectorAll('thead tr:first-child th'), function (header) {
+			return header.textContent.trim();
+		});
+	}
+
+	var headers = getHeaders();
 	if (headers.length < 4) return;
 
 	var overlay = document.createElement('div');
@@ -79,6 +86,7 @@
 	}
 
 	function prepareRows() {
+		headers = getHeaders();
 		Array.prototype.forEach.call(table.querySelectorAll('tbody tr'), function (row) {
 			if (!isFactoryRow(row)) {
 				unprepareRow(row);
@@ -93,6 +101,7 @@
 	}
 
 	function openDialog(row) {
+		headers = getHeaders();
 		var cells = Array.prototype.slice.call(row.cells);
 		var orderNumber = cells[0] ? cells[0].textContent.trim() : '';
 		previousFocus = document.activeElement;

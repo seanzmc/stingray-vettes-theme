@@ -5,7 +5,11 @@
       Formidable's stock markup
       (.frm_forms, .frm_form_field, item_meta inputs); a few !importants
       counter the plugin stylesheet (formidableforms.css) it enqueues.
-   2) wpDataTables — the @Factory orders table.
+   2) wpDataTables — the @Factory orders table. The table is configured with
+      the wdt-skin-dark skin (wrapper: .wpdt-c.wdt-skin-dark.wpTableWCAG),
+      column filters render inside tfoot th cells, and the row-detail dialog
+      is the Bootstrap-style #wdt-md-modal (.wdt-md-modal), all verified
+      against the rendered DOM.
    Both translate to the DS: carbon surfaces, warm-white ink, accent only
    on affordances, 140ms ease, no new fonts.
    ========================================================================== */
@@ -55,8 +59,15 @@
   line-height: var(--leading-relaxed);
 }
 
-.sc-embed .frm_forms a {
+/* Formidable confirmation views render outside .frm_forms in a bare
+   .sc-embed, so links (payment portal, policy pages) need the affordance
+   color at the embed scope too. */
+.sc-embed a {
   color: var(--accent);
+}
+
+.sc-embed a:hover {
+  text-decoration: underline;
 }
 
 .sc-embed .frm_forms hr {
@@ -324,51 +335,19 @@
   font-size: var(--text-body-sm);
 }
 
-.sc-embed .wpDataTablesWrapper.wdt-skin-mojito,
-.sc-embed .wpdt-c.wdt-skin-mojito > .wpDataTablesWrapper {
+.sc-embed .wpdt-c.wdt-skin-dark > .wpDataTablesWrapper {
   box-sizing: border-box;
-  border: 1px solid var(--line);
+  border: 1px solid var(--line) !important;
   border-radius: var(--radius-xl);
   padding: clamp(var(--space-md), 3vw, var(--space-2xl));
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
-  background: var(--carbon-panel);
+  background: var(--carbon-panel) !important;
   color: var(--ink);
   font-family: inherit;
 }
 
-.sc-embed .wpdt-c.wdt-skin-mojito .wpDataTablesWrapper .wpDataTableFilterBox {
-  display: flex;
-  align-items: flex-end;
-  flex-wrap: wrap;
-  gap: var(--space-md);
-  max-width: 100%;
-  margin-bottom: 16px;
-  padding: 0;
-  background: transparent;
-}
-
-.sc-embed .wpdt-c.wdt-skin-mojito .wpDataTablesWrapper .wpDataTableFilterSection {
-  flex: 1 1 180px;
-  width: auto !important;
-  min-width: 0;
-  max-width: 100%;
-  min-height: 0 !important;
-  margin: 0 !important;
-  order: 0 !important;
-  padding: 0 !important;
-}
-
-.sc-embed .wpdt-c.wdt-skin-mojito .wpDataTablesWrapper #wdt-clear-filters-button-block {
-  flex: 0 0 auto;
-  width: auto;
-  min-height: 0;
-  margin: 0;
-  padding: 0 !important;
-}
-
-/* toolbar: column filters, search, length, and export controls */
-.sc-embed .wpdt-c.wdt-skin-mojito .wpDataTablesWrapper .wpDataTableFilterSection > label,
+/* toolbar: search and length controls */
 .sc-embed .wpDataTablesWrapper .dataTables_filter label,
 .sc-embed .wpDataTablesWrapper .dataTables_length label {
   display: block;
@@ -386,6 +365,7 @@
 .sc-embed .wpDataTablesWrapper .dataTables_filter input,
 .sc-embed .wpDataTablesWrapper .dataTables_length select,
 .sc-embed .wpDataTablesWrapper input[type="search"],
+.sc-embed .wpdt-c.wdt-skin-dark .wpDataTablesWrapper .wdt-filter-control,
 .sc-embed .wdt-filter-control {
   box-sizing: border-box;
   width: 100%;
@@ -410,39 +390,42 @@
   box-shadow: 0 0 0 3px var(--accent-glow);
 }
 
-.sc-embed .wpdt-c.wdt-skin-mojito .wpDataTablesWrapper .wpDataTableFilterSection .wdt-clear-filters-button {
+.sc-embed .wpdt-c.wdt-skin-dark .wdt-clear-filters-button,
+.sc-embed .wdt-clear-filters-button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  flex: 0 0 auto;
-  width: var(--hit-step);
-  height: var(--hit-step);
-  min-width: var(--hit-step);
   min-height: var(--hit-step);
-  border: 1px solid var(--ghost-border);
+  border: 1px solid var(--ghost-border) !important;
   border-radius: var(--radius-sm);
-  padding: 0;
-  background: var(--control-bg);
-  color: var(--ink);
+  padding: 0 16px;
+  background: var(--control-bg) !important;
+  color: var(--ink) !important;
   font: inherit;
+  font-size: 0.8rem;
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  text-decoration: none;
   cursor: pointer;
   transition: border-color var(--transition-fast), background var(--transition-fast), box-shadow var(--transition-fast);
 }
 
-.sc-embed .wpdt-c.wdt-skin-mojito .wpDataTablesWrapper .wpDataTableFilterSection .wdt-clear-filters-button:hover {
-  border-color: var(--accent);
-  background: var(--ghost-hover-bg);
+.sc-embed .wdt-clear-filters-button:hover {
+  border-color: var(--accent) !important;
+  background: var(--ghost-hover-bg) !important;
   box-shadow: var(--hover-lift-shadow);
+  text-decoration: none;
 }
 
-.sc-embed .wpdt-c.wdt-skin-mojito .wpDataTablesWrapper .wpDataTableFilterSection .wdt-clear-filters-button:focus-visible {
+.sc-embed .wdt-clear-filters-button:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
-  border-color: var(--accent);
+  border-color: var(--accent) !important;
   box-shadow: 0 0 0 3px var(--accent-glow);
 }
 
-.sc-embed .wpdt-c.wdt-skin-mojito .wpDataTablesWrapper table.wpDataTable {
+.sc-embed .wpdt-c.wdt-skin-dark .wpDataTablesWrapper table.wpDataTable {
   width: 100% !important;
   min-width: 680px;
   border-collapse: separate;
@@ -454,7 +437,7 @@
   font-family: inherit !important;
 }
 
-.sc-embed .wpdt-c.wdt-skin-mojito .wpDataTablesWrapper table.wpDataTable thead th.wdtheader {
+.sc-embed .wpdt-c.wdt-skin-dark .wpDataTablesWrapper table.wpDataTable thead th.wdtheader {
   border-bottom: 1px solid var(--hairline-strong) !important;
   padding: 12px 14px !important;
   background: var(--carbon-panel) !important;
@@ -469,19 +452,31 @@
   transition: background var(--transition-fast), color var(--transition-fast);
 }
 
-.sc-embed .wpdt-c.wdt-skin-mojito .wpDataTablesWrapper table.wpDataTable thead th.wdtheader:hover {
+.sc-embed .wpdt-c.wdt-skin-dark .wpDataTablesWrapper table.wpDataTable thead th.wdtheader:hover {
   background: var(--carbon-panel-strong) !important;
   color: var(--ink) !important;
 }
 
-.sc-embed .wpdt-c.wdt-skin-mojito .wpDataTablesWrapper table.wpDataTable thead th.wdtheader:focus-visible {
-  outline: 2px solid var(--accent);
+/* keyboard focus on sortable headers — skin-agnostic so a skin change can
+   never silently remove the indicator again */
+.sc-embed table.wpDataTable thead th:focus-visible {
+  outline: 2px solid var(--accent) !important;
   outline-offset: -3px;
   background: var(--carbon-panel-strong) !important;
   box-shadow: inset 0 0 0 3px var(--accent-glow);
 }
 
-.sc-embed .wpdt-c.wdt-skin-mojito .wpDataTablesWrapper table.wpDataTable tbody td {
+/* the tfoot row that carries the per-column filter controls (cells render
+   as td.wdtheader) */
+.sc-embed .wpdt-c.wdt-skin-dark .wpDataTablesWrapper table.wpDataTable tfoot td,
+.sc-embed .wpdt-c.wdt-skin-dark .wpDataTablesWrapper table.wpDataTable tfoot th {
+  border-top: 1px solid var(--hairline-strong) !important;
+  border-bottom: 0 !important;
+  padding: 10px 14px !important;
+  background: var(--carbon-panel) !important;
+}
+
+.sc-embed .wpdt-c.wdt-skin-dark .wpDataTablesWrapper table.wpDataTable tbody td {
   border-bottom: 1px solid var(--hairline) !important;
   padding: 11px 14px !important;
   background: transparent !important;
@@ -491,18 +486,18 @@
   transition: background var(--transition-fast), color var(--transition-fast);
 }
 
-.sc-embed .wpdt-c.wdt-skin-mojito .wpDataTablesWrapper table.wpDataTable tbody tr:nth-child(even) td {
+.sc-embed .wpdt-c.wdt-skin-dark .wpDataTablesWrapper table.wpDataTable tbody tr:nth-child(even) td {
   background: var(--wash-soft) !important;
 }
 
-.sc-embed .wpdt-c.wdt-skin-mojito .wpDataTablesWrapper table.wpDataTable tbody tr:hover td,
-.sc-embed .wpdt-c.wdt-skin-mojito .wpDataTablesWrapper table.wpDataTable tbody tr:focus-within td {
+.sc-embed .wpdt-c.wdt-skin-dark .wpDataTablesWrapper table.wpDataTable tbody tr:hover td,
+.sc-embed .wpdt-c.wdt-skin-dark .wpDataTablesWrapper table.wpDataTable tbody tr:focus-within td {
   background: var(--control-bg) !important;
   color: var(--ink) !important;
   cursor: pointer;
 }
 
-.sc-embed .wpdt-c.wdt-skin-mojito .wpDataTablesWrapper table.wpDataTable tbody tr:last-child td {
+.sc-embed .wpdt-c.wdt-skin-dark .wpDataTablesWrapper table.wpDataTable tbody tr:last-child td {
   border-bottom: 0 !important;
 }
 
@@ -528,7 +523,7 @@
   box-shadow: var(--hover-lift-shadow);
 }
 
-.sc-embed .wpdt-c.wdt-skin-mojito .wpDataTablesWrapper .dataTables_paginate a.paginate_button:focus-visible {
+.sc-embed .dataTables_paginate a.paginate_button:focus-visible {
   outline: 2px solid var(--accent) !important;
   outline-offset: 2px;
   border-color: var(--accent) !important;
@@ -552,10 +547,9 @@
   font-variant-numeric: tabular-nums;
 }
 
-/* row-detail popup (wpDataTables mounts this outside .sc-embed) */
-.wdt-frontend-modal .modal-content,
-.wpDataTablesPopover,
-.wdt-popup {
+/* row-detail dialog (#wdt-md-modal — wpDataTables mounts this Bootstrap-style
+   modal outside .sc-embed; used on responsive/mobile row taps) */
+.wdt-md-modal .modal-content {
   background: var(--carbon-panel) !important;
   border: 1px solid var(--line) !important;
   border-radius: var(--radius-xl);
@@ -563,20 +557,50 @@
   color: var(--ink) !important;
 }
 
-.wdt-frontend-modal .modal-header {
+.wdt-md-modal .modal-header {
   border-bottom: 1px solid var(--hairline) !important;
   color: var(--ink);
 }
 
-.wdt-frontend-modal .modal-body table td,
-.wdt-frontend-modal .modal-body table th {
-  border-color: var(--hairline) !important;
+.wdt-md-modal .modal-header .modal-title {
+  color: var(--ink) !important;
+}
+
+/* Bootstrap's stock close glyph is black-on-transparent — invisible here */
+.wdt-md-modal .close {
+  color: var(--ink) !important;
+  opacity: 0.7;
+  text-shadow: none;
+}
+
+.wdt-md-modal .close:hover,
+.wdt-md-modal .close:focus-visible {
+  color: var(--accent) !important;
+  opacity: 1;
+}
+
+.wdt-md-modal .modal-body {
   color: var(--muted) !important;
+}
+
+.wdt-md-modal .modal-body p {
+  color: var(--muted);
+}
+
+.wdt-md-modal .modal-body strong,
+.wdt-md-modal .modal-body b,
+.wdt-md-modal .modal-body th {
+  color: var(--ink) !important;
+}
+
+.wdt-md-modal .modal-body table td,
+.wdt-md-modal .modal-body table th {
+  border-color: var(--hairline) !important;
   background: transparent !important;
 }
 
-.wdt-frontend-modal .modal-body table th {
-  color: var(--ink) !important;
+.wdt-md-modal .modal-footer {
+  border-top: 1px solid var(--hairline) !important;
 }
 
 .sc-embed table.wpDataTable .sc-factory-row:focus-visible {

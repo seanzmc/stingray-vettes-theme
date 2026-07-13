@@ -186,6 +186,19 @@ if (observerCallback) observerCallback();
 assert(valid.classList.contains('sc-factory-row'), 'A newly valid row must be prepared after a DataTables redraw.');
 assert(0 === valid.tabIndex, 'A newly valid row must become keyboard focusable after a DataTables redraw.');
 
+/* Column-visibility change: DataTables hides a column after load, so header
+   and cell counts shrink together. Rows must be evaluated against the live
+   header set, not a load-time snapshot. */
+labelHeaders.pop();
+valid.cells.pop();
+if (observerCallback) observerCallback();
+assert(valid.classList.contains('sc-factory-row'), 'A row must stay prepared after DataTables hides a column (headers must not be a stale load-time snapshot).');
+assert(0 === valid.tabIndex, 'A row must stay keyboard focusable after a column-visibility change.');
+
+assert(-1 === styles.indexOf('wdt-skin-mojito'), 'Factory styles must target the wdt-skin-dark skin the live table uses, not mojito.');
+assert(-1 === styles.indexOf('wdt-frontend-modal'), 'Factory styles must target the .wdt-md-modal row-detail dialog wpDataTables actually renders.');
+assert(-1 !== styles.indexOf('.wdt-md-modal .modal-content'), 'Factory styles must skin the .wdt-md-modal row-detail dialog.');
+
 if (failures.length) {
 	console.error(failures.join('\n'));
 	process.exit(1);
