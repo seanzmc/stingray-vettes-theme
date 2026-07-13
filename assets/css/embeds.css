@@ -16,8 +16,16 @@
 
 /* =========================== Formidable Forms ========================== */
 
+/* The form is the page's action area — give it the same carbon panel the
+   Factory table gets so it reads as one discoverable object, not loose
+   fields floating on the page background. */
 .sc-embed .frm_forms {
+  box-sizing: border-box;
   max-width: 860px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-xl);
+  padding: clamp(18px, 3.5vw, 36px);
+  background: var(--carbon-panel);
 }
 
 .sc-embed .frm_forms form {
@@ -40,16 +48,18 @@
   clip: rect(0 0 0 0);
 }
 
+/* In-form section headers sit two levels below the page h2s — smaller and
+   tighter so they group fields without competing with the page structure. */
 .sc-embed .frm_forms h3 {
-  margin: 26px 0 12px;
+  margin: 34px 0 16px;
   font-family: var(--font-primary);
   font-weight: 600;
-  font-size: 1.15rem;
-  letter-spacing: var(--tracking-display);
+  font-size: 0.95rem;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--ink);
   border-bottom: 1px solid var(--hairline-footer);
-  padding-bottom: 8px;
+  padding-bottom: 10px;
 }
 
 .sc-embed .frm_forms p,
@@ -108,7 +118,7 @@
 
 /* fields */
 .sc-embed .frm_forms .frm_form_field {
-  margin-bottom: 16px;
+  margin-bottom: 20px;
 }
 
 .sc-embed .frm_forms input[type="text"],
@@ -197,7 +207,16 @@
   accent-color: var(--accent);
 }
 
-/* model-choice radio images (B&P form) */
+/* model-choice radio images (deposit + B&P forms): the plugin nests
+   img + text in a block container, which bottom-hangs the text next to the
+   logo — flex-center the pair so the card reads logo · name on one line */
+.sc-embed .frm_forms .frm_image_option_container {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+}
+
 .sc-embed .frm_forms .frm_opt_container label img {
   height: 40px;
   width: auto;
@@ -328,6 +347,8 @@
 .sc-embed .frm_forms .frm_html_container img {
   max-width: 100%;
   height: auto;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
 }
 
 .sc-embed .frm_forms figure {
@@ -635,6 +656,7 @@
 
 .wdt-md-modal .modal-body,
 .wdt-frontend-modal .modal-body {
+  padding: 20px 24px !important;
   color: var(--muted) !important;
 }
 
@@ -706,13 +728,16 @@
   display: none;
 }
 
+/* Note: this block previously sized itself with --space-1/2/4/5 tokens that
+   were never defined, so every padding and gap here computed to 0 — the
+   cramped dialog was a bug, not a design choice. Sizes are now literal. */
 .sc-factory-modal {
   position: fixed;
   z-index: 10000;
   inset: 0;
   display: grid;
   place-items: center;
-  padding: var(--space-4);
+  padding: 18px;
   background: rgba(0, 0, 0, 0.78);
 }
 
@@ -734,14 +759,14 @@
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: var(--space-4);
+  gap: 18px;
   border-bottom: 1px solid var(--hairline);
-  padding: var(--space-5);
+  padding: 22px 24px;
   background: var(--carbon-panel);
 }
 
 .sc-factory-modal__eyebrow {
-  margin: 0 0 var(--space-1);
+  margin: 0 0 6px;
   color: var(--accent);
   font-size: 0.72rem;
   font-weight: var(--weight-heavy);
@@ -791,15 +816,15 @@
 
 .sc-factory-modal__details {
   margin: 0;
-  padding: 0 var(--space-5) var(--space-5);
+  padding: 4px 24px 24px;
 }
 
 .sc-factory-modal__detail {
   display: grid;
   grid-template-columns: minmax(140px, 0.42fr) minmax(0, 1fr);
-  gap: var(--space-4);
+  gap: 18px;
   border-bottom: 1px solid var(--hairline);
-  padding: var(--space-4) 0;
+  padding: 14px 0;
 }
 
 .sc-factory-modal__detail:last-child {
@@ -825,7 +850,7 @@
 
 @media (max-width: 640px) {
   .sc-factory-modal {
-    padding: var(--space-2);
+    padding: 10px;
   }
 
   .sc-factory-modal__panel {
@@ -834,12 +859,12 @@
 
   .sc-factory-modal__header,
   .sc-factory-modal__details {
-    padding-right: var(--space-4);
-    padding-left: var(--space-4);
+    padding-right: 16px;
+    padding-left: 16px;
   }
 
   .sc-factory-modal__detail {
     grid-template-columns: 1fr;
-    gap: var(--space-1);
+    gap: 6px;
   }
 }

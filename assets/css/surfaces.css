@@ -18,31 +18,45 @@
 }
 
 .sc-page-lede {
-  margin: calc(-1 * var(--space-3xl) + 16px) 0 var(--space-3xl);
+  margin: 0 0 clamp(40px, 6vw, 64px);
   max-width: 62ch;
   color: var(--muted);
   font-size: var(--text-body-lg);
   line-height: var(--leading-relaxed);
 }
 
-/* ---- Sections ---- */
+/* ---- Sections ----
+   Rhythm: sections separate with generous clamp space, and every section
+   title carries a short accent bar above it — the one scanning anchor the
+   eye can ride down a long page. Section titles track tighter than the page
+   title (0.14em vs 0.28em) so the h1 stays the loudest voice. */
 .sc-section {
-  margin: 0 0 clamp(36px, 5vw, 56px);
+  margin: 0 0 clamp(48px, 7vw, 76px);
 }
 
 .sc-section-title {
-  margin: 0 0 6px;
+  margin: 0 0 10px;
   font-family: var(--font-primary);
   font-weight: 600;
   font-size: clamp(1.35rem, 2.4vw, 1.8rem);
   line-height: var(--leading-display);
-  letter-spacing: var(--tracking-display);
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--ink);
 }
 
+.sc-section-title::before {
+  content: "";
+  display: block;
+  width: 26px;
+  height: 3px;
+  margin-bottom: 12px;
+  border-radius: 2px;
+  background: var(--accent);
+}
+
 .sc-section-lede {
-  margin: 0 0 18px;
+  margin: 0 0 26px;
   max-width: 68ch;
   color: var(--muted);
   font-size: var(--text-body);
@@ -200,7 +214,7 @@
   grid-template-columns: 30px minmax(0, 1fr);
   gap: 12px;
   align-items: baseline;
-  padding: 14px 16px;
+  padding: 16px 18px;
   background: var(--carbon-panel-strong);
   border: 1px solid var(--line);
   border-radius: var(--radius-lg);
@@ -357,6 +371,7 @@
 .sc-note {
   display: grid;
   gap: 6px;
+  margin: 0 0 18px;
   border: 1px solid var(--warn-border);
   border-radius: var(--radius-lg);
   padding: 14px 16px;
@@ -383,7 +398,7 @@
 
 /* ---- Embed wrapper (Formidable, wpDataTables) ---- */
 .sc-embed {
-  margin-top: 8px;
+  margin-top: 16px;
 }
 
 /* ---- Figures (annotated screenshots) ---- */

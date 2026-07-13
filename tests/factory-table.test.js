@@ -203,6 +203,7 @@ assert(
 );
 assert(-1 !== styles.indexOf('.wdt-frontend-modal .modal-content'), 'Factory styles must skin the .wdt-frontend-modal checkbox-filter dialog.');
 assert(-1 !== styles.indexOf('.wdt-checkbox-filter.btn'), 'Factory styles must skin the tfoot checkbox-filter toggle buttons.');
+assert(!/var\(--space-\d+\)/.test(styles), 'Numeric --space-N tokens are not defined in the DS spacing scale; they silently compute to 0 (this collapsed the factory dialog padding once).');
 
 if (failures.length) {
 	console.error(failures.join('\n'));

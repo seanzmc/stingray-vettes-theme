@@ -145,7 +145,7 @@ body.admin-bar .sc-topbar { top: 32px; }
 .sc-page { min-height: 60vh; }
 .sc-page-inner { max-width: var(--content-max); margin: 0 auto; padding: clamp(28px, 5vw, 64px) clamp(16px, 4vw, 40px); }
 .sc-page-title {
-  margin: 0 0 var(--space-3xl); font-family: var(--font-primary); font-weight: 600;
+  margin: 0 0 18px; font-family: var(--font-primary); font-weight: 600;
   font-size: var(--text-h2); line-height: var(--leading-display);
   letter-spacing: var(--tracking-display); text-transform: uppercase; color: var(--ink);
 }
