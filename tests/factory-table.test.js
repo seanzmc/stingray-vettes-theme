@@ -196,10 +196,10 @@ assert(valid.classList.contains('sc-factory-row'), 'A row must stay prepared aft
 assert(0 === valid.tabIndex, 'A row must stay keyboard focusable after a column-visibility change.');
 
 assert(-1 === styles.indexOf('wdt-skin-mojito'), 'Factory styles must target the wdt-skin-dark skin the live table uses, not mojito.');
-assert(-1 !== styles.indexOf('.wdt-md-modal .modal-content'), 'Factory styles must skin the .wdt-md-modal row-detail dialog.');
+assert(-1 !== styles.indexOf('.wpdt-c .modal-content'), 'Factory styles must skin wpDataTables modal content at its stable wrapper boundary.');
 assert(
-	-1 !== styles.indexOf('.wdt-md-modal .modal-body .wdt-details-dialog-fields-block'),
-	'Factory styles must give wpDataTables row-detail fields a readable text color on the plugin modal background.'
+	-1 === styles.indexOf('.wdt-details-dialog-fields-block'),
+	'Factory modal colors must inherit from modal content rather than target generated detail-field markup.'
 );
 assert(-1 !== styles.indexOf('.wdt-frontend-modal .modal-content'), 'Factory styles must skin the .wdt-frontend-modal checkbox-filter dialog.');
 assert(-1 !== styles.indexOf('.wdt-checkbox-filter.btn'), 'Factory styles must skin the tfoot checkbox-filter toggle buttons.');

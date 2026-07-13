@@ -597,7 +597,7 @@
    #wdt-md-modal — the row-detail dialog (responsive/mobile row taps);
    #wdt-frontend-modal — the checkbox-filter dialog the tfoot column-filter
    buttons open. Both are Bootstrap-style modals. */
-.wdt-md-modal .modal-content,
+.wpdt-c .modal-content,
 .wdt-frontend-modal .modal-content {
   background: var(--carbon-panel) !important;
   border: 1px solid var(--line) !important;
@@ -653,13 +653,6 @@
 .wdt-md-modal .modal-body table th {
   border-color: var(--hairline) !important;
   background: transparent !important;
-}
-
-/* wpDataTables sets light text directly on these generated fields even when
-   its row-detail dialog retains the stock white Bootstrap background. */
-.wdt-md-modal .modal-body .wdt-details-dialog-fields-block,
-.wdt-md-modal .modal-body .wdt-details-dialog-fields-block * {
-  color: var(--carbon-desk) !important;
 }
 
 .wdt-md-modal .modal-footer,
