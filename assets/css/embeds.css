@@ -655,6 +655,13 @@
   background: transparent !important;
 }
 
+/* wpDataTables sets light text directly on these generated fields even when
+   its row-detail dialog retains the stock white Bootstrap background. */
+.wdt-md-modal .modal-body .wdt-details-dialog-fields-block,
+.wdt-md-modal .modal-body .wdt-details-dialog-fields-block * {
+  color: var(--carbon-desk) !important;
+}
+
 .wdt-md-modal .modal-footer,
 .wdt-frontend-modal .modal-footer {
   border-top: 1px solid var(--hairline) !important;

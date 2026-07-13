@@ -197,6 +197,10 @@ assert(0 === valid.tabIndex, 'A row must stay keyboard focusable after a column-
 
 assert(-1 === styles.indexOf('wdt-skin-mojito'), 'Factory styles must target the wdt-skin-dark skin the live table uses, not mojito.');
 assert(-1 !== styles.indexOf('.wdt-md-modal .modal-content'), 'Factory styles must skin the .wdt-md-modal row-detail dialog.');
+assert(
+	-1 !== styles.indexOf('.wdt-md-modal .modal-body .wdt-details-dialog-fields-block'),
+	'Factory styles must give wpDataTables row-detail fields a readable text color on the plugin modal background.'
+);
 assert(-1 !== styles.indexOf('.wdt-frontend-modal .modal-content'), 'Factory styles must skin the .wdt-frontend-modal checkbox-filter dialog.');
 assert(-1 !== styles.indexOf('.wdt-checkbox-filter.btn'), 'Factory styles must skin the tfoot checkbox-filter toggle buttons.');
 
