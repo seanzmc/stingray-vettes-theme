@@ -154,6 +154,48 @@ body.admin-bar .sc-topbar { top: 32px; }
 .sc-page-content h2, .sc-page-content h3 { color: var(--ink); font-family: var(--font-primary); font-weight: 600; letter-spacing: var(--tracking-display); text-transform: uppercase; line-height: var(--leading-display); }
 .sc-page-content img { max-width: 100%; height: auto; }
 
+/* Legacy page content can carry stray widgets (e.g. the Jetpack subscribe
+   form on /blog/) — give bare form controls the standard DS treatment. */
+.sc-page-content fieldset {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-xl);
+  padding: 18px;
+  background: var(--carbon-panel);
+}
+.sc-page-content input[type="text"],
+.sc-page-content input[type="email"] {
+  min-height: 42px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 0 12px;
+  background: var(--carbon-panel-strong);
+  color: var(--ink);
+  font: inherit;
+}
+.sc-page-content input[type="text"]:focus-visible,
+.sc-page-content input[type="email"]:focus-visible {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-glow);
+}
+.sc-page-content input[type="submit"],
+.sc-page-content button[type="submit"] {
+  min-height: 42px;
+  border: 0;
+  border-radius: var(--radius-md);
+  padding: 10px 22px;
+  background: var(--accent);
+  color: var(--on-accent);
+  font: inherit;
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background var(--transition-fast);
+}
+.sc-page-content input[type="submit"]:hover,
+.sc-page-content button[type="submit"]:hover { background: var(--accent-deep); }
+
 @media (max-width: 899px) {
   .sc-nav-links { display: none !important; }
   .sc-burger { display: flex; }
