@@ -22,6 +22,7 @@
 .sc-embed .frm_forms {
   box-sizing: border-box;
   max-width: 860px;
+  margin: 0 auto;
   border: 1px solid var(--line);
   border-radius: var(--radius-xl);
   padding: clamp(18px, 3.5vw, 36px);
