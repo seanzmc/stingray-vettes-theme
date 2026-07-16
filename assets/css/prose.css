@@ -1,0 +1,350 @@
+/* ==========================================================================
+   Stingray Corvette — .sc-prose
+   Maps the design-system tokens onto plain wp-admin editor output: headings,
+   paragraphs, lists, tables, buttons, images, quotes, and inline marks.
+
+   Scope and intent (hybrid scaffolding):
+   - Structural page chrome (hero, eyebrow, title, .sc-embed mounts, step
+     lists, card grids, accordions) stays owned by PHP templates + surfaces.css
+     / theme.css. Editors cannot rearrange that layout from wp-admin, by
+     design — it is load-bearing hierarchy, not copy.
+   - `.sc-prose` is the one region per surface where the raw the_content()
+     of the bound WordPress page renders. Editors can add, edit, and reorder
+     paragraphs/lists/tables/images/notes here without a theme deploy. This
+     file is the only stylesheet responsible for making that freeform output
+     look native to the design system.
+   - Keep this file selector-scoped under `.sc-prose` only. Do not reach
+     outside it, and do not restyle `.sc-embed`, `.sc-step-list`,
+     `.sc-card-panel`, `.sc-accordion`, etc. here — those remain owned by
+     surfaces.css.
+   ========================================================================== */
+
+.sc-prose {
+  max-width: 70ch;
+  color: var(--muted);
+  font-size: var(--text-body-lg);
+  line-height: var(--leading-relaxed);
+}
+
+.sc-prose > *:first-child {
+  margin-top: 0;
+}
+
+.sc-prose > *:last-child {
+  margin-bottom: 0;
+}
+
+/* ---- Headings ----
+   Editors get h2–h6; the page h1 stays template-owned (sc-page-title). */
+.sc-prose h2,
+.sc-prose h3,
+.sc-prose h4,
+.sc-prose h5,
+.sc-prose h6 {
+  margin: 1.6em 0 0.6em;
+  color: var(--ink);
+  font-family: var(--font-primary);
+  font-weight: 600;
+  line-height: var(--leading-display);
+}
+
+.sc-prose h2 {
+  font-size: clamp(1.3rem, 2.2vw, 1.6rem);
+  letter-spacing: var(--tracking-display);
+  text-transform: uppercase;
+}
+
+.sc-prose h3 {
+  font-size: 1.15rem;
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+}
+
+.sc-prose h4,
+.sc-prose h5,
+.sc-prose h6 {
+  font-size: 1rem;
+  letter-spacing: var(--tracking-normal);
+  text-transform: none;
+}
+
+/* ---- Paragraphs, inline marks, links ---- */
+.sc-prose p {
+  margin: 0 0 1.1em;
+}
+
+.sc-prose a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.sc-prose a:hover {
+  color: var(--accent-deep);
+}
+
+.sc-prose strong,
+.sc-prose b {
+  color: var(--ink);
+  font-weight: var(--weight-heavy);
+}
+
+.sc-prose em,
+.sc-prose i {
+  font-style: italic;
+}
+
+.sc-prose mark {
+  background: var(--warn-bg);
+  color: var(--ink);
+  padding: 0 3px;
+}
+
+.sc-prose code {
+  background: var(--carbon-panel-strong);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 0.1em 0.4em;
+  font-size: 0.88em;
+}
+
+.sc-prose pre {
+  margin: 0 0 1.1em;
+  padding: 14px 16px;
+  background: var(--carbon-panel-strong);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  overflow-x: auto;
+}
+
+.sc-prose pre code {
+  background: none;
+  border: 0;
+  padding: 0;
+}
+
+.sc-prose hr {
+  border: 0;
+  border-top: 1px solid var(--hairline-footer);
+  margin: 2em 0;
+}
+
+/* ---- Blockquote ---- */
+.sc-prose blockquote {
+  margin: 0 0 1.1em;
+  padding: 6px 0 6px 18px;
+  border-left: 3px solid var(--accent);
+  color: var(--ink);
+  font-style: italic;
+}
+
+.sc-prose blockquote p:last-child {
+  margin-bottom: 0;
+}
+
+.sc-prose blockquote cite {
+  display: block;
+  margin-top: 0.4em;
+  color: var(--dim);
+  font-style: normal;
+  font-size: 0.85em;
+}
+
+/* ---- Lists ---- */
+.sc-prose ul,
+.sc-prose ol {
+  margin: 0 0 1.1em;
+  padding-left: 1.3em;
+}
+
+.sc-prose ul {
+  list-style: disc;
+}
+
+.sc-prose ol {
+  list-style: decimal;
+}
+
+.sc-prose li {
+  margin: 0 0 0.4em;
+}
+
+.sc-prose li > ul,
+.sc-prose li > ol {
+  margin-top: 0.4em;
+  margin-bottom: 0;
+}
+
+.sc-prose ul ul,
+.sc-prose ol ol,
+.sc-prose ul ol,
+.sc-prose ol ul {
+  list-style-type: circle;
+}
+
+/* ---- Tables ----
+   Covers classic pasted tables and the core table block, which wraps
+   <table> in <figure class="wp-block-table">. */
+.sc-prose figure.wp-block-table {
+  margin: 0 0 1.1em;
+  overflow-x: auto;
+}
+
+.sc-prose table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0 0 1.1em;
+  font-size: var(--text-body);
+}
+
+.sc-prose th,
+.sc-prose td {
+  border: 1px solid var(--line);
+  padding: 10px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+
+.sc-prose thead th {
+  background: var(--carbon-panel-strong);
+  color: var(--ink);
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  font-size: 0.82em;
+}
+
+.sc-prose tbody tr:nth-child(even) td {
+  background: var(--wash-faint);
+}
+
+.sc-prose .wp-block-table.is-style-stripes tbody tr:nth-child(odd) td {
+  background: var(--wash-soft);
+}
+
+.sc-prose figcaption,
+.sc-prose .wp-caption-text {
+  margin-top: 8px;
+  color: var(--dim);
+  font-size: 0.8rem;
+  line-height: var(--leading-relaxed);
+}
+
+/* ---- Images ----
+   Covers bare <img>, the caption block/shortcode (figure/.wp-caption), and
+   the classic alignment classes editors still apply to images. */
+.sc-prose img {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--radius-lg);
+}
+
+.sc-prose figure {
+  margin: 0 0 1.1em;
+}
+
+.sc-prose .wp-caption {
+  max-width: 100%;
+  margin: 0 0 1.1em;
+}
+
+.sc-prose .wp-caption img {
+  display: block;
+}
+
+.sc-prose .alignleft {
+  float: left;
+  margin: 0.3em 1.3em 1em 0;
+}
+
+.sc-prose .alignright {
+  float: right;
+  margin: 0.3em 0 1em 1.3em;
+}
+
+.sc-prose .aligncenter {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.sc-prose::after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+/* ---- Buttons ----
+   Covers the core Button block markup and any hand-authored `.button`
+   anchor/input/button an editor pastes into the content field. Visual
+   language matches sc-btn-primary without importing a template class. */
+.sc-prose .wp-block-button__link,
+.sc-prose a.button,
+.sc-prose button,
+.sc-prose input[type="submit"],
+.sc-prose input[type="button"] {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: var(--hit-min);
+  padding: 12px 22px;
+  margin: 0 0 1.1em;
+  border: 0;
+  border-radius: var(--radius-md);
+  background: var(--accent);
+  color: var(--on-accent);
+  font: inherit;
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background var(--transition-fast);
+}
+
+.sc-prose .wp-block-button__link:hover,
+.sc-prose a.button:hover,
+.sc-prose button:hover,
+.sc-prose input[type="submit"]:hover,
+.sc-prose input[type="button"]:hover {
+  background: var(--accent-deep);
+  color: var(--on-accent);
+}
+
+.sc-prose .wp-block-button.is-style-outline .wp-block-button__link,
+.sc-prose a.button.is-style-outline {
+  background: transparent;
+  color: var(--ink);
+  border: 1px solid var(--ghost-border);
+}
+
+.sc-prose .wp-block-button.is-style-outline .wp-block-button__link:hover,
+.sc-prose a.button.is-style-outline:hover {
+  border-color: var(--accent);
+  background: var(--ghost-hover-bg);
+  color: var(--ink);
+}
+
+.sc-prose input[type="text"],
+.sc-prose input[type="email"],
+.sc-prose textarea,
+.sc-prose select {
+  min-height: 42px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 0 12px;
+  background: var(--carbon-panel-strong);
+  color: var(--ink);
+  font: inherit;
+}
+
+.sc-prose input[type="text"]:focus-visible,
+.sc-prose input[type="email"]:focus-visible,
+.sc-prose textarea:focus-visible,
+.sc-prose select:focus-visible,
+.sc-prose .wp-block-button__link:focus-visible,
+.sc-prose a.button:focus-visible,
+.sc-prose button:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--accent-glow);
+}

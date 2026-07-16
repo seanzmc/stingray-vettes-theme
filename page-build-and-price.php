@@ -118,6 +118,8 @@ get_header();
 				<?php echo stingray_corvette_render_page_embed_shortcode(); ?>
 			</div>
 		</section>
+
+		<?php stingray_corvette_render_editable_notes(); ?>
 	</div>
 </main>
 

@@ -487,6 +487,8 @@ get_header();
 			    </div>
 			</div>
 		</div>
+
+		<?php stingray_corvette_render_editable_notes(); ?>
 	</div>
 </main>
 

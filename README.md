@@ -72,10 +72,38 @@ Vendored from `/Users/seandm/Projects/Stingcalc/` into `assets/calculator/`:
 
 - `assets/css/theme.css` — shared chrome (topbar, drawer, buttons, footer,
   interior-page shell), ported from the homepage's inline CSS onto DS tokens.
+- `assets/css/surfaces.css` — interior-page component vocabulary owned by PHP
+  templates: page headers, panel cards, link cards, step lists, pills,
+  accordions, `.sc-embed`.
+- `assets/css/prose.css` — maps DS tokens onto plain wp-admin editor output
+  (headings, paragraphs, lists, tables, buttons, images) for the `.sc-prose`
+  region. Enqueued globally, after `surfaces.css`. See "Editable content
+  regions" below.
 - `assets/homepage/homepage.css` — homepage-only layer (hero, spin viewer,
   quick-action cards), same provenance.
 - `assets/calculator/calculator.css` — calculator-only DS skin for the vendored
   Stingcalc markup.
+
+## Editable content regions (hybrid scaffolding)
+
+Every surface template keeps its page chrome (hero, eyebrow, title),
+`.sc-embed` mount points, and composed widgets (step lists, card grids,
+accordions) as hard-coded PHP — that hierarchy is not wp-admin editable by
+design. Each surface additionally calls
+`stingray_corvette_render_editable_notes()` (defined in `functions.php`) once,
+near the end of its content, which prints the bound WordPress page's normal
+`the_content()` inside a `.sc-prose`-wrapped `<section>` titled "Additional
+Information." The block renders nothing when that page's content field is
+empty, so nothing changes on a surface until an editor adds copy in wp-admin.
+
+`page.php` and `index.php` (generic content pages with no dedicated template)
+already render their entire body from `the_content()`; their wrapper carries
+both `sc-page-content` (existing width/spacing) and `sc-prose` (the new
+heading/table/button/image mapping).
+
+`front-page.php` (full-bleed, no `get_header()`/`get_footer()`) and
+`page-order.php` (dormant rollback material) are intentionally excluded from
+this rollout; see their own header comments for why.
 
 ## Surfaces
 
