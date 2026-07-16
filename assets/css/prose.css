@@ -1,0 +1,317 @@
+/* ==========================================================================
+   Stingray Corvette — .sc-prose: the editable-content skin.
+
+   One stylesheet maps standard WordPress editor output (classic + block)
+   onto the design system so wp-admin users can add or reorder copy without
+   a deploy. Templates own layout, hierarchy, and section rhythm; this file
+   owns only what the editor can emit inside a .sc-prose region: headings,
+   paragraphs, lists, quotes, tables, buttons, images, code, separators.
+
+   Values ride on the DS tokens (colors/typography/spacing) and follow the
+   system invariants: outline selection, hard offset hover, 140ms ease,
+   no new colors, no new type ramp.
+   ========================================================================== */
+
+.sc-prose {
+  max-width: 70ch;
+  margin: 0 0 clamp(48px, 7vw, 76px); /* same rhythm as .sc-section */
+  color: var(--muted);
+  font-size: var(--text-body-lg);
+  line-height: var(--leading-relaxed);
+}
+
+.sc-prose > :first-child { margin-top: 0; }
+.sc-prose > :last-child { margin-bottom: 0; }
+
+/* ---- Paragraphs + inline ---- */
+.sc-prose p {
+  margin: 0 0 1em;
+}
+
+.sc-prose a {
+  color: var(--accent);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+.sc-prose a:hover {
+  color: var(--accent-deep);
+}
+
+.sc-prose strong { color: var(--ink); }
+.sc-prose em { color: inherit; }
+
+.sc-prose mark {
+  background: var(--warn-bg);
+  color: var(--warn);
+  padding: 0 4px;
+  border-radius: 2px;
+}
+
+/* ---- Headings ----
+   h1 is reserved for the template's .sc-page-title; the editor should start
+   at h2. h2 mirrors .sc-section-title (accent bar included) so edited copy
+   is indistinguishable from template sections; h3/h4 step down the same way
+   panel titles and eyebrows do. */
+.sc-prose h1,
+.sc-prose h2 {
+  margin: 1.6em 0 10px;
+  font-family: var(--font-primary);
+  font-weight: 600;
+  font-size: clamp(1.35rem, 2.4vw, 1.8rem);
+  line-height: var(--leading-display);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+
+.sc-prose h1::before,
+.sc-prose h2::before {
+  content: "";
+  display: block;
+  width: 26px;
+  height: 3px;
+  margin-bottom: 12px;
+  border-radius: 2px;
+  background: var(--accent);
+}
+
+.sc-prose h3 {
+  margin: 1.5em 0 8px;
+  color: var(--ink);
+  font-size: 1.05rem;
+  font-weight: var(--weight-heavy);
+  line-height: var(--leading-snug);
+}
+
+.sc-prose h4,
+.sc-prose h5,
+.sc-prose h6 {
+  margin: 1.4em 0 6px;
+  color: var(--dim);
+  font-size: 0.75rem;
+  font-weight: var(--weight-bold);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+/* ---- Lists ---- */
+.sc-prose ul,
+.sc-prose ol {
+  margin: 0 0 1.1em;
+  padding-left: 1.3em;
+  display: grid;
+  gap: 8px;
+}
+
+.sc-prose li {
+  line-height: var(--leading-relaxed);
+}
+
+.sc-prose li::marker {
+  color: var(--accent);
+  font-weight: var(--weight-heavy);
+}
+
+.sc-prose ul ul,
+.sc-prose ul ol,
+.sc-prose ol ul,
+.sc-prose ol ol {
+  margin: 8px 0 0;
+}
+
+/* ---- Blockquote ---- */
+.sc-prose blockquote {
+  margin: 0 0 1.2em;
+  padding: 14px 18px;
+  border-left: 3px solid var(--accent);
+  border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
+  background: var(--wash-faint);
+  color: var(--muted);
+}
+
+.sc-prose blockquote p:last-child { margin-bottom: 0; }
+
+.sc-prose blockquote cite {
+  display: block;
+  margin-top: 8px;
+  color: var(--dim);
+  font-size: 0.8rem;
+  font-style: normal;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* ---- Tables (classic <table> and block .wp-block-table) ---- */
+.sc-prose .wp-block-table {
+  margin: 0 0 1.2em;
+  overflow-x: auto;
+}
+
+.sc-prose table {
+  width: 100%;
+  margin: 0 0 1.2em;
+  border-collapse: collapse;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: var(--carbon-panel-strong);
+  font-size: var(--text-body-sm);
+}
+
+.sc-prose .wp-block-table table { margin-bottom: 0; }
+
+.sc-prose th,
+.sc-prose td {
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--hairline);
+  text-align: left;
+  vertical-align: top;
+}
+
+.sc-prose tr:last-child > th,
+.sc-prose tr:last-child > td {
+  border-bottom: 0;
+}
+
+.sc-prose thead th,
+.sc-prose th {
+  color: var(--ink);
+  font-size: 0.7rem;
+  font-weight: var(--weight-bold);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.sc-prose td { color: var(--muted); }
+
+.sc-prose figcaption,
+.sc-prose .wp-element-caption {
+  margin-top: 10px;
+  color: var(--dim);
+  font-size: 0.8rem;
+  line-height: var(--leading-relaxed);
+}
+
+/* ---- Buttons (block editor) ----
+   .wp-block-button__link / .wp-element-button map to the DS primary button;
+   the editor's "outline" style maps to the ghost button. */
+.sc-prose .wp-block-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 0 0 1.2em;
+}
+
+.sc-prose .wp-block-button__link,
+.sc-prose .wp-element-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 24px;
+  min-height: var(--hit-min);
+  font-size: var(--text-body);
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  color: var(--on-accent);
+  background: var(--accent);
+  border: 0;
+  border-radius: var(--radius-md);
+  box-shadow: 0 10px 30px var(--accent-glow);
+  transition: background var(--transition-fast);
+}
+
+.sc-prose .wp-block-button__link:hover,
+.sc-prose .wp-element-button:hover {
+  color: var(--on-accent);
+  background: var(--accent-deep);
+}
+
+.sc-prose .is-style-outline .wp-block-button__link,
+.sc-prose .is-style-outline .wp-element-button {
+  color: var(--ink);
+  background: transparent;
+  border: 1px solid var(--ghost-border);
+  box-shadow: none;
+  transition: border-color var(--transition-fast), background var(--transition-fast);
+}
+
+.sc-prose .is-style-outline .wp-block-button__link:hover,
+.sc-prose .is-style-outline .wp-element-button:hover {
+  color: var(--ink);
+  border-color: var(--accent);
+  background: var(--ghost-hover-bg);
+}
+
+/* ---- Images / media ---- */
+.sc-prose img {
+  max-width: 100%;
+  height: auto;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: var(--carbon-panel-sunk);
+}
+
+.sc-prose figure,
+.sc-prose .wp-block-image {
+  margin: 0 0 1.2em;
+}
+
+.sc-prose iframe,
+.sc-prose video {
+  max-width: 100%;
+}
+
+/* Editor alignment classes stay inside the prose column. */
+.sc-prose .aligncenter {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
+.sc-prose .alignleft,
+.sc-prose .alignright,
+.sc-prose .alignwide,
+.sc-prose .alignfull {
+  float: none;
+  width: 100%;
+  max-width: 100%;
+}
+
+/* ---- Code ---- */
+.sc-prose code {
+  padding: 2px 7px;
+  border: 1px solid var(--control-border);
+  border-radius: var(--radius-sm);
+  background: var(--control-bg);
+  color: var(--ink);
+  font-size: 0.82em;
+}
+
+.sc-prose pre {
+  margin: 0 0 1.2em;
+  padding: 14px 16px;
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: var(--carbon-panel-strong);
+  color: var(--muted);
+  font-size: 0.85rem;
+  line-height: var(--leading-normal);
+}
+
+.sc-prose pre code {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font-size: inherit;
+}
+
+/* ---- Separator ---- */
+.sc-prose hr {
+  border: 0;
+  border-top: 1px solid var(--hairline-footer);
+  margin: clamp(28px, 4vw, 44px) 0;
+}

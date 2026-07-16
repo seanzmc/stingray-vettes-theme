@@ -21,6 +21,8 @@ get_header();
 			<p class="sc-page-lede"><?php esc_html_e( 'Estimate payments, loan amounts, income, and quick-pencil figures before you start or submit your Corvette order.', 'stingray-corvette' ); ?></p>
 		</header>
 
+		<?php echo stingray_corvette_render_page_prose(); ?>
+
 		<noscript>
 			<div class="sc-note sc-note--info">
 				<strong><?php esc_html_e( 'JavaScript Required', 'stingray-corvette' ); ?></strong>

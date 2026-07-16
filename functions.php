@@ -83,6 +83,10 @@ function stingray_corvette_enqueue_styles() {
 	// Interior-surface components (link cards, accordions, pills, step lists).
 	wp_enqueue_style( 'stingray-surfaces', $uri . '/assets/css/surfaces.css', array( 'stingray-theme' ), $ver );
 
+	// Editable-content skin: maps standard editor output inside .sc-prose
+	// regions (headings, lists, tables, buttons, images) onto the DS tokens.
+	wp_enqueue_style( 'stingray-prose', $uri . '/assets/css/prose.css', array( 'stingray-surfaces' ), $ver );
+
 	// Homepage-only layer: hero + quick actions + the 360° spin viewer.
 	if ( is_front_page() ) {
 		wp_enqueue_style( 'stingray-homepage', $uri . '/assets/homepage/homepage.css', array( 'stingray-theme' ), $ver );
@@ -360,6 +364,47 @@ function stingray_corvette_render_page_embed_shortcode( $meta_key = 'stingray_em
 	}
 
 	return $rendered;
+}
+
+/**
+ * Render the page's editable prose region.
+ *
+ * Hybrid scaffolding: surface templates own the page chrome (hero, eyebrow,
+ * title), .sc-embed mount points, and composed widgets; the WordPress page
+ * owns one free-form copy region rendered here. wp-admin users can edit,
+ * reorder, or add notes in the page editor without a theme deploy, and
+ * assets/css/prose.css maps whatever the editor emits onto the design system.
+ *
+ * Returns an empty string when the page has no content, so surfaces whose
+ * copy is fully template-owned render exactly as before.
+ *
+ * @return string Rendered .sc-prose region, or an empty string.
+ */
+function stingray_corvette_render_page_prose() {
+	if ( ! have_posts() ) {
+		return '';
+	}
+
+	$output = '';
+
+	while ( have_posts() ) {
+		the_post();
+
+		$raw_content = get_the_content();
+
+		if ( '' === trim( (string) $raw_content ) ) {
+			continue;
+		}
+
+		$rendered = apply_filters( 'the_content', $raw_content );
+		$rendered = str_replace( ']]>', ']]&gt;', $rendered );
+
+		$output .= '<div class="sc-prose">' . $rendered . '</div>';
+	}
+
+	rewind_posts();
+
+	return $output;
 }
 
 /**

@@ -155,6 +155,19 @@
 	</div>
 </section>
 
+<?php
+// Editable homepage notes: renders only when the front page has content in
+// wp-admin, so the marketing layout above is untouched by default.
+$stingray_front_prose = stingray_corvette_render_page_prose();
+if ( '' !== $stingray_front_prose ) :
+?>
+<section class="sc-page" aria-label="<?php esc_attr_e( 'Notes', 'stingray-corvette' ); ?>">
+	<div class="sc-page-inner">
+		<?php echo $stingray_front_prose; ?>
+	</div>
+</section>
+<?php endif; ?>
+
 <?php get_template_part( 'inc/site-footer' ); ?>
 
 <?php wp_footer(); ?>

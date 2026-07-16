@@ -86,6 +86,8 @@ get_header();
 			<p class="sc-page-lede"><?php esc_html_e( 'Track Corvette orders placed by Stingray Chevrolet in Plant City, FL once they are scheduled, sequenced, built, shipped, or delivered.', 'stingray-corvette' ); ?></p>
 		</header>
 
+		<?php echo stingray_corvette_render_page_prose(); ?>
+
 		<section class="sc-section" aria-labelledby="factory-track-heading">
 			<h2 id="factory-track-heading" class="sc-section-title"><?php esc_html_e( 'Track your factory order', 'stingray-corvette' ); ?></h2>
 			<p class="sc-section-lede"><?php esc_html_e( 'This page only shows orders placed by Stingray Chevrolet that are already in the factory production process.', 'stingray-corvette' ); ?></p>

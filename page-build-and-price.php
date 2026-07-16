@@ -54,6 +54,8 @@ get_header();
 			<p class="sc-page-lede"><?php esc_html_e( 'Use Chevrolet’s online configurator, copy your six-digit build code from the summary page, and send it to our Corvette team so we can review the exact configuration with you.', 'stingray-corvette' ); ?></p>
 		</header>
 
+		<?php echo stingray_corvette_render_page_prose(); ?>
+
 		<section class="sc-section" aria-labelledby="configurator-heading">
 			<h2 id="configurator-heading" class="sc-section-title"><?php esc_html_e( 'Start with Chevrolet Build & Price', 'stingray-corvette' ); ?></h2>
 			<p class="sc-section-lede"><?php esc_html_e( 'Open the Chevrolet configurator for the Corvette model you want, complete your build, then return here with the build code from the summary page.', 'stingray-corvette' ); ?></p>

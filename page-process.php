@@ -237,6 +237,8 @@ get_header();
 			</div>
 		</header>
 
+		<?php echo stingray_corvette_render_page_prose(); ?>
+
 		<section class="sc-section" aria-labelledby="process-actions-heading">
 			<h2 id="process-actions-heading" class="sc-section-title"><?php esc_html_e( 'Start with the right step', 'stingray-corvette' ); ?></h2>
 			<div class="sc-grid">

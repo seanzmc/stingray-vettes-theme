@@ -20,6 +20,8 @@ get_header();
 			<p class="sc-page-lede"><?php esc_html_e( 'Place your refundable Corvette deposit, choose the list you want to join, and receive the payment portal link for the $500 deposit.', 'stingray-corvette' ); ?></p>
 		</header>
 
+		<?php echo stingray_corvette_render_page_prose(); ?>
+
 		<section class="sc-section" aria-labelledby="deposit-process-heading">
 			<h2 id="deposit-process-heading" class="sc-section-title"><?php esc_html_e( 'How the deposit works', 'stingray-corvette' ); ?></h2>
 			<p class="sc-section-lede"><?php esc_html_e( 'Start with the list form below, then use the payment portal link that appears after submission. The same payment link is also emailed to you in case you navigate away.', 'stingray-corvette' ); ?></p>

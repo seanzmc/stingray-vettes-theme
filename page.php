@@ -15,7 +15,7 @@ get_header();
 		<?php while ( have_posts() ) : the_post(); ?>
 			<article <?php post_class(); ?>>
 				<h1 class="sc-page-title"><?php the_title(); ?></h1>
-				<div class="sc-page-content"><?php the_content(); ?></div>
+				<div class="sc-page-content sc-prose"><?php the_content(); ?></div>
 			</article>
 		<?php endwhile; ?>
 	</div>
