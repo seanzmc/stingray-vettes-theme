@@ -83,8 +83,9 @@ function stingray_corvette_enqueue_styles() {
 	// Interior-surface components (link cards, accordions, pills, step lists).
 	wp_enqueue_style( 'stingray-surfaces', $uri . '/assets/css/surfaces.css', array( 'stingray-theme' ), $ver );
 
-	// Editable-content skin: maps standard editor output inside .sc-prose
-	// regions (headings, lists, tables, buttons, images) onto the DS tokens.
+	// .sc-prose: maps the design system onto plain wp-admin editor output
+	// (headings, paragraphs, lists, tables, buttons, images). Loaded site-wide
+	// so every surface's editable the_content() region renders consistently.
 	wp_enqueue_style( 'stingray-prose', $uri . '/assets/css/prose.css', array( 'stingray-surfaces' ), $ver );
 
 	// Homepage-only layer: hero + quick actions + the 360° spin viewer.
@@ -367,44 +368,61 @@ function stingray_corvette_render_page_embed_shortcode( $meta_key = 'stingray_em
 }
 
 /**
- * Render the page's editable prose region.
+ * Render the page-bound WordPress editor content as the one editable region
+ * on an otherwise template-owned surface.
  *
- * Hybrid scaffolding: surface templates own the page chrome (hero, eyebrow,
- * title), .sc-embed mount points, and composed widgets; the WordPress page
- * owns one free-form copy region rendered here. wp-admin users can edit,
- * reorder, or add notes in the page editor without a theme deploy, and
- * assets/css/prose.css maps whatever the editor emits onto the design system.
+ * This is the hybrid-scaffolding seam: templates keep ownership of page
+ * chrome (hero, eyebrow, title), .sc-embed mount points, and composed
+ * widgets (step lists, card grids, accordions) as hard-coded PHP/markup.
+ * wp-admin users edit or reorder copy, or add ad hoc notes, by editing the
+ * bound page's normal content field -- no deploy required. The block only
+ * renders when that field has content, so surfaces stay visually unchanged
+ * until an editor opts in.
  *
- * Returns an empty string when the page has no content, so surfaces whose
- * copy is fully template-owned render exactly as before.
+ * @param array $args {
+ *     Optional. Heading text for the rendered section.
  *
- * @return string Rendered .sc-prose region, or an empty string.
+ *     @type string $title      Visible section heading. Default "Additional Information".
+ *     @type string $heading_id  Element id used for aria-labelledby. Default "page-notes-heading".
+ * }
  */
-function stingray_corvette_render_page_prose() {
-	if ( ! have_posts() ) {
-		return '';
+function stingray_corvette_render_editable_notes( $args = array() ) {
+	$post_id = get_queried_object_id();
+
+	if ( ! $post_id ) {
+		return;
 	}
 
-	$output = '';
+	$notes_post = get_post( $post_id );
 
-	while ( have_posts() ) {
-		the_post();
-
-		$raw_content = get_the_content();
-
-		if ( '' === trim( (string) $raw_content ) ) {
-			continue;
-		}
-
-		$rendered = apply_filters( 'the_content', $raw_content );
-		$rendered = str_replace( ']]>', ']]&gt;', $rendered );
-
-		$output .= '<div class="sc-prose">' . $rendered . '</div>';
+	if ( ! ( $notes_post instanceof WP_Post ) ) {
+		return;
 	}
 
-	rewind_posts();
+	if ( '' === trim( wp_strip_all_tags( $notes_post->post_content ) ) ) {
+		return;
+	}
 
-	return $output;
+	$args = wp_parse_args(
+		$args,
+		array(
+			'title'      => __( 'Additional Information', 'stingray-corvette' ),
+			'heading_id' => 'page-notes-heading',
+		)
+	);
+
+	global $post;
+	$outer_post = $post;
+	$post       = $notes_post;
+	setup_postdata( $post );
+	?>
+	<section class="sc-section" aria-labelledby="<?php echo esc_attr( $args['heading_id'] ); ?>">
+		<h2 id="<?php echo esc_attr( $args['heading_id'] ); ?>" class="sc-section-title"><?php echo esc_html( $args['title'] ); ?></h2>
+		<div class="sc-prose"><?php the_content(); ?></div>
+	</section>
+	<?php
+	wp_reset_postdata();
+	$post = $outer_post;
 }
 
 /**

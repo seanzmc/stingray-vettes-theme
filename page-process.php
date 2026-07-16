@@ -237,8 +237,6 @@ get_header();
 			</div>
 		</header>
 
-		<?php echo stingray_corvette_render_page_prose(); ?>
-
 		<section class="sc-section" aria-labelledby="process-actions-heading">
 			<h2 id="process-actions-heading" class="sc-section-title"><?php esc_html_e( 'Start with the right step', 'stingray-corvette' ); ?></h2>
 			<div class="sc-grid">
@@ -439,6 +437,8 @@ get_header();
 				<span><?php esc_html_e( 'Stingray Chevrolet reserves the right to modify deposit requirements, pricing policies, and order procedures at any time. All information on this page reflects current policy and supersedes any previously published versions.', 'stingray-corvette' ); ?></span>
 			</div>
 		</section>
+
+		<?php stingray_corvette_render_editable_notes(); ?>
 	</div>
 </main>
 

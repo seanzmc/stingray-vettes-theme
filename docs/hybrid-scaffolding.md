@@ -1,7 +1,9 @@
 # Hybrid Scaffolding — templates own layout, pages own copy
 
-Since v0.1.24 every interior surface template renders one editable prose
-region from the WordPress page editor, in addition to its hardcoded chrome.
+Since v0.1.25 every surface template renders one editable notes region from
+the WordPress page editor, in addition to its hardcoded chrome. (README.md
+§ prose covers the vendoring/structure notes; this file is the working
+guide.)
 
 ## Ownership boundaries
 
@@ -16,35 +18,35 @@ Embeds are unchanged: Formidable / wpDataTables shortcodes still live in the
 
 ## How it works
 
-- `stingray_corvette_render_page_prose()` (functions.php) runs the loop,
-  renders `the_content()` through the normal filters, and wraps it in
-  `<div class="sc-prose">`. Empty page content → empty string → the surface
-  renders exactly as before.
-- `assets/css/prose.css` is enqueued globally after `surfaces.css` (handle
+- `stingray_corvette_render_editable_notes()` (functions.php) renders the
+  bound page's `the_content()` inside a `.sc-prose` section titled
+  "Additional Information" (title/heading id overridable via `$args`).
+  Empty page content → renders nothing → the surface is unchanged.
+- `assets/css/prose.css` is enqueued site-wide after `surfaces.css` (handle
   `stingray-prose`) and styles only elements inside `.sc-prose`.
-- Region placement per template (one region each):
+- Region placement (one per page, at the END of the page body):
   - `page-deposit.php`, `page-build-and-price.php`, `page-factory.php`,
-    `page-process.php`, `page-calculator.php` — directly after the page
-    header, before the first structural section.
-  - `front-page.php` — after the external-destinations section, before the
-    footer; hidden entirely while the front page's content is empty.
+    `page-process.php`, `page-calculator.php` — last block inside
+    `.sc-page-inner`, after the final template section.
+  - `front-page.php` — between the external-destinations section and the
+    footer, inside a `.sc-page-inner` gutter wrapper; hidden entirely while
+    the front page's content is empty.
   - `page.php` / `index.php` — the whole body is the prose region
     (`.sc-page-content.sc-prose`), so legacy pages pick up the full skin.
-- `page-order.php` is dormant rollback material (see AGENTS.md) and was
-  intentionally not touched.
+- `page-order.php` is dormant rollback material (see AGENTS.md) and has no
+  region.
 
 ## Editing guidance (wp-admin)
 
-- Start headings at **H2** — H1 belongs to the template title. An H2 renders
-  like a template section title, accent bar included.
+- The section renders under an automatic "Additional Information" heading —
+  start your own headings at **H2** for subsections within it.
 - Paragraphs, lists, quotes, tables, separators, images, and the Buttons
-  block (default = primary red, outline style = ghost) are all skinned.
+  block are all skinned by prose.css.
 - Don't paste embed shortcodes into the content region; those stay in the
   `stingray_embed_shortcode` custom field.
 
-## Rollout checklist for a live site
+## Changing things later
 
-Before deploying, check each mapped page's content in wp-admin
-(Deposit, Build & Price, Factory, Process, Calculator, front page):
-leftover legacy content in the editor will start rendering in the new
-prose region. Clear it or keep it deliberately.
+- Copy inside the notes region: wp-admin page editor, publish. No deploy.
+- Template-owned copy, placement, or styling: theme file change + version
+  bump in `style.css` + deploy, as usual.

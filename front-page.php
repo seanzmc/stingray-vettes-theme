@@ -157,15 +157,15 @@
 
 <?php
 // Editable homepage notes: renders only when the front page has content in
-// wp-admin, so the marketing layout above is untouched by default.
-$stingray_front_prose = stingray_corvette_render_page_prose();
-if ( '' !== $stingray_front_prose ) :
+// wp-admin, so the marketing layout above is untouched by default. The
+// emptiness check mirrors stingray_corvette_render_editable_notes() so the
+// gutter wrapper never renders around an empty region.
+$stingray_front_notes = get_post_field( 'post_content', get_queried_object_id() );
+if ( '' !== trim( wp_strip_all_tags( (string) $stingray_front_notes ) ) ) :
 ?>
-<section class="sc-page" aria-label="<?php esc_attr_e( 'Notes', 'stingray-corvette' ); ?>">
-	<div class="sc-page-inner">
-		<?php echo $stingray_front_prose; ?>
-	</div>
-</section>
+<div class="sc-page-inner">
+	<?php stingray_corvette_render_editable_notes(); ?>
+</div>
 <?php endif; ?>
 
 <?php get_template_part( 'inc/site-footer' ); ?>
