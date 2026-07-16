@@ -268,7 +268,19 @@ get_header();
 					<div class="sc-card-panel">
 						<h3 class="sc-card-panel-title">
 							<span><?php echo esc_html( $process_status_card['name'] ); ?></span>
-							<span class="sc-pill"><?php echo esc_html( $process_status_card['status'] ); ?></span>
+							<?php
+							switch ( $process_status_card['status'] ) {
+								case __( 'CLOSED', 'stingray-corvette' ):
+									$process_status_pill_modifier = 'sc-pill--accent';
+									break;
+								case __( 'DISCONTINUED', 'stingray-corvette' ):
+									$process_status_pill_modifier = 'sc-pill--ended';
+									break;
+								default:
+									$process_status_pill_modifier = 'sc-pill--open';
+							}
+							?>
+							<span class="sc-pill <?php echo esc_attr( $process_status_pill_modifier ); ?>"><?php echo esc_html( $process_status_card['status'] ); ?></span>
 						</h3>
 						<ul>
 							<?php foreach ( $process_status_card['details'] as $process_status_detail_index => $process_status_detail ) : ?>
