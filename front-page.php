@@ -25,11 +25,7 @@
 	<div class="sc-hero-glow"></div>
 	<div class="sc-hero-row">
 		<div class="sc-hero-copy">
-			<div class="sc-hero-badge">
-				<span class="sc-hero-badge-dot"></span>
-				2027 Corvette &middot; Dealer Direct
-			</div>
-			<h1 class="sc-hero-title">Build the one<br>you actually<br><span class="sc-accent">want.</span></h1>
+			<h1 class="sc-hero-title">Build the one<br>you <span class="sc-accent">want.</span></h1>
 			<p class="sc-hero-lede">Customize your Corvette exactly how you want it &mdash; the latest options, features, and live pricing &mdash; then place your order with Stingray Chevrolet, a top-10 Corvette dealer in Plant City, FL.</p>
 			<div class="sc-hero-ctas">
 				<a class="sc-btn-primary" href="<?php echo esc_url( home_url( '/order/' ) ); ?>">
@@ -37,9 +33,6 @@
 					<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="13 6 19 12 13 18"></polyline></svg>
 				</a>
 				<a class="sc-btn-ghost" href="<?php echo esc_url( home_url( '/process/' ) ); ?>">See the Process</a>
-			</div>
-			<div class="sc-hero-trims">
-				<span>Stingray</span><span class="sc-accent">&middot;</span><span>Grand Sport</span><span class="sc-accent">&middot;</span><span>Z06</span>
 			</div>
 		</div>
 		<div class="sc-hero-stage">

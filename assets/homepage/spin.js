@@ -22,6 +22,7 @@
     dragToSpin: true,                 // allow grab + drag on the car
     autoCycle: true,                  // advance paint color after N revolutions
     revsPerColor: 1,                  // revolutions before the paint changes
+    colorLeadFrames: 2,               // fire the paint change this many frames before the revolution completes
     manualColor: 'Torch Red',         // used when autoCycle is false
     assetBase: window.SC_SPIN_BASE || 'assets/spin/'  // absolute theme URL to the frame folders
   };
@@ -188,10 +189,19 @@
   }
 
   /* ---------- Rotation → color advance ---------- */
+  // The paint change fires colorLeadFrames short of a full revolution: the
+  // bounded hero scroll tops out at exactly revsPerColor, so a threshold of
+  // revsPerColor itself is only reached at the last scroll pixel (and float
+  // accumulation can leave revAccum fractionally under it). Leading by a
+  // couple of frames guarantees the change lands within the first
+  // scroll-through. Subtracting the full revsPerColor afterwards keeps
+  // later changes on the same once-per-revolution cadence.
+  var colorLeadRevs = Math.max(0, CONFIG.colorLeadFrames || 0) / COLORS[0].count;
   function addRotation(revs) {
     if (!CONFIG.autoCycle) return;
     revAccum += revs;
-    if (revAccum < revsPerColor) return;
+    var threshold = revsPerColor - colorLeadRevs;
+    if (revAccum < threshold) return;
     var next = (colorIdx + 1) % COLORS.length;
     if (isReady(next)) {
       revAccum -= revsPerColor;
@@ -200,7 +210,7 @@
       animateAccent(COLORS[next]);
       preloadColor((next + 1) % COLORS.length);
     } else {
-      revAccum = revsPerColor;
+      revAccum = threshold;
       preloadColor(next);
     }
   }

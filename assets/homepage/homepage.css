@@ -57,15 +57,8 @@
   }
 }
 .sc-hero-copy { flex: 1 1 420px; min-width: min(100%, 420px); position: relative; z-index: 2; }
-.sc-hero-badge {
-  display: inline-flex; align-items: center; gap: 10px; padding: 7px 14px;
-  border: 1px solid rgba(255, 255, 255, 0.16); border-radius: var(--radius-pill);
-  font-size: 0.72rem; font-weight: var(--weight-bold); letter-spacing: 0.14em;
-  text-transform: uppercase; color: #cfd3d6;
-}
-.sc-hero-badge-dot { width: 7px; height: 7px; border-radius: var(--radius-pill); background: var(--accent); box-shadow: 0 0 10px var(--accent); }
 .sc-hero-title {
-  margin: 22px 0 0;
+  margin: 0;
   font-family: var(--font-primary);
   font-size: min(clamp(2rem, 3.9vw, 3.25rem), 8.3vw);
   line-height: var(--leading-display);
@@ -81,12 +74,6 @@
   font-weight: var(--weight-regular); color: #b9bec1;
 }
 .sc-hero-ctas { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 30px; }
-.sc-hero-trims {
-  display: flex; align-items: center; gap: 18px; margin-top: 30px;
-  font-size: 0.78rem; font-weight: var(--weight-bold); letter-spacing: 0.12em;
-  text-transform: uppercase; color: var(--dim);
-}
-.sc-hero-trims .sc-accent { color: var(--accent); }
 
 /* ---- 360° spin viewer ---- */
 .sc-hero-stage { flex: 1 1 440px; min-width: min(100%, 360px); position: relative; z-index: 1; }
