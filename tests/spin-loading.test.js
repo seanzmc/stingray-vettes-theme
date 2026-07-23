@@ -46,29 +46,52 @@ function runViewer(options) {
 	options = options || {};
 	var requests = [];
 	var images = [];
+	var listeners = {};
+	var pending = 0;
+	var maxPending = 0;
+	var scrollProgress = 0;
 	var canvas = fakeNode();
 	var loader = fakeNode();
 	var hint = fakeNode();
+	var hero = fakeNode();
+	canvas.closest = function (selector) {
+		return options.scrollEligible && '.sc-hero' === selector ? hero : null;
+	};
+	hero.getBoundingClientRect = function () {
+		return { width: 750, height: 375, top: -scrollProgress * 600, bottom: 0 };
+	};
 
 	function FakeImage() {
 		this.complete = false;
 		this.naturalWidth = 0;
 		this.naturalHeight = 0;
+		this.pending = false;
 		images.push(this);
 	}
 	Object.defineProperty(FakeImage.prototype, 'src', {
 		set: function (value) {
 			this.currentSrc = value;
+			this.pending = true;
+			pending++;
+			maxPending = Math.max(maxPending, pending);
 			requests.push(value);
 		}
 	});
 	FakeImage.prototype.succeed = function () {
+		if (this.pending) {
+			this.pending = false;
+			pending--;
+		}
 		this.complete = true;
 		this.naturalWidth = 1500;
 		this.naturalHeight = 750;
 		if (this.onload) this.onload();
 	};
 	FakeImage.prototype.fail = function () {
+		if (this.pending) {
+			this.pending = false;
+			pending--;
+		}
 		if (this.onerror) this.onerror();
 	};
 
@@ -87,12 +110,17 @@ function runViewer(options) {
 		devicePixelRatio: 1,
 		matchMedia: function (query) {
 			return {
-				matches: query.indexOf('prefers-reduced-motion: reduce') !== -1 ? !!options.reduce : false,
+				matches: query.indexOf('prefers-reduced-motion: reduce') !== -1
+					? !!options.reduce
+					: (query.indexOf('min-width: 900px') !== -1 ? !!options.scrollEligible : false),
 				addEventListener: function () {},
 				addListener: function () {}
 			};
 		},
-		addEventListener: function () {}
+		addEventListener: function (type, listener) {
+			if (!listeners[type]) listeners[type] = [];
+			listeners[type].push(listener);
+		}
 	};
 	var context = {
 		window: window,
@@ -108,7 +136,16 @@ function runViewer(options) {
 		String: String
 	};
 	vm.runInNewContext(source, context);
-	return { requests: requests, images: images };
+	return {
+		requests: requests,
+		images: images,
+		dispatch: function (type) {
+			(listeners[type] || []).forEach(function (listener) { listener(); });
+		},
+		getMaxPending: function () { return maxPending; },
+		getPending: function () { return pending; },
+		setScrollProgress: function (progress) { scrollProgress = progress; }
+	};
 }
 
 var webpFrames = collect(spinRoot, '.webp');
@@ -136,6 +173,19 @@ assert(4 === normal.images.length, 'PNG fallback must reuse the same request slo
 
 normal.images[0].succeed();
 assert(6 === normal.requests.length, 'Completing a fallback must advance the bounded queue once.');
+
+var overlappingPaints = runViewer({ scrollEligible: true });
+for (var completed = 0; completed < 26; completed++) {
+	overlappingPaints.images[completed].succeed();
+}
+assert(4 === overlappingPaints.getPending(), 'Torch Red must have four pending requests before the 70% paint transition.');
+overlappingPaints.setScrollProgress(0.7);
+overlappingPaints.dispatch('scroll');
+overlappingPaints.images[26].succeed();
+assert(overlappingPaints.requests.some(function (url) {
+	return /gbk-yellow-webp\/gbk-ext\.\d{3}-cmp\.webp$/.test(url);
+}), 'The 70% transition must start lazy Accelerate Yellow loading.');
+assert(overlappingPaints.getMaxPending() <= 4, 'Pending requests across all paint URLs must never exceed four during the 70% transition.');
 
 var saveData = runViewer({ saveData: true });
 assert(1 === saveData.requests.length, 'Save-Data mode must request one static frame.');

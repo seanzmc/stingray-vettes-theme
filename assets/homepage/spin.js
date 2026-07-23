@@ -146,14 +146,29 @@
     return order.slice(0, count);
   }
 
-  function finishFrame(arr, frameIndex, idx, activeState, loadNext) {
-    activeState.count--;
+  var activeLoads = 0;
+  var frameLoadQueue = [];
+
+  function pumpFrameLoadQueue() {
+    while (activeLoads < CONFIG.maxConcurrent && frameLoadQueue.length) {
+      activeLoads++;
+      frameLoadQueue.shift()();
+    }
+  }
+
+  function scheduleFrameLoad(start) {
+    frameLoadQueue.push(start);
+    pumpFrameLoadQueue();
+  }
+
+  function finishFrame(arr, frameIndex, idx) {
+    activeLoads--;
     arr.loadedCount++;
     if (idx === colorIdx && frameIndex === 0) {
       if (loader) loader.style.display = 'none';
       sizeCanvas();
     }
-    loadNext();
+    pumpFrameLoadQueue();
   }
 
   function preloadColor(idx) {
@@ -161,22 +176,13 @@
     if (frameSets[color.key]) return frameSets[color.key];
     var arr = new Array(color.count);
     var queue = prioritizedFrameIndexes(color.count);
-    var cursor = 0;
-    var activeState = { count: 0 };
     arr.loadedCount = 0;
-
-    function loadNext() {
-      while (activeState.count < CONFIG.maxConcurrent && cursor < queue.length) {
-        startFrame(queue[cursor++]);
-      }
-    }
 
     function startFrame(frameIndex) {
       var im = new Image();
       var triedPng = false;
-      activeState.count++;
       im.onload = function () {
-        finishFrame(arr, frameIndex, idx, activeState, loadNext);
+        finishFrame(arr, frameIndex, idx);
       };
       im.onerror = function () {
         if (!triedPng) {
@@ -184,14 +190,16 @@
           im.src = pngFrameUrl(color, frameIndex);
           return;
         }
-        finishFrame(arr, frameIndex, idx, activeState, loadNext);
+        finishFrame(arr, frameIndex, idx);
       };
       arr[frameIndex] = im;
       im.src = webpFrameUrl(color, frameIndex);
     }
 
     frameSets[color.key] = arr;
-    loadNext();
+    queue.forEach(function (frameIndex) {
+      scheduleFrameLoad(function () { startFrame(frameIndex); });
+    });
     return arr;
   }
 
