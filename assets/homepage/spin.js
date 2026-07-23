@@ -24,7 +24,11 @@
     revsPerColor: 1,                  // revolutions before the paint changes
     colorLeadFrames: 2,               // fire the paint change this many frames before the revolution completes
     manualColor: 'Torch Red',         // used when autoCycle is false
-    assetBase: window.SC_SPIN_BASE || 'assets/spin/'  // absolute theme URL to the frame folders
+    assetBase: window.SC_SPIN_BASE || 'assets/spin/', // absolute theme URL to the frame folders
+    webpDirSuffix: '-webp/',
+    webpFileSuffix: '-cmp.webp',
+    pngFileSuffix: '.png',
+    maxConcurrent: 4
   };
 
   // Each paint: frame folder + matching accent palette for the whole page.
@@ -47,6 +51,9 @@
   var root = document.documentElement;
 
   var reduce = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+  var saveData = !!(navigator.connection && navigator.connection.saveData);
+  var constrained = reduce || saveData;
+  var dragEnabled = CONFIG.dragToSpin && !constrained;
   var dir = (CONFIG.spinDirection === 'Clockwise') ? -1 : 1;
   var behavior = CONFIG.spinBehavior;
   var pxPerRev = Math.max(100, CONFIG.scrollPerRev);
@@ -70,7 +77,7 @@
   if (hero) hero.style.setProperty('--spin-scroll-distance', pxPerRev + 'px');
 
   function scrollIsEligible() {
-    return behavior === 'Scroll to spin' && !!hero && !!scrollQuery && scrollQuery.matches;
+    return !constrained && behavior === 'Scroll to spin' && !!hero && !!scrollQuery && scrollQuery.matches;
   }
 
   function getScrollProgress() {
@@ -84,7 +91,7 @@
     if (!hint) return;
     hint.textContent = scrollEligible
       ? '360° · Scroll to spin'
-      : (CONFIG.dragToSpin ? '360° · Drag to spin' : '360° View');
+      : (dragEnabled ? '360° · Drag to spin' : '360° View');
   }
 
   function syncScrollMode(options) {
@@ -112,28 +119,104 @@
     for (var i = 0; i < COLORS.length; i++) if (COLORS[i].name === CONFIG.manualColor) colorIdx = i;
   }
 
-  canvas.style.cursor = CONFIG.dragToSpin ? 'grab' : 'default';
+  canvas.style.cursor = dragEnabled ? 'grab' : 'default';
 
-  function frameUrl(color, i) {
-    return CONFIG.assetBase + color.dir + color.prefix + String(i + 1).padStart(3, '0') + '.png';
+  function frameStem(color, i) {
+    return color.prefix + String(i + 1).padStart(3, '0');
+  }
+
+  function webpFrameUrl(color, i) {
+    return CONFIG.assetBase +
+      color.dir.replace(/\/$/, '') +
+      CONFIG.webpDirSuffix +
+      frameStem(color, i) +
+      CONFIG.webpFileSuffix;
+  }
+
+  function pngFrameUrl(color, i) {
+    return CONFIG.assetBase + color.dir + frameStem(color, i) + CONFIG.pngFileSuffix;
+  }
+
+  function prioritizedFrameIndexes(count) {
+    var order = [0];
+    for (var offset = 1; offset <= Math.floor(count / 2); offset++) {
+      order.push(offset);
+      if (count - offset !== offset) order.push(count - offset);
+    }
+    return order.slice(0, count);
+  }
+
+  function finishFrame(arr, frameIndex, idx, activeState, loadNext) {
+    activeState.count--;
+    arr.loadedCount++;
+    if (idx === colorIdx && frameIndex === 0) {
+      if (loader) loader.style.display = 'none';
+      sizeCanvas();
+    }
+    loadNext();
   }
 
   function preloadColor(idx) {
     var color = COLORS[idx];
     if (frameSets[color.key]) return frameSets[color.key];
     var arr = new Array(color.count);
+    var queue = prioritizedFrameIndexes(color.count);
+    var cursor = 0;
+    var activeState = { count: 0 };
     arr.loadedCount = 0;
-    for (var i = 0; i < color.count; i++) (function (i) {
+
+    function loadNext() {
+      while (activeState.count < CONFIG.maxConcurrent && cursor < queue.length) {
+        startFrame(queue[cursor++]);
+      }
+    }
+
+    function startFrame(frameIndex) {
       var im = new Image();
+      var triedPng = false;
+      activeState.count++;
       im.onload = function () {
-        arr.loadedCount++;
-        if (idx === colorIdx && arr.loadedCount === 1) { if (loader) loader.style.display = 'none'; sizeCanvas(); }
+        finishFrame(arr, frameIndex, idx, activeState, loadNext);
       };
-      im.onerror = function () { arr.loadedCount++; };
-      im.src = frameUrl(color, i);
-      arr[i] = im;
-    })(i);
+      im.onerror = function () {
+        if (!triedPng) {
+          triedPng = true;
+          im.src = pngFrameUrl(color, frameIndex);
+          return;
+        }
+        finishFrame(arr, frameIndex, idx, activeState, loadNext);
+      };
+      arr[frameIndex] = im;
+      im.src = webpFrameUrl(color, frameIndex);
+    }
+
     frameSets[color.key] = arr;
+    loadNext();
+    return arr;
+  }
+
+  function loadStaticFrame(idx) {
+    var color = COLORS[idx];
+    var arr = new Array(color.count);
+    var triedPng = false;
+    var im = new Image();
+    arr.loadedCount = 0;
+    im.onload = function () {
+      arr.loadedCount = 1;
+      if (loader) loader.style.display = 'none';
+      sizeCanvas();
+    };
+    im.onerror = function () {
+      if (!triedPng) {
+        triedPng = true;
+        im.src = pngFrameUrl(color, 0);
+        return;
+      }
+      arr.loadedCount = 1;
+    };
+    arr[0] = im;
+    frameSets[color.key] = arr;
+    im.src = webpFrameUrl(color, 0);
     return arr;
   }
 
@@ -171,6 +254,7 @@
   }
 
   function animateAccent(t) {
+    if (constrained) { setAccentInstant(t); return; }
     if (!live) { setAccentInstant(t); return; }
     var from = { a: live.a.slice(), d: live.d.slice(), on: live.on.slice(), glow: live.glow.slice() };
     var to = { a: parseColor(t.a), d: parseColor(t.d), on: parseColor(t.on), glow: parseColor(t.glow) };
@@ -198,7 +282,7 @@
   // later changes on the same once-per-revolution cadence.
   var colorLeadRevs = Math.max(0, CONFIG.colorLeadFrames || 0) / COLORS[0].count;
   function addRotation(revs) {
-    if (!CONFIG.autoCycle) return;
+    if (constrained || !CONFIG.autoCycle) return;
     revAccum += revs;
     var threshold = revsPerColor - colorLeadRevs;
     if (revAccum < threshold) return;
@@ -279,7 +363,7 @@
   /* ---------- Auto-spin loop (unused in scroll mode) ---------- */
   function startLoop() {
     cancelAnimationFrame(spinRaf);
-    if (reduce || behavior === 'Interact to spin' || behavior === 'Scroll to spin') { drawFrame(); return; }
+    if (constrained || behavior === 'Interact to spin' || behavior === 'Scroll to spin') { drawFrame(); return; }
     var revsPerMs = 1 / (Math.max(1, CONFIG.spinSpeed) * 1000);
     var last = performance.now();
     function loop(now) {
@@ -300,7 +384,7 @@
   /* ---------- Drag to spin ---------- */
   var lastX = 0;
   canvas.addEventListener('pointerdown', function (e) {
-    if (!CONFIG.dragToSpin) return;
+    if (!dragEnabled) return;
     dragging = true;
     lastX = e.clientX;
     canvas.style.cursor = 'grabbing';
@@ -318,12 +402,13 @@
   window.addEventListener('pointerup', function () {
     if (!dragging) return;
     dragging = false;
-    canvas.style.cursor = CONFIG.dragToSpin ? 'grab' : 'default';
+    canvas.style.cursor = dragEnabled ? 'grab' : 'default';
   });
 
   /* ---------- Boot: only the selected paint's frames load here ---------- */
   setAccentInstant(COLORS[colorIdx]);
-  preloadColor(colorIdx);
+  if (constrained) loadStaticFrame(colorIdx);
+  else preloadColor(colorIdx);
   sizeCanvas();
   syncScrollMode({ applyInitialProgress: true });
   window.addEventListener('resize', function () {
