@@ -15,8 +15,21 @@
   }
 
   function calculateScale(contentWidth, contentHeight, boxWidth, boxHeight) {
-    if (!contentWidth || !contentHeight || !boxWidth || !boxHeight) return 1;
-    return Math.min(1, boxWidth / contentWidth, boxHeight / contentHeight);
+    var measurements = [contentWidth, contentHeight, boxWidth, boxHeight];
+    var valid = measurements.every(function (measurement) {
+      return typeof measurement === 'number' && isFinite(measurement) && measurement > 0;
+    });
+    if (!valid) return null;
+
+    var scale = Math.min(1, boxWidth / contentWidth, boxHeight / contentHeight);
+    return isFinite(scale) && scale > 0 ? scale : null;
+  }
+
+  function resetPrintNode(element, className) {
+    element.getAttributeNames().forEach(function (attributeName) {
+      element.removeAttribute(attributeName);
+    });
+    element.classList.add(className);
   }
 
   function buildPrintSheet(modal) {
@@ -27,16 +40,16 @@
 
     var sheet = document.createElement('section');
     var inner = document.createElement('div');
-    var title = document.createElement('h1');
     var bodyClone = modalBody.cloneNode(true);
     var modalTitle = modal.querySelector('.modal-title');
+    var title = modalTitle ? modalTitle.cloneNode(true) : document.createElement('h1');
 
     sheet.setAttribute('id', sheetId);
     sheet.setAttribute('aria-hidden', 'true');
     inner.classList.add('sc-configurator-print-inner');
-    title.classList.add('sc-configurator-print-title');
-    bodyClone.classList.add('sc-configurator-print-body');
-    title.textContent = modalTitle ? modalTitle.textContent.trim() : 'Configurator order';
+    resetPrintNode(title, 'sc-configurator-print-title');
+    resetPrintNode(bodyClone, 'sc-configurator-print-body');
+    if (!modalTitle) title.textContent = 'Configurator order';
 
     inner.appendChild(title);
     inner.appendChild(bodyClone);
@@ -49,6 +62,11 @@
       sheet.clientWidth,
       sheet.clientHeight
     );
+    if (null === scale) {
+      cleanupPrintSheet();
+      return null;
+    }
+
     inner.style.transform = 'scale(' + scale.toFixed(4) + ')';
     sheet.setAttribute('data-print-scale', scale.toFixed(4));
     return sheet;

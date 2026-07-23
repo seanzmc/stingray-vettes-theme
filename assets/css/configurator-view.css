@@ -98,6 +98,11 @@
 }
 
 .sc-configurator-print-body {
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  overflow: visible !important;
+  position: static !important;
   padding: 0;
   font: 10pt/1.18 Arial, sans-serif;
 }
