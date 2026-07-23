@@ -41,11 +41,12 @@ Vendored from `/Users/seandm/Projects/27vette/export-page/stingray-homepage/asse
 into `assets/homepage/`:
 
 - `crossflags-white.png`, `wordmark-white.png` — logo lockup.
-- `spin/<paint>/*.png` — the 360° frame sets, all five paints × 30 frames
-  (`gkz-red`, `gbk-yellow`, `gtr-blue`, `g26-orange`, `g4z-green`), vendored
-  per the build brief so the theme is self-contained. Only the currently
-  selected paint's set loads on page view; the next paint's set loads
-  on demand as rotation approaches a color change (see `assets/homepage/spin.js`).
+- `spin/<paint>/*.png` — canonical theme-vendored fallback frames, five paints ×
+  30 frames.
+- `spin/<paint>-webp/*-cmp.webp` — 1500×750 transparent delivery derivatives,
+  generated from the matching PNG stems. The viewer requests WebP first, retries
+  the matching PNG once on failure, caps loading at four concurrent requests,
+  and loads only one static frame for reduced-motion or Save-Data users.
 
 ### Calculator assets
 
