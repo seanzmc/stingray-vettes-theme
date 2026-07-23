@@ -419,9 +419,19 @@ assert(
 	Number(longSheet && longSheet.getAttribute('data-print-scale')) < 1,
 	'Complete long modal content must be measured and scaled below 100%.'
 );
+var transformMatch = longInner && /^scale\(([^)]+)\)$/.exec(longInner.style.transform);
+var appliedLongScale = transformMatch ? Number(transformMatch[1]) : NaN;
 assert(
-	Math.abs(Number(longSheet && longSheet.getAttribute('data-print-scale')) - 0.5362) < 0.0001,
-	'Long-content scale must include the complete 1800px body below the 320px viewport.'
+	appliedLongScale === Number(longSheet && longSheet.getAttribute('data-print-scale')),
+	'The applied transform and recorded print scale must match.'
+);
+assert(
+	longInner && appliedLongScale * longInner.scrollWidth <= longSheet.clientWidth,
+	'Serialized print scale must keep the complete content width inside the sheet.'
+);
+assert(
+	longInner && appliedLongScale * longInner.scrollHeight <= longSheet.clientHeight,
+	'Serialized print scale must keep the complete content height inside the sheet.'
 );
 
 longHarness.runCleanupTimers();

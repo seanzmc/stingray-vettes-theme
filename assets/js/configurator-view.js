@@ -67,8 +67,9 @@
       return null;
     }
 
-    inner.style.transform = 'scale(' + scale.toFixed(4) + ')';
-    sheet.setAttribute('data-print-scale', scale.toFixed(4));
+    var serializedScale = String(scale);
+    inner.style.transform = 'scale(' + serializedScale + ')';
+    sheet.setAttribute('data-print-scale', serializedScale);
     return sheet;
   }
 
