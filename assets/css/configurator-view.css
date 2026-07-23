@@ -1,0 +1,172 @@
+/* Private /configurator-view/ utility surface only. */
+.wpdt-c .modal-content,
+.wdt-md-modal .modal-content {
+  --bs-modal-color: #161616;
+  background: #fff !important;
+  color: #161616 !important;
+}
+
+.wpdt-c .modal-header,
+.wdt-md-modal .modal-header {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  padding: 0.75rem 1rem !important;
+  border-bottom: 1px solid #d8dde3 !important;
+  color: #161616 !important;
+}
+
+.wpdt-c .modal-title,
+.wdt-md-modal .modal-title {
+  margin-right: auto;
+  color: #161616 !important;
+}
+
+.wpdt-c .modal-body,
+.wdt-md-modal .modal-body {
+  padding: 0.75rem 1rem !important;
+  color: #161616 !important;
+}
+
+.wpdt-c .modal-body *,
+.wdt-md-modal .modal-body * {
+  color: inherit !important;
+}
+
+.wpdt-c .modal-body p,
+.wpdt-c .modal-body ul,
+.wpdt-c .modal-body ol,
+.wdt-md-modal .modal-body p,
+.wdt-md-modal .modal-body ul,
+.wdt-md-modal .modal-body ol {
+  margin-top: 0.35rem;
+  margin-bottom: 0.6rem;
+}
+
+.sc-configurator-print-button {
+  min-height: 42px;
+  padding: 0.45rem 0.8rem;
+  border: 1px solid #161616;
+  border-radius: 4px;
+  background: #fff;
+  color: #161616;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.sc-configurator-print-button:hover {
+  background: #f1f3f5;
+}
+
+.sc-configurator-print-button:focus-visible {
+  outline: 3px solid #d22630;
+  outline-offset: 2px;
+}
+
+#sc-configurator-print-sheet {
+  position: fixed;
+  left: -10000px;
+  top: 0;
+  width: 8in;
+  height: 10.5in;
+  overflow: hidden;
+  background: #fff;
+}
+
+.sc-configurator-print-inner {
+  width: 8in;
+  color: #000;
+  background: #fff;
+  transform-origin: top left;
+}
+
+.sc-configurator-print-inner,
+.sc-configurator-print-inner * {
+  box-sizing: border-box;
+  color: #000 !important;
+  background: #fff !important;
+  box-shadow: none !important;
+  text-shadow: none !important;
+}
+
+.sc-configurator-print-title {
+  margin: 0 0 0.18in;
+  padding: 0 0 0.1in;
+  border-bottom: 1px solid #cfd4da;
+  font: 700 17pt/1.1 Arial, sans-serif;
+}
+
+.sc-configurator-print-body {
+  padding: 0;
+  font: 10pt/1.18 Arial, sans-serif;
+}
+
+.sc-configurator-print-body p,
+.sc-configurator-print-body ul,
+.sc-configurator-print-body ol {
+  margin-top: 0.04in;
+  margin-bottom: 0.08in;
+}
+
+.sc-configurator-print-body h1,
+.sc-configurator-print-body h2,
+.sc-configurator-print-body h3,
+.sc-configurator-print-body h4,
+.sc-configurator-print-body strong,
+.sc-configurator-print-body b {
+  font-weight: 700;
+}
+
+.sc-configurator-print-body h1,
+.sc-configurator-print-body h2,
+.sc-configurator-print-body h3,
+.sc-configurator-print-body h4 {
+  margin: 0.08in 0 0.03in;
+  font-size: 10.5pt;
+  line-height: 1.12;
+}
+
+.sc-configurator-print-body li {
+  margin: 0;
+}
+
+@page {
+  size: letter portrait;
+  margin: 0.25in;
+}
+
+@media print {
+  html,
+  body {
+    width: 8in !important;
+    height: 10.5in !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #fff !important;
+  }
+
+  body.sc-configurator-printing > *:not(#sc-configurator-print-sheet) {
+    display: none !important;
+  }
+
+  body.sc-configurator-printing #sc-configurator-print-sheet {
+    display: block !important;
+    position: fixed;
+    inset: 0;
+    width: 8in;
+    height: 10.5in;
+    overflow: hidden;
+    break-inside: avoid;
+    break-after: avoid;
+    page-break-inside: avoid;
+    page-break-after: avoid;
+  }
+
+  .sc-configurator-print-button,
+  .modal-close,
+  .close,
+  .btn-close {
+    display: none !important;
+  }
+}

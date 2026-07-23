@@ -1,0 +1,92 @@
+(function () {
+  'use strict';
+
+  var modalSelector = '.wpdt-c .modal-content, .wdt-md-modal .modal-content';
+  var printButtonClass = 'sc-configurator-print-button';
+  var sheetId = 'sc-configurator-print-sheet';
+  var cleanupTimer = 0;
+
+  function cleanupPrintSheet() {
+    clearTimeout(cleanupTimer);
+    cleanupTimer = 0;
+    var oldSheet = document.querySelector('#' + sheetId);
+    if (oldSheet) oldSheet.remove();
+    document.body.classList.remove('sc-configurator-printing');
+  }
+
+  function calculateScale(contentWidth, contentHeight, boxWidth, boxHeight) {
+    if (!contentWidth || !contentHeight || !boxWidth || !boxHeight) return 1;
+    return Math.min(1, boxWidth / contentWidth, boxHeight / contentHeight);
+  }
+
+  function buildPrintSheet(modal) {
+    var modalBody = modal.querySelector('.modal-body');
+    if (!modalBody) return null;
+
+    cleanupPrintSheet();
+
+    var sheet = document.createElement('section');
+    var inner = document.createElement('div');
+    var title = document.createElement('h1');
+    var bodyClone = modalBody.cloneNode(true);
+    var modalTitle = modal.querySelector('.modal-title');
+
+    sheet.setAttribute('id', sheetId);
+    sheet.setAttribute('aria-hidden', 'true');
+    inner.classList.add('sc-configurator-print-inner');
+    title.classList.add('sc-configurator-print-title');
+    bodyClone.classList.add('sc-configurator-print-body');
+    title.textContent = modalTitle ? modalTitle.textContent.trim() : 'Configurator order';
+
+    inner.appendChild(title);
+    inner.appendChild(bodyClone);
+    sheet.appendChild(inner);
+    document.body.appendChild(sheet);
+
+    var scale = calculateScale(
+      inner.scrollWidth,
+      inner.scrollHeight,
+      sheet.clientWidth,
+      sheet.clientHeight
+    );
+    inner.style.transform = 'scale(' + scale.toFixed(4) + ')';
+    sheet.setAttribute('data-print-scale', scale.toFixed(4));
+    return sheet;
+  }
+
+  function printModal(modal) {
+    if (!buildPrintSheet(modal)) return;
+    document.body.classList.add('sc-configurator-printing');
+    window.requestAnimationFrame(function () {
+      window.requestAnimationFrame(function () {
+        window.print();
+        cleanupTimer = setTimeout(cleanupPrintSheet, 1000);
+      });
+    });
+  }
+
+  function addPrintButton(modal) {
+    var header = modal.querySelector('.modal-header');
+    if (!header || modal.querySelector('.' + printButtonClass)) return;
+
+    var button = document.createElement('button');
+    button.classList.add(printButtonClass);
+    button.setAttribute('type', 'button');
+    button.textContent = 'Print order';
+    button.addEventListener('click', function () {
+      printModal(modal);
+    });
+    header.appendChild(button);
+  }
+
+  function scanForModals() {
+    Array.prototype.forEach.call(document.querySelectorAll(modalSelector), addPrintButton);
+  }
+
+  window.addEventListener('afterprint', cleanupPrintSheet);
+  new MutationObserver(scanForModals).observe(document.body, {
+    childList: true,
+    subtree: true
+  });
+  scanForModals();
+})();

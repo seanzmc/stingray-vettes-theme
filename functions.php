@@ -126,6 +126,23 @@ function stingray_corvette_enqueue_styles() {
 		wp_enqueue_script( 'stingray-factory-table', $uri . '/assets/js/factory-table.js', array(), $ver, true );
 	}
 
+	// Private configurator submission viewer: compact modal + one-sheet print.
+	if ( is_page( 'configurator-view' ) ) {
+		wp_enqueue_style(
+			'stingray-configurator-view',
+			$uri . '/assets/css/configurator-view.css',
+			array( 'stingray-surfaces' ),
+			$ver
+		);
+		wp_enqueue_script(
+			'stingray-configurator-view-print',
+			$uri . '/assets/js/configurator-view.js',
+			array(),
+			$ver,
+			true
+		);
+	}
+
 	// Payment calculator (/calculator/): vendored Stingcalc logic, DS-authored skin.
 	if ( is_page( 'calculator' ) ) {
 		wp_enqueue_style( 'stingray-calculator', $uri . '/assets/calculator/calculator.css', array( 'stingray-surfaces' ), $ver );
