@@ -122,6 +122,11 @@ this rollout; see their own header comments for why.
   Formidable link-share embed at `/build-and-price/`.
 - `page-factory.php` — DS-styled Orders @ Factory explainer and wpDataTables
   embed at `/factory/`.
+- `/configurator-view/` — private wpDataTables submission-review page. The theme
+  conditionally loads `assets/css/configurator-view.css` and
+  `assets/js/configurator-view.js` to provide a compact readable modal and a
+  client-only one-Letter-sheet print action. Submission data and table
+  configuration remain plugin-owned.
 - `page-process.php` — DS-styled Corvette order process guide at `/process/`,
   rebuilt from the live policy/process page content.
 - `page.php` — generic DS-styled interior wrapper for pages without a dedicated
