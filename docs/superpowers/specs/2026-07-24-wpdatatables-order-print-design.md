@@ -27,9 +27,10 @@ data source and providing a consistent visible margin on the printed sheet.
 
 ### Selected: print the selected wpDataTables row
 
-Read the current modal's detail fields in the authenticated browser and build
-the print sheet from those values. This guarantees that the printed data comes
-from the row the administrator selected and requires no additional request.
+Read the current modal's `plaintextbuildsummary` detail field in the
+authenticated browser and build the print sheet from that value alone. This
+guarantees that the printed data comes from the row the administrator selected
+and requires no additional request.
 
 ### Rejected: dynamic Formidable field-value request
 
@@ -50,10 +51,11 @@ printing workflow.
 1. The administrator clicks a wpDataTables row.
 2. wpDataTables opens and populates its existing detail modal.
 3. The theme-owned `Print order` button reads the open modal.
-4. The print sheet includes the customer name, variant, build summary, and
-   entry date.
-5. The technical entry ID remains available for row identity but is omitted
-   from the printed document.
+4. The print sheet contains only the selected row's
+   `plaintextbuildsummary` value.
+5. The modal title, separate name, variant, entry-date, and technical entry-ID
+   fields are omitted because the formatted plaintext summary already contains
+   the customer name, submission date, and selected options.
 6. The temporary print document is measured against the usable Letter content
    area and proportionally reduced when necessary. Content is never enlarged.
 7. The browser print dialog opens.
@@ -92,7 +94,9 @@ submission data will be changed by the theme implementation.
 ### Automated
 
 - Prove that the print source targets the wpDataTables detail modal.
-- Prove that selected-row fields are copied while the entry ID is omitted.
+- Prove that only the selected row's `plaintextbuildsummary` value is copied.
+- Prove that the modal title, separate name, variant, entry-date, and entry-ID
+  values are not added to the print sheet.
 - Prove that hidden or plugin-constrained source markup cannot suppress the
   printed build summary.
 - Prove that scale is calculated against `7.5in × 10in` and never exceeds 1.
@@ -108,7 +112,7 @@ submission data will be changed by the theme implementation.
 - Confirm each modal receives exactly one `Print order` button.
 - Print representative short and long orders to PDF.
 - Confirm each PDF is one Letter portrait page, has a visible `0.5in` inset,
-  contains the complete selected build summary, and omits the entry ID.
+  and contains only the complete selected plaintext build summary.
 
 ## Preserved Boundaries
 
