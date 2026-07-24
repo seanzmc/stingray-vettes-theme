@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  var modalSelector = '.wpdt-c .modal-content, .wdt-md-modal .modal-content';
+  var modalSelector = '.wpdt-c .modal-content, .wdt-md-modal .modal-content, .frm-modal-sc .modal-content';
   var printButtonClass = 'sc-configurator-print-button';
   var sheetId = 'sc-configurator-print-sheet';
   var cleanupTimer = 0;

@@ -1,13 +1,15 @@
 /* Private /configurator-view/ utility surface only. */
 .wpdt-c .modal-content,
-.wdt-md-modal .modal-content {
+.wdt-md-modal .modal-content,
+.frm-modal-sc .modal-content {
   --bs-modal-color: #161616;
   background: #fff !important;
   color: #161616 !important;
 }
 
 .wpdt-c .modal-header,
-.wdt-md-modal .modal-header {
+.wdt-md-modal .modal-header,
+.frm-modal-sc .modal-header {
   display: flex;
   gap: 0.75rem;
   align-items: center;
@@ -17,19 +19,22 @@
 }
 
 .wpdt-c .modal-title,
-.wdt-md-modal .modal-title {
+.wdt-md-modal .modal-title,
+.frm-modal-sc .modal-title {
   margin-right: auto;
   color: #161616 !important;
 }
 
 .wpdt-c .modal-body,
-.wdt-md-modal .modal-body {
+.wdt-md-modal .modal-body,
+.frm-modal-sc .modal-body {
   padding: 0.75rem 1rem !important;
   color: #161616 !important;
 }
 
 .wpdt-c .modal-body *,
-.wdt-md-modal .modal-body * {
+.wdt-md-modal .modal-body *,
+.frm-modal-sc .modal-body * {
   color: inherit !important;
 }
 
@@ -38,7 +43,10 @@
 .wpdt-c .modal-body ol,
 .wdt-md-modal .modal-body p,
 .wdt-md-modal .modal-body ul,
-.wdt-md-modal .modal-body ol {
+.wdt-md-modal .modal-body ol,
+.frm-modal-sc .modal-body p,
+.frm-modal-sc .modal-body ul,
+.frm-modal-sc .modal-body ol {
   margin-top: 0.35rem;
   margin-bottom: 0.6rem;
 }

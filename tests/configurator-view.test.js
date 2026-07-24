@@ -36,6 +36,11 @@ var css = fs.readFileSync(cssPath, 'utf8');
 var source = fs.readFileSync(jsPath, 'utf8');
 
 [
+	'.frm-modal-sc .modal-content',
+	'.frm-modal-sc .modal-header',
+	'.frm-modal-sc .modal-title',
+	'.frm-modal-sc .modal-body',
+	'.frm-modal-sc .modal-body *',
 	'--bs-modal-color: #161616',
 	'padding: 0.75rem 1rem',
 	'@media print',
@@ -49,6 +54,10 @@ var source = fs.readFileSync(jsPath, 'utf8');
 ].forEach(function (marker) {
 	assert(css.indexOf(marker) !== -1, 'Missing CSS contract: ' + marker);
 });
+assert(
+	source.indexOf('.frm-modal-sc .modal-content') !== -1,
+	'Print discovery must target the live Formidable submission-modal wrapper.'
+);
 
 function createHarness(options) {
 	options = options || {};
@@ -297,7 +306,8 @@ function createHarness(options) {
 			return null;
 		},
 		querySelectorAll: function (selector) {
-			return selector.indexOf('.modal-content') !== -1 ? modals.slice() : [];
+			var requiredSelector = options.requiredModalSelector || '.modal-content';
+			return selector.indexOf(requiredSelector) !== -1 ? modals.slice() : [];
 		}
 	};
 	var window = {
@@ -358,6 +368,17 @@ function printButtonCount(modal) {
 function clickPrint(modal) {
 	modal.querySelector('.sc-configurator-print-button').listeners.click();
 }
+
+var formidableHarness = createHarness({
+	requiredModalSelector: '.frm-modal-sc .modal-content'
+});
+var formidableModal = formidableHarness.makeModal(900, 700);
+formidableHarness.modals.push(formidableModal);
+formidableHarness.triggerMutation();
+assert(
+	1 === printButtonCount(formidableModal),
+	'Live Formidable submission modals must receive exactly one Print order button.'
+);
 
 var longHarness = createHarness();
 var longModal = longHarness.makeModal(1800, 900);
