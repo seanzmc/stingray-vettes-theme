@@ -229,6 +229,8 @@ function createHarness(options) {
 		return copy;
 	};
 	Element.prototype.matches = function (selector) {
+		var dataKeyMatch = /^\[data-key="([^"]+)"\]$/.exec(selector);
+		if (dataKeyMatch) return this.getAttribute('data-key') === dataKeyMatch[1];
 		if ('.' === selector.charAt(0)) return this.classList.contains(selector.slice(1));
 		if ('#' === selector.charAt(0)) return this.getAttribute('id') === selector.slice(1);
 		return this.tagName.toLowerCase() === selector.toLowerCase();
@@ -256,9 +258,9 @@ function createHarness(options) {
 		var titleName = new Element('span');
 		var titleOrder = new Element('strong');
 		var modalBody = new Element('div');
-		var summary = new Element('section');
-		var list = new Element('ul');
-		var belowFold = new Element('li');
+		var customerName = new Element('div');
+		var summary = new Element('div');
+		var entryId = new Element('div');
 
 		modal.classList.add('modal-content');
 		header.classList.add('modal-header');
@@ -283,12 +285,25 @@ function createHarness(options) {
 		modalBody.clientHeight = 320;
 		modalBody._scrollHeight = bodyHeight;
 		modalBody._scrollWidth = bodyWidth;
-		summary.classList.add('submission-summary');
-		belowFold.setAttribute('data-test', 'below-fold');
-		belowFold.textContent = 'Nested below-viewport option';
-		list.appendChild(belowFold);
-		summary.appendChild(list);
-		modalBody.appendChild(summary);
+		customerName.setAttribute('data-key', 'name');
+		customerName.textContent = 'Tim Hottel';
+		summary.setAttribute('data-key', 'plaintextbuildsummary');
+		summary.setAttribute('class', 'detailColumn plugin-summary');
+		summary.setAttribute('style', 'display: block; max-height: 320px; overflow: auto;');
+		summary.textContent = [
+			'Tim Hottel',
+			'Submitted: 2026-06-26',
+			'Variant',
+			'• Corvette Stingray Convertible 2LT',
+			'Total MSRP: $101,715'
+		].join('\n');
+		summary._scrollHeight = bodyHeight;
+		summary._scrollWidth = bodyWidth;
+		entryId.setAttribute('data-key', 'id');
+		entryId.textContent = '243746';
+		modalBody.appendChild(customerName);
+		if (!options.omitSummary) modalBody.appendChild(summary);
+		modalBody.appendChild(entryId);
 
 		modal.appendChild(header);
 		modal.appendChild(modalBody);
@@ -402,44 +417,42 @@ assert(
 	'Repeated modal mutations must inject exactly one Print order button.'
 );
 
-var originalBody = longModal.querySelector('.modal-body');
-var originalAttributes = originalBody.getAttributeNames().sort().join('|');
 clickPrint(longModal);
 
 var longSheet = longHarness.document.querySelector('#sc-configurator-print-sheet');
 var longInner = longSheet && longSheet.children[0];
-var titleClone = longInner && longInner.children[0];
-var bodyClone = longInner && longInner.children[1];
+var summaryClone = longInner && longInner.children[0];
+var expectedSummary = [
+	'Tim Hottel',
+	'Submitted: 2026-06-26',
+	'Variant',
+	'• Corvette Stingray Convertible 2LT',
+	'Total MSRP: $101,715'
+].join('\n');
 
 assert(1 === longHarness.getPrinted(), 'Valid long content must call window.print once.');
 assert(longHarness.body.classList.contains('sc-configurator-printing'), 'Print state must be active for printing.');
 assert(longSheet, 'Print action must append a temporary sheet.');
 assert(
-	titleClone && 'Tim Hottel — Order 123' === titleClone.textContent,
-	'Nested modal title text must be complete in the print sheet.'
+	longInner && 1 === longInner.children.length,
+	'Print sheet must contain only the plaintext build summary.'
 );
 assert(
-	titleClone && titleClone.querySelector('strong') &&
-	' — Order 123' === titleClone.querySelector('strong').textContent,
-	'Deep title cloning must preserve nested title markup and content.'
+	summaryClone && expectedSummary === summaryClone.textContent,
+	'Print sheet must preserve the complete selected plaintext build summary.'
 );
 assert(
-	bodyClone && bodyClone.textContent.indexOf('Nested below-viewport option') !== -1,
-	'Deep body cloning must preserve nested content below the modal viewport.'
+	summaryClone && 'sc-configurator-print-body' === summaryClone.getAttribute('class'),
+	'Summary clone must replace plugin classes with the print-body class.'
 );
 assert(
-	bodyClone && 'sc-configurator-print-body' === bodyClone.getAttribute('class'),
-	'Print body must replace plugin classes with only the print class.'
+	summaryClone && summaryClone.getAttributeNames().sort().join('|') === 'class',
+	'Summary clone must discard plugin attributes and inline constraints.'
 );
 assert(
-	bodyClone && bodyClone.getAttributeNames().sort().join('|') === 'class',
-	'Print body must discard plugin attributes that can retain modal behavior or constraints.'
-);
-assert(
-	originalAttributes === originalBody.getAttributeNames().sort().join('|') &&
-	originalBody.classList.contains('modal-body') &&
-	'320px' === originalBody.style.maxHeight,
-	'Preparing a print clone must not mutate the original modal body.'
+	longInner.textContent.indexOf('Order 123') === -1 &&
+	longInner.textContent.indexOf('243746') === -1,
+	'Print sheet must not add the modal title or entry ID.'
 );
 assert(
 	longInner && longInner.style.transform.indexOf('scale(') === 0,
@@ -460,7 +473,7 @@ assert(
 	'Serialized print scale must keep the complete content width inside the sheet.'
 );
 assert(
-	longInner && appliedLongScale * longInner.scrollHeight <= longSheet.clientHeight,
+	longInner && appliedLongScale * longInner.scrollHeight <= longSheet.clientHeight + 0.001,
 	'Serialized print scale must keep the complete content height inside the sheet.'
 );
 
@@ -491,6 +504,21 @@ if (shortHarness.getAfterPrint()) shortHarness.getAfterPrint()();
 assert(
 	!shortHarness.document.querySelector('#sc-configurator-print-sheet'),
 	'afterprint must remove the temporary sheet.'
+);
+
+var missingSummaryHarness = createHarness({ omitSummary: true });
+var missingSummaryModal = missingSummaryHarness.makeModal(300, 600);
+missingSummaryHarness.modals.push(missingSummaryModal);
+missingSummaryHarness.triggerMutation();
+clickPrint(missingSummaryModal);
+
+assert(
+	0 === missingSummaryHarness.getPrinted(),
+	'Missing plaintextbuildsummary must abort without opening the print dialog.'
+);
+assert(
+	!missingSummaryHarness.document.querySelector('#sc-configurator-print-sheet'),
+	'Missing plaintextbuildsummary must leave no temporary print sheet.'
 );
 
 [

@@ -33,26 +33,21 @@
   }
 
   function buildPrintSheet(modal) {
-    var modalBody = modal.querySelector('.modal-body');
-    if (!modalBody) return null;
+    var summary = modal.querySelector('[data-key="plaintextbuildsummary"]');
+    if (!summary) return null;
 
     cleanupPrintSheet();
 
     var sheet = document.createElement('section');
     var inner = document.createElement('div');
-    var bodyClone = modalBody.cloneNode(true);
-    var modalTitle = modal.querySelector('.modal-title');
-    var title = modalTitle ? modalTitle.cloneNode(true) : document.createElement('h1');
+    var summaryClone = summary.cloneNode(true);
 
     sheet.setAttribute('id', sheetId);
     sheet.setAttribute('aria-hidden', 'true');
     inner.classList.add('sc-configurator-print-inner');
-    resetPrintNode(title, 'sc-configurator-print-title');
-    resetPrintNode(bodyClone, 'sc-configurator-print-body');
-    if (!modalTitle) title.textContent = 'Configurator order';
+    resetPrintNode(summaryClone, 'sc-configurator-print-body');
 
-    inner.appendChild(title);
-    inner.appendChild(bodyClone);
+    inner.appendChild(summaryClone);
     sheet.appendChild(inner);
     document.body.appendChild(sheet);
 
