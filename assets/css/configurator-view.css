@@ -154,10 +154,18 @@
   position: fixed;
   left: -10000px;
   top: 0;
+  width: 8.5in;
+  height: 11in;
+  padding: 0.5in;
+  overflow: hidden;
+  box-sizing: border-box;
+  background: #fff;
+}
+
+.sc-configurator-print-frame {
   width: 7.5in;
   height: 10in;
   overflow: hidden;
-  background: #fff;
 }
 
 .sc-configurator-print-inner {
@@ -226,14 +234,14 @@
 
 @page {
   size: letter portrait;
-  margin: 0.5in;
+  margin: 0;
 }
 
 @media print {
   html,
   body {
-    width: 7.5in !important;
-    height: 10in !important;
+    width: 8.5in !important;
+    height: 11in !important;
     margin: 0 !important;
     padding: 0 !important;
     background: #fff !important;
@@ -245,11 +253,12 @@
 
   body.sc-configurator-printing #sc-configurator-print-sheet {
     display: block !important;
-    position: fixed;
-    inset: 0;
-    width: 7.5in;
-    height: 10in;
+    position: static;
+    width: 8.5in;
+    height: 11in;
+    padding: 0.5in;
     overflow: hidden;
+    box-sizing: border-box;
     break-inside: avoid;
     break-after: avoid;
     page-break-inside: avoid;

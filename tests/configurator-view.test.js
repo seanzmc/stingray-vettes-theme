@@ -55,7 +55,11 @@ var source = fs.readFileSync(jsPath, 'utf8');
 	'@media print',
 	'@page',
 	'size: letter portrait',
-	'margin: 0.5in',
+	'margin: 0',
+	'padding: 0.5in',
+	'width: 8.5in',
+	'height: 11in',
+	'.sc-configurator-print-frame',
 	'width: 7.5in',
 	'height: 10in',
 	'white-space: pre-wrap',
@@ -88,6 +92,12 @@ function createHarness(options) {
 	ClassList.prototype.add = function (name) {
 		if (this.values.indexOf(name) === -1) this.values.push(name);
 		this.element.attributes.class = this.values.join(' ');
+		if ('sc-configurator-print-frame' === name) {
+			this.element.clientWidth = 720;
+			this.element.clientHeight = 960;
+			this.element._scrollWidth = 720;
+			this.element._scrollHeight = 960;
+		}
 	};
 	ClassList.prototype.remove = function (name) {
 		this.values = this.values.filter(function (value) { return value !== name; });
@@ -117,10 +127,10 @@ function createHarness(options) {
 		this.style = {};
 		this.attributes = {};
 		this._textContent = '';
-		this.clientWidth = 720;
-		this.clientHeight = 960;
-		this._scrollWidth = 720;
-		this._scrollHeight = 960;
+		this.clientWidth = 816;
+		this.clientHeight = 1056;
+		this._scrollWidth = 816;
+		this._scrollHeight = 1056;
 	}
 	Object.defineProperty(Element.prototype, 'textContent', {
 		get: function () {
@@ -424,7 +434,8 @@ assert(
 clickPrint(longModal);
 
 var longSheet = longHarness.document.querySelector('#sc-configurator-print-sheet');
-var longInner = longSheet && longSheet.children[0];
+var longFrame = longSheet && longSheet.children[0];
+var longInner = longFrame && longFrame.children[0];
 var summaryClone = longInner && longInner.children[0];
 var expectedSummary = [
 	'Tim Hottel',
@@ -437,6 +448,16 @@ var expectedSummary = [
 assert(1 === longHarness.getPrinted(), 'Valid long content must call window.print once.');
 assert(longHarness.body.classList.contains('sc-configurator-printing'), 'Print state must be active for printing.');
 assert(longSheet, 'Print action must append a temporary sheet.');
+assert(
+	longSheet && 1 === longSheet.children.length &&
+	longFrame.classList.contains('sc-configurator-print-frame'),
+	'Print sheet must contain one internally inset content frame.'
+);
+assert(
+	longFrame && 1 === longFrame.children.length &&
+	longInner.classList.contains('sc-configurator-print-inner'),
+	'Print frame must contain one measured print-inner element.'
+);
 assert(
 	longInner && 1 === longInner.children.length,
 	'Print sheet must contain only the plaintext build summary.'
@@ -459,7 +480,8 @@ assert(
 	'Print sheet must not add the modal title or entry ID.'
 );
 assert(
-	longInner && longInner.style.transform.indexOf('scale(') === 0,
+	longInner && longInner.style.transform &&
+	longInner.style.transform.indexOf('scale(') === 0,
 	'Print content must receive a measured scale.'
 );
 assert(
@@ -473,12 +495,12 @@ assert(
 	'The applied transform and recorded print scale must match.'
 );
 assert(
-	longInner && appliedLongScale * longInner.scrollWidth <= longSheet.clientWidth,
-	'Serialized print scale must keep the complete content width inside the sheet.'
+	longInner && appliedLongScale * longInner.scrollWidth <= longFrame.clientWidth,
+	'Serialized print scale must keep the complete content width inside the inset frame.'
 );
 assert(
-	longInner && appliedLongScale * longInner.scrollHeight <= longSheet.clientHeight + 0.001,
-	'Serialized print scale must keep the complete content height inside the sheet.'
+	longInner && appliedLongScale * longInner.scrollHeight <= longFrame.clientHeight + 0.001,
+	'Serialized print scale must keep the complete content height inside the inset frame.'
 );
 
 longHarness.runCleanupTimers();

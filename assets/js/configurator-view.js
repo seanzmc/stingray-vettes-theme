@@ -39,23 +39,26 @@
     cleanupPrintSheet();
 
     var sheet = document.createElement('section');
+    var frame = document.createElement('div');
     var inner = document.createElement('div');
     var summaryClone = summary.cloneNode(true);
 
     sheet.setAttribute('id', sheetId);
     sheet.setAttribute('aria-hidden', 'true');
+    frame.classList.add('sc-configurator-print-frame');
     inner.classList.add('sc-configurator-print-inner');
     resetPrintNode(summaryClone, 'sc-configurator-print-body');
 
     inner.appendChild(summaryClone);
-    sheet.appendChild(inner);
+    frame.appendChild(inner);
+    sheet.appendChild(frame);
     document.body.appendChild(sheet);
 
     var scale = calculateScale(
       inner.scrollWidth,
       inner.scrollHeight,
-      sheet.clientWidth,
-      sheet.clientHeight
+      frame.clientWidth,
+      frame.clientHeight
     );
     if (null === scale) {
       cleanupPrintSheet();
