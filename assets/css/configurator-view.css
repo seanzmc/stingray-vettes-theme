@@ -1,4 +1,82 @@
 /* Private /configurator-view/ utility surface only. */
+.wpdt-c .wpDataTablesWrapper {
+  color: var(--ink) !important;
+}
+
+.wpdt-c .wpDataTablesWrapper label,
+.wpdt-c .wpDataTablesWrapper .dataTables_filter label,
+.wpdt-c .wpDataTablesWrapper .dataTables_length label {
+  color: var(--muted) !important;
+}
+
+.wpdt-c .wpDataTablesWrapper .dataTables_filter input,
+.wpdt-c .wpDataTablesWrapper .dataTables_length select,
+.wpdt-c .wpDataTablesWrapper .wdt-filter-control {
+  border-color: var(--line) !important;
+  background: var(--carbon-panel-strong) !important;
+  color: var(--ink) !important;
+}
+
+.wpdt-c .wpDataTablesWrapper .dataTables_filter input::placeholder,
+.wpdt-c .wpDataTablesWrapper .wdt-filter-control::placeholder {
+  color: var(--dim) !important;
+  opacity: 1;
+}
+
+.wpdt-c .wpDataTablesWrapper table.wpDataTable {
+  background: transparent !important;
+  color: var(--muted) !important;
+}
+
+.wpdt-c .wpDataTablesWrapper table.wpDataTable thead th,
+.wpdt-c .wpDataTablesWrapper table.wpDataTable thead th * {
+  background: var(--carbon-panel) !important;
+  color: var(--ink) !important;
+}
+
+.wpdt-c .wpDataTablesWrapper table.wpDataTable tbody td,
+.wpdt-c .wpDataTablesWrapper table.wpDataTable tbody td * {
+  background: transparent !important;
+  color: var(--muted) !important;
+}
+
+.wpdt-c .wpDataTablesWrapper table.wpDataTable tbody tr:nth-child(even) td {
+  background: var(--wash-soft) !important;
+}
+
+.wpdt-c .wpDataTablesWrapper table.wpDataTable tbody tr:hover td,
+.wpdt-c .wpDataTablesWrapper table.wpDataTable tbody tr:focus-within td {
+  background: var(--control-bg) !important;
+  color: var(--ink) !important;
+}
+
+.wpdt-c .dataTables_info {
+  color: var(--dim) !important;
+}
+
+.wpdt-c .dataTables_paginate .paginate_button {
+  border-color: var(--control-border) !important;
+  background: var(--control-bg) !important;
+  color: var(--muted) !important;
+}
+
+.wpdt-c .dataTables_paginate .paginate_button:hover,
+.wpdt-c .dataTables_paginate .paginate_button:focus-visible {
+  border-color: var(--accent) !important;
+  color: var(--ink) !important;
+}
+
+.wpdt-c .dataTables_paginate .paginate_button.current {
+  border-color: var(--accent) !important;
+  background: var(--accent) !important;
+  color: var(--on-accent) !important;
+}
+
+.wpdt-c .dataTables_paginate .paginate_button.disabled {
+  color: var(--dim) !important;
+  opacity: 0.45;
+}
+
 .wpdt-c .modal-content,
 .wdt-md-modal .modal-content,
 .frm-modal-sc .modal-content {
