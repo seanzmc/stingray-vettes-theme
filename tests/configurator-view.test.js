@@ -55,7 +55,11 @@ var source = fs.readFileSync(jsPath, 'utf8');
 	'@media print',
 	'@page',
 	'size: letter portrait',
-	'margin: 0.25in',
+	'margin: 0.5in',
+	'width: 7.5in',
+	'height: 10in',
+	'white-space: pre-wrap',
+	'overflow-wrap: anywhere',
 	'#sc-configurator-print-sheet',
 	'height: auto !important',
 	'max-height: none !important',
@@ -113,10 +117,10 @@ function createHarness(options) {
 		this.style = {};
 		this.attributes = {};
 		this._textContent = '';
-		this.clientWidth = 768;
-		this.clientHeight = 1008;
-		this._scrollWidth = 768;
-		this._scrollHeight = 1008;
+		this.clientWidth = 720;
+		this.clientHeight = 960;
+		this._scrollWidth = 720;
+		this._scrollHeight = 960;
 	}
 	Object.defineProperty(Element.prototype, 'textContent', {
 		get: function () {
