@@ -68,8 +68,8 @@ var source = fs.readFileSync(jsPath, 'utf8');
 	assert(css.indexOf(marker) !== -1, 'Missing CSS contract: ' + marker);
 });
 assert(
-	source.indexOf('.frm-modal-sc .modal-content') !== -1,
-	'Print discovery must target the live Formidable submission-modal wrapper.'
+	source.indexOf('.wdt-md-modal .modal-content') !== -1,
+	'Print discovery must target the live wpDataTables modal wrapper.'
 );
 
 function createHarness(options) {
@@ -397,15 +397,15 @@ function clickPrint(modal) {
 	modal.querySelector('.sc-configurator-print-button').listeners.click();
 }
 
-var formidableHarness = createHarness({
-	requiredModalSelector: '.frm-modal-sc .modal-content'
+var wpDataTablesHarness = createHarness({
+	requiredModalSelector: '.wdt-md-modal .modal-content'
 });
-var formidableModal = formidableHarness.makeModal(900, 700);
-formidableHarness.modals.push(formidableModal);
-formidableHarness.triggerMutation();
+var wpDataTablesModal = wpDataTablesHarness.makeModal(900, 700);
+wpDataTablesHarness.modals.push(wpDataTablesModal);
+wpDataTablesHarness.triggerMutation();
 assert(
-	1 === printButtonCount(formidableModal),
-	'Live Formidable submission modals must receive exactly one Print order button.'
+	1 === printButtonCount(wpDataTablesModal),
+	'Live wpDataTables modals must receive exactly one Print order button.'
 );
 
 var longHarness = createHarness();
